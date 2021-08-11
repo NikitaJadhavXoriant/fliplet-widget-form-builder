@@ -10,7 +10,7 @@ Fliplet.FormBuilder.field('time', {
     },
     autofill: {
       type: String,
-      default: 'always'
+      default: 'default'
     },
     defaultSource: {
       type: String,
@@ -92,27 +92,8 @@ Fliplet.FormBuilder.field('time', {
     }
 
     if (!this.value || this.autofill === 'always') {
-      var now = new Date();
-      var hours = now.getHours();
-      var minutes = now.getMinutes();
-
-      if (hours < 10) {
-        hours = '0' + hours;
-      }
-
-      if (minutes < 10) {
-        minutes = '0' + minutes;
-      }
-
-      this.updateValue(hours + ':' + minutes);
+      this.updateValue(moment().format('HH:mm'));
       this.empty = false;
-    }
-  },
-  watch: {
-    value: function(val) {
-      if (!val) {
-        this.updateValue(moment().format('HH:mm'));
-      }
     }
   }
 });
