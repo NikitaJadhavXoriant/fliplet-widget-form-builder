@@ -12,7 +12,7 @@ Fliplet.FormBuilder.field('date', {
     },
     autofill: {
       type: String,
-      default: 'always'
+      default: 'default'
     },
     defaultSource: {
       type: String,
