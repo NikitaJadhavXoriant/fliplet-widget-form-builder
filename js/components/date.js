@@ -56,17 +56,21 @@ Fliplet.FormBuilder.field('date', {
         format: 'yyyy-mm-dd',
         todayHighlight: true,
         autoclose: true
-      }).on('changeDate', function(e) {
+      });
+
+      // Set an initial value as configured
+      if (this.autofill !== 'empty') {
+        this.datePicker.datepicker('setDate', new Date(this.value) || new Date());
+      }
+
+      // Attach changeDate listener after initial value is assigned
+      this.datePicker.on('changeDate', function(e) {
         if (e.date) {
           $vm.value = moment(e.date).format(DATE_FORMAT);
         }
 
         $vm.updateValue();
       });
-
-      if (this.autofill !== 'empty') {
-        this.datePicker.datepicker('setDate', new Date(this.value) || new Date());
-      }
     }
 
     if (this.defaultValueSource !== 'default') {
@@ -86,7 +90,7 @@ Fliplet.FormBuilder.field('date', {
       return;
     }
 
-    this.$emit('_input', this.name, this.value);
+    this.$emit('_input', this.name, this.value, false, true);
     $vm.$v.$reset();
   },
   watch: {
@@ -96,7 +100,7 @@ Fliplet.FormBuilder.field('date', {
       }
 
       this.highlightError();
-      this.$emit('_input', this.name, val);
+      this.$emit('_input', this.name, val, false, true);
     }
   }
 });

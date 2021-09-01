@@ -88,7 +88,7 @@ Fliplet.FormBuilder.field('password', {
       this.highlightError();
     },
     onPasswordConfirmationInput: function($event) {
-      this.$emit('_input', this.name, $event.target.value, true);
+      this.$emit('_input', this.name, $event.target.value, true, true);
     }
   }
 });

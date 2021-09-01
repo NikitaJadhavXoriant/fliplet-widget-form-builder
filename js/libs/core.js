@@ -171,7 +171,7 @@ Fliplet.FormBuilder = (function() {
       };
 
       component.methods.onInput = _.debounce(function($event) {
-        this.$emit('_input', this.name, $event.target.value);
+        this.$emit('_input', this.name, $event.target.value, false, true);
       }, 200);
 
       component.methods.browserSupport = function(browserType) {

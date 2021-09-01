@@ -362,7 +362,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
           });
         }
       },
-      onInput: function (fieldName, value, fromPasswordConfirmation) {
+      onInput: function (fieldName, value, fromPasswordConfirmation, skipOnChange) {
         var $vm = this;
 
         this.fields.some(function(field) {
@@ -373,7 +373,10 @@ Fliplet.Widget.instance('form-builder', function(data) {
               field.value = value;
             }
 
-            $vm.triggerChange(fieldName, value);
+            if (!skipOnChange) {
+              $vm.triggerChange(fieldName, value);
+            }
+
             return true;
           }
         });
@@ -463,7 +466,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
 
         // form validation
         $vm.isFormValid = true;
-        
+
         var invalidFields = [];
 
         $vm.$children.forEach(function (inputField) {
@@ -482,7 +485,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
 
         /**
          * Showing an error message
-         * 
+         *
          * @param {String} errorMessage - an error message that we should show to the user
          *  if its empty string show default message
          * @returns {void} shows a toast message to users
@@ -494,7 +497,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
 
         /**
          * This method will decide what we will do after isFormInvalid hook
-         * 
+         *
          * @returns {Promise} With this logic:
          *  1. In case there was no listener on isFormInvalid hook we will show the toast
          *     with default message
@@ -515,7 +518,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
 
                   return reject();
                 }
-                
+
                 return resolve();
               })
               .catch(function(response) {
@@ -549,31 +552,31 @@ Fliplet.Widget.instance('form-builder', function(data) {
               formData[name] = value;
             }
           }
-  
+
           var errorFields = Object.keys($vm.errors);
           var fieldErrors = [];
           if (errorFields.length) {
             errorFields.forEach(function (fieldName) {
               fieldErrors.push(errorFields[fieldName]);
             });
-  
+
             $vm.error = fieldErrors.join('. ');
             $vm.isSending = false;
             return;
           }
-  
+
           $vm.fields.forEach(function(field) {
             var value = field.value;
             var type = field._type;
-  
+
             if (field._submit === false || !field.enabled) {
               return;
             }
-  
+
             if (field.submitWhenFalsy === false && !value) {
               return;
             }
-  
+
             if (isFile(value)) {
               // File input
               for (var i = 0; i < value.length; i++) {
@@ -586,7 +589,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
               }
               if (type === 'flDate') {
                 value = moment(value);
-  
+
                 if (moment(value).isValid()) {
                   value = value.format('YYYY-MM-DD');
                 } else {
@@ -597,14 +600,14 @@ Fliplet.Widget.instance('form-builder', function(data) {
               appendField(field.name, value);
             }
           });
-  
+
           formPromise.then(function (form) {
             return Fliplet.Hooks.run('beforeFormSubmit', formData, form);
           }).then(function() {
             if (data.dataSourceId) {
               return Fliplet.DataSources.connect(data.dataSourceId);
             }
-  
+
             return;
           }).then(function(connection) {
             // Append schema as private variable
@@ -616,7 +619,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
                 };
               }
             });
-  
+
             if (entryId && entry && data.dataSourceId) {
               return connection.update(entryId, formData, {
                 offline: false,
@@ -624,7 +627,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
                 source: data.uuid
               });
             }
-  
+
             if (data.dataStore && data.dataStore.indexOf('dataSource') > -1 && data.dataSourceId) {
               return connection.insert(formData, {
                 offline: data.offline,
@@ -632,7 +635,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
                 source: data.uuid
               });
             }
-  
+
             return;
           }).then(function(result) {
             return formPromise.then(function (form) {
@@ -640,7 +643,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
                 if (entryId !== 'session') {
                   return;
                 }
-  
+
                 // If the user just updated his/her profile
                 // let's update the cached session.
                 return Fliplet.Session.get().catch(function () {
@@ -652,24 +655,24 @@ Fliplet.Widget.instance('form-builder', function(data) {
             if (data.saveProgress) {
               localStorage.removeItem(progressKey);
             }
-  
+
             var operation = Promise.resolve();
-  
+
             // Emails are only sent by the client when data source hooks aren't set
             if (!data.dataSourceId) {
               if (data.emailTemplateAdd && data.onSubmit && data.onSubmit.indexOf('templatedEmailAdd') > -1) {
                 operation = Fliplet.Communicate.sendEmail(_.extend({}, data.emailTemplateAdd), formData);
               }
-  
+
               if (data.emailTemplateEdit && data.onSubmit && data.onSubmit.indexOf('templatedEmailEdit') > -1) {
                 operation = Fliplet.Communicate.sendEmail(_.extend({}, data.emailTemplateEdit), formData);
               }
             }
-  
+
             if (data.generateEmailTemplate && data.onSubmit && data.onSubmit.indexOf('generateEmail') > -1) {
               operation = Fliplet.Communicate.composeEmail(_.extend({}, data.generateEmailTemplate), formData);
             }
-  
+
             if (data.linkAction && data.redirect) {
               return operation.then(function () {
                 return trackEventOp.then(function () {
@@ -682,7 +685,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
                 Fliplet.Navigate.to(data.linkAction);
               })
             }
-  
+
             $vm.isSent = true;
             $vm.isSending = false;
             $vm.reset(false);
@@ -693,7 +696,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
              * $forceUpdate solve this issue.
              */
             $vm.$forceUpdate();
-  
+
             $vm.loadEntryForUpdate();
           }, function(err) {
             console.error(err);
@@ -701,7 +704,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
             $vm.isSending = false;
             Fliplet.Hooks.run('onFormSubmitError', { formData: formData, error: err });
           });
-  
+
           // We might use this code to save the form data locally when going away from the page
           // $(window).unload(function onWindowUnload() {
           //   localStorage.setItem('fl-form-data-' + data.id, this.fields.map(function (field) {
