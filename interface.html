@@ -147,6 +147,18 @@
             </div>
 
             <h3>Submission</h3>
+            <div  v-if="!settings.dataStore.length" class="form-group">
+              <div class="control-label">
+                <label>When the form is loaded...</label>
+              </div>
+              <div class="checkbox checkbox-icon">
+                <input type="checkbox" id="autobindProfileEditing" v-model="settings.autobindProfileEditing" :value="true">
+                <label for="autobindProfileEditing">
+                  <span class="check"><i class="fa fa-check"></i></span> Load the data from user's profile
+                  <p class="help-block"><small>If the user is signed in to the app, they will be able to edit their user profile using this form.</small></p>
+                </label>
+              </div>
+            </div>
             <div class="form-group" v-if="showDataSourceSettings">
               <div class="control-label">
                 <label>When the form is submitted...</label>
@@ -157,6 +169,11 @@
                   <label for="save_datasource">
                     <span class="check"><i class="fa fa-check"></i></span> Add new submissions to a data source
                   </label>
+                </div>
+                <div v-if="settings.autobindProfileEditing">
+                  <p class="help-block">
+                    <small>If the form loads data from user’s profile, it can only be used to ypdate the user’s profile.</small>
+                  </p>
                 </div>
 
                 <div class="hidden-settings" v-bind:class="{ 'active': showExtraAdd, 'hidden': !showExtraAdd }">
@@ -224,18 +241,6 @@
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div  v-if="!settings.dataStore.length" class="form-group">
-              <div class="control-label">
-                <label>When the form is loaded...</label>
-              </div>
-              <div class="checkbox checkbox-icon">
-                <input type="checkbox" id="autobindProfileEditing" v-model="settings.autobindProfileEditing" :value="true">
-                <label for="autobindProfileEditing">
-                  <span class="check"><i class="fa fa-check"></i></span> Load the data from user's profile
-                  <p class="help-block"><small>If the user is signed in to the app, they will be able to edit their user profile using this form.</small></p>
-                </label>
               </div>
             </div>
             <div class="form-group">
