@@ -26,7 +26,8 @@ Fliplet.FormBuilder.field('date', {
   data: function() {
     return {
       datePicker: null,
-      isInputFocused: false
+      isInputFocused: false,
+      isPreview: Fliplet.Env.get('preview')
     };
   },
   validations: function() {
@@ -95,11 +96,14 @@ Fliplet.FormBuilder.field('date', {
   },
   watch: {
     value: function(val) {
-      if (!val && this.autofill !== 'empty') {
-        this.updateValue(moment().format(DATE_FORMAT));
+      if (this.datepicker) {
+        this.datePicker.datepicker('setDate', val);
       }
 
-      this.highlightError();
+      if (this.isPreview && this.$v.value.$invalid) {
+        this.highlightError();
+      }
+
       this.$emit('_input', this.name, val, false, true);
     }
   }

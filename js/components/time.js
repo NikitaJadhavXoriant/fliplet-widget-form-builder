@@ -23,7 +23,8 @@ Fliplet.FormBuilder.field('time', {
   },
   data: function() {
     return {
-      isInputFocused: false
+      isInputFocused: false,
+      isPreview: Fliplet.Env.get('preview')
     };
   },
   validations: function() {
@@ -38,26 +39,15 @@ Fliplet.FormBuilder.field('time', {
     return rules;
   },
   methods: {
-    updateValue: function(value) {
-      if (value) {
-        this.value = value;
-      }
-
-      this.highlightError();
-      this.$emit('_input', this.name, this.value);
-    },
     initTimePicker: function() {
       var $vm = this;
 
       this.timepicker = $($vm.$refs.timepicker).timeEntry()
         .on('change', function(event) {
           $vm.value = event.target.value;
-          $vm.updateValue($vm.value);
         });
 
       this.timepicker.timeEntry('setTime', $vm.value);
-
-      $vm.$v.$reset();
     }
   },
   computed: {
@@ -92,8 +82,24 @@ Fliplet.FormBuilder.field('time', {
     }
 
     if (!this.value || this.autofill === 'always') {
-      this.updateValue(moment().format('HH:mm'));
+      this.value = moment().format('HH:mm');
       this.empty = false;
+    }
+
+    this.$emit('_input', this.name, this.value);
+    this.$v.$reset();
+  },
+  watch: {
+    value: function(val) {
+      if (this.timepicker) {
+        this.timepicker.timeEntry('setTime', val);
+      }
+
+      if (this.isPreview && this.$v.value.$invalid) {
+        this.highlightError();
+      }
+
+      this.$emit('_input', this.name, val);
     }
   }
 });
