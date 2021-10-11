@@ -1269,39 +1269,3 @@ input[type='time']::-webkit-clear-button {
 .fl-form .checkbox.checkbox-icon label > span.check > i.fa {
   top: 2px;
 }
-
-.password-checker > .arrow,
-.password-checker > .arrow:after {
-  position: absolute;
-  display: block;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-}
-
-.password-checker > .arrow {
-  top: -11px;
-  left: 50%;
-  margin-left: -11px;
-  border-width: 11px;
-  border-top-width: 0;
-  border-bottom-color: #dddddd;
-}
-
-.password-checker > .arrow:after {
-  top: 1px;
-  margin-left: -10px;
-  content: " ";
-  border-width: 10px;
-  border-top-width: 0;
-  border-bottom-color: #f5f5f5;
-}
-
-.password-checker.panel-success > .arrow {
-  border-bottom-color: #d6e9c6;
-}
-
-.password-checker.panel-success > .arrow:after {
-  border-bottom-color: #dff0d8;
-}
