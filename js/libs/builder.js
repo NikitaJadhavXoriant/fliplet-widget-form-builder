@@ -327,7 +327,9 @@ new Vue({
       // Cleanup
       this.settings.fields = _.compact(this.fields);
 
-      return Fliplet.Widget.save(this.settings);
+      return Fliplet.Widget.save(this.settings).then(function onSettingsUpdated() {
+        return $vm.updateDataSourceHooks();
+      });
     },
     createDefaultBodyTemplate: function(fields) {
       // Creates default email template
@@ -541,14 +543,8 @@ new Vue({
         return dataSource.columns || [];
       });
     },
-    updateDataSource: function() {
+    updateDataSourceHooks: function() {
       var dataSourceId = this.settings.dataSourceId;
-      var newColumns = _.chain(this.fields)
-        .filter(function(field) {
-          return field._submit !== false;
-        })
-        .map('name')
-        .value();
 
       var fieldsToHash = _.map(_.filter(this.fields, function(field) {
         return !!field.hash;
@@ -562,19 +558,19 @@ new Vue({
         ds.columns = ds.columns || [];
 
         var hooksDeleted;
-        var columns = _.uniq(newColumns.concat(ds.columns));
 
-        // remove existing hooks for the operations
+        // remove existing hooks for the operations from the same widget instance
         ds.hooks = _.reject(ds.hooks || [], function(hook) {
-          var result = hook.widgetInstanceId == widgetId && hook.type == 'operations';
+          var remove = hook.widgetInstanceId == widgetId && hook.type == 'operations';
 
-          if (result) {
+          if (remove) {
             hooksDeleted = true;
           }
 
-          return result;
+          return remove;
         });
 
+        // add fields that need to be hashed to data source hooks
         if (fieldsToHash) {
           var payload = {};
 
@@ -589,13 +585,10 @@ new Vue({
             payload: payload
           });
         } else if (!hooksDeleted) {
-          if (_.isEqual(columns.sort(), ds.columns.sort())) {
-            return Promise.resolve(); // no need to update
-          }
+          return; // no need to update
         }
 
         return Fliplet.DataSources.update(dataSourceId, {
-          columns: columns,
           hooks: ds.hooks
         });
       });
