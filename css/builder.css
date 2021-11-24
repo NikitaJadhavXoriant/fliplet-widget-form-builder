@@ -638,7 +638,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   position: relative;
 }
 
-.field-signature a {
+.field-signature .btn-clear {
   position: absolute;
   top: 5px;
   right: 10px;

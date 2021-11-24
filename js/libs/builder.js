@@ -545,6 +545,12 @@ new Vue({
     },
     updateDataSourceHooks: function() {
       var dataSourceId = this.settings.dataSourceId;
+      var newColumns = _.chain(this.fields)
+        .filter(function(field) {
+          return field._submit !== false;
+        })
+        .map('name')
+        .value();
 
       var fieldsToHash = _.map(_.filter(this.fields, function(field) {
         return !!field.hash;
@@ -558,6 +564,7 @@ new Vue({
         ds.columns = ds.columns || [];
 
         var hooksDeleted;
+        var columns = _.uniq(newColumns.concat(ds.columns));
 
         // remove existing hooks for the operations from the same widget instance
         ds.hooks = _.reject(ds.hooks || [], function(hook) {
@@ -585,7 +592,9 @@ new Vue({
             payload: payload
           });
         } else if (!hooksDeleted) {
-          return; // no need to update
+          if (_.isEqual(columns.sort(), ds.columns.sort())) {
+            return; // no need to update
+          }
         }
 
         return Fliplet.DataSources.update(dataSourceId, {

@@ -824,7 +824,7 @@ html[dir="rtl"] .radio.radio-icon input[type="radio"] + label > span.check {
   position: relative;
 }
 
-.field-signature a {
+.field-signature .btn-clear {
   position: absolute;
   top: 0;
   right: 10px;
@@ -849,6 +849,11 @@ html[dir="rtl"] .radio.radio-icon input[type="radio"] + label > span.check {
 
 .has-error .field-signature canvas {
   border-color: #a94442 !important;
+}
+
+.signature-preview {
+  display: flex;
+  flex-direction: column;
 }
 
 /* WYSIWYG FIELD */

@@ -45,5 +45,14 @@ Fliplet.FormBuilder.field('radio', {
       this.$refs.radioButton[newIndex].focus();
       this.clickHandler(this.options[newIndex]);
     }
+  },
+  created: function() {
+    var $vm = this;
+
+    var selectedOption = _.find($vm.options, function(option) {
+      return (_.has(option, 'label') && _.has(option, 'id')) ? option.id === $vm.value : option.label === $vm.value;
+    });
+
+    this.value = selectedOption ? this.value : '';
   }
 });

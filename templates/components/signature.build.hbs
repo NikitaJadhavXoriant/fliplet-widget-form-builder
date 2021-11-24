@@ -5,18 +5,24 @@
   </div>
 </template>
 <template v-else>
-  <div class="field-signature focus-outline" tabindex="0">
-    <canvas :id="name" ref="canvas"></canvas>
-    <a
-      href="#"
-      class="focus-outline"
-      tabindex="0"
-      v-on:click.prevent="clean()"
-      v-on:keydown.space.prevent="clean()"
-    >
-      <i class="fa fa-times"></i>
-      Clear
-    </a>
+  <div v-show="isEditable" class="signature-editor">
+    <div class="field-signature focus-outline" tabindex="0">
+      <canvas :id="name" ref="canvas"></canvas>
+      <a
+        href="#"
+        class="focus-outline btn-clear"
+        tabindex="0"
+        v-on:click.prevent="clean()"
+        v-on:keydown.space.prevent="clean()"
+      >
+        <i class="fa fa-times"></i>
+        Clear
+      </a>
+    </div>
+  </div>
+  <div v-show="!isEditable" class="field-signature focus-outline signature-preview" tabindex="0">
+    <img :src="value" alt="signature image" />
+    <a href="#" v-on:click.prevent="isEditable = true">Edit</a>
   </div>
   <p class="text-danger" v-if="$v.value.required === false && $v.value.$dirty">Field is required.</p>
 </template>

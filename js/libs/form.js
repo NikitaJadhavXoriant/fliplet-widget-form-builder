@@ -211,26 +211,6 @@ Fliplet.Widget.instance('form-builder', function(data) {
               }
               break;
 
-            case 'flCheckbox':
-              if (fieldData.length > 0) {
-                var inOptions = [];
-
-                fieldData.forEach(function (element) {
-                  var match = _.find(field.options, function (option) {
-                    return option.label === element || option.id === element;
-                  });
-
-                  if (match) {
-                    inOptions.push(match);
-                  }
-                });
-
-                field.value = inOptions.length ? _.uniqWith(fieldData, _.isEqual) : [];
-              } else {
-                field.value = [];
-              }
-              break;
-
             case 'flStarRating':
               field.options = _.times(5, function(i) {
                 return {
@@ -238,15 +218,8 @@ Fliplet.Widget.instance('form-builder', function(data) {
                 };
               });
 
-            case 'flRadio':
-              // Work only if passed value is a string
-              // Altered check to support old version of the form builder and if a user provides data as ID not a Label it will work correctly
-              var match = _.find(field.options, function (option) {
-                return option.label === fieldData || option.id === fieldData;
-              });
-
-              field.value = match ? fieldData : '';
-              break;
+            case 'flCheckbox': // There is no validation and value assignment as there is no access to checkbox options. This is implemented in the checkbox component.
+            case 'flRadio': // There is no validation and value assignment as there is no access to radio options. This is implemented in the radio component.
 
             default:
               field.value = fieldData;
