@@ -569,6 +569,9 @@ Fliplet.Widget.instance('form-builder', function(data) {
                   value = null;
                 }
               }
+              if (type === 'flEmail') {
+                value = value.toLowerCase();
+              }
               // Other inputs
               appendField(field.name, value);
             }
