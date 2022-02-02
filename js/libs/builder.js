@@ -84,6 +84,7 @@ function generateFormDefaults(data) {
     previewingTemplate: '',
     fields: [],
     offline: true,
+    isPlaceholder: false,
     redirect: false,
     dataStore: [],
     onSubmit: [],
@@ -654,7 +655,6 @@ new Vue({
 
       $vm.save(true).then(function onSettingsSaved() {
         $(selector).removeClass('is-loading');
-
         Fliplet.Studio.emit('reload-widget-instance', Fliplet.Widget.getDefaultId());
         $vm.triggerSave();
       });
@@ -667,6 +667,7 @@ new Vue({
       var settings = formTemplate.settings;
 
       settings.templateId = formTemplate.id;
+      settings.isPlaceholder = false;
       settings.name = this.settings.name;
 
       this.settings = generateFormDefaults(settings);
@@ -868,7 +869,7 @@ new Vue({
       return $html.html();
     },
     loadTemplates: function() {
-      if (data.fields) {
+      if (data.fields && data.templateId) {
         return Promise.resolve(); // do not load templates when editing a form as such UI is not shown
       }
 
@@ -882,7 +883,13 @@ new Vue({
         if (!$vm.organizationTemplates.length) {
           var blankTemplateId = $vm.systemTemplates[0].id;
 
+          $vm.settings.isPlaceholder = false;
           $vm.useTemplate(blankTemplateId);
+        } else {
+          Fliplet.Widget.save(_.assign(data, { isPlaceholder: true })).then(function() {
+            $(selector).removeClass('is-loading');
+            Fliplet.Studio.emit('reload-widget-instance', Fliplet.Widget.getDefaultId());
+          });
         }
       });
     },
@@ -1079,7 +1086,6 @@ new Vue({
           $($vm.$refs.templateGallery).find('[data-toggle="tooltip"]').tooltip({
             container: 'body'
           });
-          $(selector).removeClass('is-loading');
         }, 500);
       }
     });

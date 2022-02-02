@@ -259,6 +259,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
         isLoading: !!entryId,
         isLoadingMessage: 'Retrieving data...',
         isConfigured: !!data.templateId,
+        isPlaceholder: data.isPlaceholder,
         fields: getFields(),
         error: null,
         errors: {},
@@ -443,13 +444,18 @@ Fliplet.Widget.instance('form-builder', function(data) {
         var invalidFields = [];
 
         $vm.$children.forEach(function (inputField) {
-
           // checks if component have vuelidate validation object
           if (inputField.$v) {
             inputField.$v.$touch();
 
             if (inputField.$v.$invalid) {
-              $(inputField.$el).addClass('has-error');
+              if (inputField.$v.passwordConfirmation) {
+                inputField.isValid = !inputField.$v.value.$invalid;
+                inputField.isPasswordConfirmed = !inputField.$v.value.$invalid && !inputField.$v.passwordConfirmation.$invalid;
+              } else {
+                inputField.isValid = false
+              }
+              
               invalidFields.push(inputField);
               $vm.isFormValid = false;
             }
@@ -663,6 +669,11 @@ Fliplet.Widget.instance('form-builder', function(data) {
             }
 
             $vm.isSent = true;
+            $vm.fields.forEach(function(field) {
+              if (field._type === 'flPassword' && field.passwordConfirmation) {
+                field.passwordConfirmation = '';
+              }
+            });
             $vm.isSending = false;
             $vm.reset(false);
             /**
@@ -778,7 +789,7 @@ Fliplet.Widget.instance('form-builder', function(data) {
         localStorage.setItem(progressKey, JSON.stringify(progress));
       }, saveDelay);
 
-      $(selector).removeClass('is-loading');
+      $(selector).removeClass('hidden');
 
       if (!data.offline) {
         Fliplet.Navigator.onOnline(function() {

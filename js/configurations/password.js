@@ -1,4 +1,13 @@
 Fliplet.FormBuilder.configuration('password', {
+  methods: {
+    validatePasswordLength: function() {
+      if (!isNaN(Number(this.autogenerateLength)) && Number(this.autogenerateLength) > 7) {
+        return;
+      }
+
+      this.autogenerateLength = 8;
+    }
+  },
   watch: {
     autogenerate: function(val) {
       if (!val) {

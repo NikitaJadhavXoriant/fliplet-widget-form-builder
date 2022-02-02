@@ -160,13 +160,11 @@ Fliplet.FormBuilder = (function() {
         var $vm = this;
 
         if ($vm.$v && $vm.$v.value) {
-          $vm.$v.$touch();
-
-          if ($vm.$v.value.$error) {
-            $($vm.$el).addClass('has-error');
-          } else {
-            $($vm.$el).removeClass('has-error');
+          if ($vm.$v.passwordConfirmation) {
+            return;
           }
+
+          $vm.isValid = !$vm.$v.value.$error;
         }
       };
 
@@ -296,6 +294,10 @@ Fliplet.FormBuilder = (function() {
         defaultValueKey: {
           type: String,
           default: ''
+        },
+        isValid: {
+          type: Boolean,
+          default: true
         }
       }, component.props);
 

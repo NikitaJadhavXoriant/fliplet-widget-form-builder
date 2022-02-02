@@ -43,27 +43,64 @@ Fliplet.FormBuilder.field('password', {
     },
     description: {
       type: String
+    },
+    isPasswordConfirmed: {
+      type: Boolean,
+      default: true
+    },
+    isValid: {
+      type: Boolean,
+      default: true
     }
+  },
+  data: function() {
+    return {
+      isFocused: false,
+      passwordMinLength: 8,
+      defaultClass: 'panel-default',
+      invalidClass: 'panel-danger',
+      rules: {
+        isUppercase: new RegExp('[A-Z]'),
+        isLowercase: new RegExp('[a-z]'),
+        isNumber: new RegExp('[0-9]'),
+        isSpecial: new RegExp('[^A-Za-z0-9]')
+      }
+    };
   },
   validations: function() {
     var rules = {
-      value: {},
-      passwordConfirmation: {}
+      value: {
+        required: this.required && window.validators.required,
+        minLength: window.validators.minLength(this.passwordMinLength),
+        containsUppercase: function(value) {
+          return value ? this.rules.isUppercase.test(value) : true;
+        },
+        containsLowercase: function(value) {
+          return value ? this.rules.isLowercase.test(value) : true;
+        },
+        containsNumber: function(value) {
+          return value ? this.rules.isNumber.test(value) : true;
+        },
+        containsSpecial: function(value) {
+          return value ? this.rules.isSpecial.test(value) : true;
+        }
+      },
+      passwordConfirmation: {
+        sameAsPassword: this.confirm && window.validators.sameAs('value')
+      }
     };
-
-    if (this.required) {
-      rules.value.required = window.validators.required;
-    }
-
-    if (this.confirm) {
-      rules.passwordConfirmation.sameAs = window.validators.sameAs('value');
-    }
 
     return rules;
   },
   computed: {
     fieldPlaceholder: function() {
       return this.autogenerate ? 'A password will be automatically generated' : this.placeholder;
+    },
+    validationClass: function() {
+      return {
+        password: !this.isValid ? this.invalidClass : this.defaultClass,
+        passwordConfirmation: !this.isPasswordConfirmed ? this.invalidClass : this.defaultClass
+      };
     }
   },
   mounted: function() {
@@ -76,12 +113,19 @@ Fliplet.FormBuilder.field('password', {
     generateRandomPassword: function(length) {
       var alphabet = 'abcdefghijklmnopqrstuvwxyz!#$%&*-ABCDEFGHIJKLMNOP1234567890';
       var password = '';
+      var isValid = true;
 
       for (var x = 0; x < length; x++) {
         password += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
       }
 
-      return password;
+      _.forEach(this.rules, function(value) {
+        if (!value.test(password)) {
+          isValid = false;
+        }
+      });
+
+      return isValid ? password : this.generateRandomPassword(length);
     },
     updatePasswordConfirmation: function() {
       this.$v.passwordConfirmation.$touch();
@@ -89,6 +133,19 @@ Fliplet.FormBuilder.field('password', {
     },
     onPasswordConfirmationInput: function($event) {
       this.$emit('_input', this.name, $event.target.value, true, true);
+    }
+  },
+  watch: {
+    value: function(newVal, oldVal) {
+      if (this.autogenerate && !newVal && oldVal) {
+        this.value = oldVal;
+        this.updateValue();
+      }
+    },
+    '$v.passwordConfirmation.$invalid': function(value) {
+      if (!value) {
+        this.isPasswordConfirmed = true;
+      }
     }
   }
 });

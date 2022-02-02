@@ -27,11 +27,6 @@
   opacity: 0.2;
 }
 
-[data-form-builder-id].is-loading {
-  opacity: 0;
-  pointer-events: none;
-}
-
 form.placeholder {
   opacity: 0.5;
   cursor: pointer;
@@ -977,6 +972,17 @@ form hr {
     width: 100%;
     height: 130px;
   }
+
+  .fileUpload .btn-primary > span {
+    margin-right: -4px;
+  }
+
+  .fileUpload .fa:not(.fa-file) {
+    position: relative;
+    display: inline-block;
+    width: auto;
+    right: 0px;
+  }
 }
 
 .form-group .mce-btn-group {
@@ -1033,6 +1039,10 @@ form hr {
 
 
 /* Loading */
+.loading-message {
+  display: block;
+  padding-top: 25%;
+}
 
 .sending-form {
   position: absolute;
@@ -1179,4 +1189,58 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   .row > div.multiple-images-item:nth-of-type(3n) {
     margin-right: 0;
   }
+}
+
+
+.password-checker {
+  margin-top: 10px;
+  margin-bottom: 0
+}
+
+.password-checker .panel-body {
+  padding: 15px 15px 5px 15px
+}
+
+.requirement {
+  display: flex;
+  align-items: flex-start;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.requirement .requirement-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  min-height: 20px;
+  border: 1px solid rgba(51, 51, 51, 0.1);
+  background-color: #f8f6f7;
+  margin-bottom: 0;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.requirement .requirement-marker i.fa {
+  color: #FFF;
+  font-size: 10px;
+  -webkit-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: all 0.25s ease;
+  -ms-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+
+.requirement input:checked + .requirement-marker {
+  background-color: #3c763d;
+}
+
+.requirement input:checked + .requirement-marker i.fa {
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
 }
