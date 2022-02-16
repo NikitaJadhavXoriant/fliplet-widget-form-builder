@@ -33,6 +33,9 @@ Fliplet.FormBuilder.field('wysiwyg', {
     }
   },
   watch: {
+    placeholder: function(val) {
+      $(this.editor.contentAreaContainer).find('p').text(val);
+    },
     value: function(val) {
       // This happens when the value is updated programmatically via the FormBuilder field().val() method
       val = _.isNumber(val) ? _.toString(val) : val;
