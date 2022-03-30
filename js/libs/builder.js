@@ -153,7 +153,6 @@ new Vue({
       generateEmailTemplate: formSettings.generateEmailTemplate || undefined,
       showDataSourceSettings: !!formSettings.dataSourceId,
       organizationName: '',
-      isPreviewing: formSettings.previewingTemplate !== '',
       editor: undefined,
       accessRules: [
         {
@@ -651,6 +650,8 @@ new Vue({
 
       var $vm = this;
 
+      this.settings.previewingTemplate = '';
+
       this.updateFormSettings(templateId, false);
 
       $vm.save(true).then(function onSettingsSaved() {
@@ -675,12 +676,6 @@ new Vue({
 
       if (this.chooseTemplate && preview) {
         this.settings.previewingTemplate = templateId;
-
-        return;
-      }
-
-      if (this.isPreviewing) {
-        this.settings.previewingTemplate = '';
 
         return;
       }
@@ -869,7 +864,7 @@ new Vue({
       return $html.html();
     },
     loadTemplates: function() {
-      if (data.fields && data.templateId) {
+      if (data.fields && data.templateId && !data.previewingTemplate) {
         return Promise.resolve(); // do not load templates when editing a form as such UI is not shown
       }
 
@@ -1087,6 +1082,11 @@ new Vue({
             container: 'body'
           });
         }, 500);
+      }
+    });
+    Fliplet.Studio.onEvent(function(evt) {
+      if (evt.detail.type === 'widgetCancel') {
+        this.settings = generateFormDefaults(data);
       }
     });
   },
