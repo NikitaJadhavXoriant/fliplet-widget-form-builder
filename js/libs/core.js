@@ -242,66 +242,66 @@ Fliplet.FormBuilder = (function() {
 
       var fieldContext = $('html').hasClass('context-build') ? 'field' : 'interface';
 
+      componentName = name(componentName);
+      components[componentName] = component;
+
+      // All fields have these properties
+      component.props = _.assign({
+        name: {
+          type: String,
+          required: true
+        },
+        label: {
+          type: String,
+          default: component.name || 'Label text'
+        },
+        _componentName: {
+          type: String,
+          default: componentName
+        },
+        showLabel: {
+          type: Boolean,
+          default: true
+        },
+        value: {
+          type: String,
+          default: ''
+        },
+        required: {
+          type: Boolean,
+          default: false
+        },
+        isHidden: {
+          type: Boolean,
+          default: false
+        },
+        canHide: {
+          type: Boolean,
+          default: true
+        },
+        readonly: {
+          type: Boolean,
+          default: false
+        },
+        defaultValueSource: {
+          type: String,
+          default: 'default'
+        },
+        defaultValueKey: {
+          type: String,
+          default: ''
+        },
+        isValid: {
+          type: Boolean,
+          default: true
+        }
+      }, component.props);
+
       // Wait until translations are available in Handlebars templates
       Fliplet().then(function() {
         component.template = templates['templates.components.' + fieldContext]({
           template: template()
         });
-
-        componentName = name(componentName);
-        components[componentName] = component;
-
-        // All fields have these properties
-        component.props = _.assign({
-          name: {
-            type: String,
-            required: true
-          },
-          label: {
-            type: String,
-            default: component.name || 'Label text'
-          },
-          _componentName: {
-            type: String,
-            default: componentName
-          },
-          showLabel: {
-            type: Boolean,
-            default: true
-          },
-          value: {
-            type: String,
-            default: ''
-          },
-          required: {
-            type: Boolean,
-            default: false
-          },
-          isHidden: {
-            type: Boolean,
-            default: false
-          },
-          canHide: {
-            type: Boolean,
-            default: true
-          },
-          readonly: {
-            type: Boolean,
-            default: false
-          },
-          defaultValueSource: {
-            type: String,
-            default: 'default'
-          },
-          defaultValueKey: {
-            type: String,
-            default: ''
-          },
-          isValid: {
-            type: Boolean,
-            default: true
-          }
-        }, component.props);
 
         Vue.component(componentName, component);
       });
