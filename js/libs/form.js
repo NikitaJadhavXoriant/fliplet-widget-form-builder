@@ -743,7 +743,7 @@ Fliplet().then(function () {
               $vm.$forceUpdate();
 
               Fliplet.UI.Toast.error(error, {
-                message: 'Unable to load entry'
+                message: T('widgets.form.errors.offlineDataError')
               });
             });
           }
