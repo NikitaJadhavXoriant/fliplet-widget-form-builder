@@ -40,6 +40,12 @@ Fliplet.FormBuilder.field('time', {
 
     return rules;
   },
+  created: function() {
+    Fliplet.Hooks.on('beforeFormSubmit', this.onBeforeSubmit);
+  },
+  destroyed: function() {
+    Fliplet.Hooks.off('beforeFormSubmit', this.onBeforeSubmit);
+  },
   methods: {
     initTimePicker: function() {
       if (this.timePicker || !this.$refs.timePicker) {
@@ -57,6 +63,11 @@ Fliplet.FormBuilder.field('time', {
         $vm.value = value;
         $vm.updateValue();
       });
+    },
+    onBeforeSubmit: function(data) {
+      if (['default', 'always'].indexOf(this.autofill) > -1 && data[this.name] === '') {
+        data[this.name] = this.defaultSource === 'submission' ? moment().format('HH:mm') : this.now;
+      }
     }
   },
   computed: {
@@ -109,7 +120,9 @@ Fliplet.FormBuilder.field('time', {
         return;
       }
 
-      this.timePicker.set(val, false);
+      if (this.timePicker) {
+        this.timePicker.set(val, false);
+      }
 
       if (this.isPreview && this.$v.value.$invalid) {
         this.highlightError();
