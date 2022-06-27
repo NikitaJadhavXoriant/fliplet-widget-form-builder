@@ -83,7 +83,9 @@ Fliplet.FormBuilder.field('date', {
         return;
       }
 
-      this.datePicker.set(val, false);
+      if (this.datePicker) {
+        this.datePicker.set(val, false);
+      }
 
       if (this.isPreview && this.$v.value.$invalid) {
         this.highlightError();
@@ -91,6 +93,12 @@ Fliplet.FormBuilder.field('date', {
 
       this.$emit('_input', this.name, val, false, true);
     }
+  },
+  created: function() {
+    Fliplet.Hooks.on('beforeFormSubmit', this.onBeforeSubmit);
+  },
+  destroyed: function() {
+    Fliplet.Hooks.off('beforeFormSubmit', this.onBeforeSubmit);
   },
   methods: {
     initDatePicker: function() {
@@ -109,6 +117,11 @@ Fliplet.FormBuilder.field('date', {
         $vm.value = value;
         $vm.updateValue();
       });
+    },
+    onBeforeSubmit: function(data) {
+      if (['default', 'always'].indexOf(this.autofill) > -1 && data[this.name] === '') {
+        data[this.name] = this.defaultSource === 'submission' ? moment().format('YYYY-MM-DD') : this.today;
+      }
     }
   }
 });
