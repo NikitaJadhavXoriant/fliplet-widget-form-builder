@@ -103,7 +103,7 @@ Fliplet.FormBuilder.field('time', {
   },
   watch: {
     value: function(val) {
-      if (this.autofill === 'always' && val === '') {
+      if (val === '' &&  ['default', 'always'].indexOf(this.autofill) > -1 && (this.required || this.autofill === 'always')) {
         this.value = this.now;
 
         return;
