@@ -26,7 +26,7 @@ Fliplet.FormBuilder.field('time', {
       timePicker: null,
       isInputFocused: false,
       isPreview: Fliplet.Env.get('preview'),
-      now: moment().format('HH:mm')
+      now: moment().locale('en').format('HH:mm')
     };
   },
   validations: function() {
@@ -56,6 +56,7 @@ Fliplet.FormBuilder.field('time', {
 
       this.timePicker = Fliplet.UI.TimePicker(this.$refs.timePicker, {
         required: this.required || this.autofill === 'always',
+        forceRequire: false,
         value: this.value
       });
 
@@ -65,7 +66,7 @@ Fliplet.FormBuilder.field('time', {
       });
     },
     onBeforeSubmit: function(data) {
-      if (['default', 'always'].indexOf(this.autofill) > -1 && data[this.name] === '') {
+      if (this.autofill === 'always' && data[this.name] === '') {
         data[this.name] = this.defaultSource === 'submission' ? moment().format('HH:mm') : this.now;
       }
     }
@@ -88,7 +89,7 @@ Fliplet.FormBuilder.field('time', {
      * which is HH:mm
      */
     if (moment(this.value, 'HH:mm A', true).isValid()) {
-      this.value = moment(this.value, 'HH:mm A').format('HH:mm');
+      this.value = moment(this.value, 'HH:mm A').locale('en').format('HH:mm');
     }
   },
   mounted: function() {
@@ -98,7 +99,7 @@ Fliplet.FormBuilder.field('time', {
       this.setValueFromDefaultSettings({ source: this.defaultValueSource, key: this.defaultValueKey });
     }
 
-    if (!this.value || this.autofill === 'always') {
+    if ((!this.value && this.autofill === 'default') || this.autofill === 'always') {
       this.value = this.now;
       this.empty = false;
     }
