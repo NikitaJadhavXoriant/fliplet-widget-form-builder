@@ -26,7 +26,7 @@ Fliplet.FormBuilder.field('date', {
       datePicker: null,
       isInputFocused: false,
       isPreview: Fliplet.Env.get('preview'),
-      today: moment().format('YYYY-MM-DD')
+      today: moment().locale('en').format('YYYY-MM-DD')
     };
   },
   validations: function() {
@@ -60,8 +60,7 @@ Fliplet.FormBuilder.field('date', {
       });
     }
 
-    if (!this.value || this.autofill === 'always') {
-      // HTML5 date field wants YYYY-MM-DD format
+    if ((!this.value && this.autofill === 'default') || this.autofill === 'always') {
       this.value = this.today;
       this.empty = false;
     }
@@ -110,6 +109,7 @@ Fliplet.FormBuilder.field('date', {
 
       this.datePicker = Fliplet.UI.DatePicker(this.$refs.datePicker, {
         required: this.required || this.autofill === 'always',
+        forceRequire: false,
         value: this.value
       });
 
@@ -119,8 +119,9 @@ Fliplet.FormBuilder.field('date', {
       });
     },
     onBeforeSubmit: function(data) {
-      if (['default', 'always'].indexOf(this.autofill) > -1 && data[this.name] === '') {
-        data[this.name] = this.defaultSource === 'submission' ? moment().format('YYYY-MM-DD') : this.today;
+      // Empty date fields are validated to null before this hook is called
+      if (this.autofill === 'always' && data[this.name] === null) {
+        data[this.name] = this.defaultSource === 'submission' ? moment().locale('en').format('YYYY-MM-DD') : this.today;
       }
     }
   }
