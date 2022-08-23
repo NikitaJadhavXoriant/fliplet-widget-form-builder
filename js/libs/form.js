@@ -299,6 +299,10 @@ Fliplet().then(function () {
           this.fields.forEach(function(field, index) {
             var value;
 
+            if (field.isHidden) {
+              return;
+            }
+
             if (field._type === 'flCheckbox') {
               value = data.fields[index].defaultValue || data.fields[index].value;
               if (!Array.isArray(value)) {
