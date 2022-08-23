@@ -62,6 +62,8 @@ function addThumbnailToCanvas(imageURI, indexCanvas, self, isFileCanvas) {
   });
 }
 
+
+
 // Wait for form fields to be ready, as they get defined after translations are initialized
 Fliplet().then(function () {
   Fliplet.Widget.instance('form-builder', function(data) {
@@ -269,7 +271,9 @@ Fliplet().then(function () {
           isOffline: false,
           isOfflineMessage: '',
           isEditMode: data.dataStore && data.dataStore.indexOf('editDataSource') > -1,
-          blockScreen: false
+          blockScreen: false,
+          today: moment().locale('en').format('YYYY-MM-DD'),
+          now: moment().locale('en').format('HH:mm')
         };
       },
       computed: {
@@ -298,18 +302,23 @@ Fliplet().then(function () {
 
           this.fields.forEach(function(field, index) {
             var value;
+            var fieldSettings = data.fields[index];
 
             if (field.isHidden) {
               return;
             }
 
             if (field._type === 'flCheckbox') {
-              value = data.fields[index].defaultValue || data.fields[index].value;
+              value = fieldSettings.defaultValue || fieldSettings.value;
               if (!Array.isArray(value)) {
                 value = value.split(/\n/);
               }
+            } else if (field._type === 'flDate' && ['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
+              value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('YYYY-MM-DD') : $vm.today;
+            } else if (field._type === 'flTime' && ['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
+              value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('HH:mm') : $vm.now;
             } else {
-              value = data.fields[index].value;
+              value = fieldSettings.value;
             }
 
             // Clone value if it's an array to ensure the original object does not mutate
@@ -541,6 +550,7 @@ Fliplet().then(function () {
 
             var errorFields = Object.keys($vm.errors);
             var fieldErrors = [];
+
             if (errorFields.length) {
               errorFields.forEach(function (fieldName) {
                 fieldErrors.push(errorFields[fieldName]);
@@ -548,6 +558,7 @@ Fliplet().then(function () {
 
               $vm.error = fieldErrors.join('. ');
               $vm.isSending = false;
+
               return;
             }
 
@@ -573,6 +584,7 @@ Fliplet().then(function () {
                 if (typeof value === 'string' && ['flNumber', 'flTelephone'].indexOf(type) !== -1) {
                   value = value.replace(/-|\s/g, '');
                 }
+
                 if (type === 'flDate') {
                   value = moment(value);
 
@@ -582,9 +594,11 @@ Fliplet().then(function () {
                     value = null;
                   }
                 }
+
                 if (type === 'flEmail') {
                   value = value.toLowerCase();
                 }
+
                 // Other inputs
                 appendField(field.name, value);
               }
@@ -596,8 +610,6 @@ Fliplet().then(function () {
               if (data.dataSourceId) {
                 return Fliplet.DataSources.connect(data.dataSourceId);
               }
-
-              return;
             }).then(function(connection) {
               // Append schema as private variable
               formData._flSchema = {};
@@ -711,6 +723,8 @@ Fliplet().then(function () {
           var $vm = this;
 
           if (entryId || fn) {
+            $vm.isLoading = true;
+
             var loadEntry = typeof fn === 'function'
               ? fn(entryId)
               : Fliplet.DataSources.connect(data.dataSourceId, { offline: false }).then(function (ds) {
@@ -747,7 +761,7 @@ Fliplet().then(function () {
               $vm.$forceUpdate();
 
               Fliplet.UI.Toast.error(error, {
-                message: 'Unable to load entry'
+                message: T('widgets.form.errors.offlineDataError')
               });
             });
           }
@@ -757,6 +771,8 @@ Fliplet().then(function () {
           }
 
           if (data.autobindProfileEditing) {
+            $vm.isLoading = true;
+
             return Fliplet.Session.get().then(function (session) {
               var isEditMode = false;
 
@@ -922,6 +938,7 @@ Fliplet().then(function () {
                       }
 
                       result = Fliplet.Profile.get(data.key);
+
                       break;
                     case 'query':
                       if (!data.key) {
@@ -929,6 +946,7 @@ Fliplet().then(function () {
                       }
 
                       result = Fliplet.Navigate.query[data.key];
+
                       break;
                     case 'storage':
                     case 'appstorage':
@@ -940,12 +958,15 @@ Fliplet().then(function () {
                         ? Fliplet.Storage
                         : Fliplet.App.Storage;
                       result = storage.get(data.key);
+
                       break;
                     case 'function':
                       result = data.key();
+
                       break;
                     case 'literal':
                       result = data.key;
+
                       break;
                     default:
                       result = data;
@@ -988,6 +1009,7 @@ Fliplet().then(function () {
                     JSON.parse(JSON.stringify(data.fields || [])).some(function (f) {
                       if (field.name === f.name) {
                         field.value = f.value;
+
                         return true;
                       }
                     });
@@ -1058,32 +1080,37 @@ Fliplet().then(function () {
 });
 
 Fliplet.FormBuilder.get = function (name) {
-  return Promise.all(formBuilderInstances).then(function (forms) {
-    var form;
+  return Fliplet().then(function () {
+    return Promise.all(formBuilderInstances).then(function (forms) {
+      var form;
 
-    if (typeof name === 'undefined') {
-      form = forms.length ? forms[0] : undefined;
-    } else {
-      forms.some(function (vueForm) {
-        if (vueForm.name === name) {
-          form = vueForm;
-          return true;
-        }
-      });
-    }
+      if (typeof name === 'undefined') {
+        form = forms.length ? forms[0] : undefined;
+      } else {
+        forms.some(function (vueForm) {
+          if (vueForm.name === name) {
+            form = vueForm;
 
-    return form;
+            return true;
+          }
+        });
+      }
+
+      return form;
+    });
   });
 };
 
 Fliplet.FormBuilder.getAll = function (name) {
-  return Promise.all(formBuilderInstances).then(function(forms) {
-    if (typeof name === 'undefined') {
-      return forms;
-    }
+  return Fliplet().then(function () {
+    return Promise.all(formBuilderInstances).then(function(forms) {
+      if (typeof name === 'undefined') {
+        return forms;
+      }
 
-    return forms.filter(function(form) {
-      return form.name === name;
+      return forms.filter(function(form) {
+        return form.name === name;
+      });
     });
   });
 };
