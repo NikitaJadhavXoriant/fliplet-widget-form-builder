@@ -11,7 +11,6 @@
           v-model="value"
           :value="option.id || option.label"
           tabindex="-1"
-          v-bind:class="{ 'readonly ' : readonly === true}"
         >
         <label v-on:click="!readonly ? clickHandler(option) : false">
           <span
