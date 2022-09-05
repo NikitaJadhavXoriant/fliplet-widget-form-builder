@@ -63,7 +63,7 @@ Fliplet.FormBuilder.field('image', {
       value: {}
     };
 
-    if (this.required) {
+    if (this.required && !this.readonly) {
       rules.value.required = window.validators.required;
     }
 

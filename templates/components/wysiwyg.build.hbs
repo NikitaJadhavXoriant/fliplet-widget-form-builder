@@ -6,11 +6,13 @@
   :name="name"
   :id="tinymceId"
   :placeholder="placeholder"
+  v-bind:readonly="readonly"
 ></textarea>
 <div
   class="ghost-tinymce"
+  v-bind:class="{ 'readonly ' : readonly === true}"
   ref="ghost"
   v-html="value"
   v-if="isInterface">
-</div>
+  </div>
 <p class="text-danger" v-if="$v.value.required === false && $v.value.$dirty">{{T "widgets.form.errors.required"}}</p>

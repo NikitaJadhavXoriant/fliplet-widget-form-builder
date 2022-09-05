@@ -21,7 +21,7 @@ Fliplet.FormBuilder.field('wysiwyg', {
       value: {}
     };
 
-    if (this.required) {
+    if (this.required && !this.readonly) {
       rules.value.required = window.validators.required;
     }
 
@@ -173,6 +173,7 @@ Fliplet.FormBuilder.field('wysiwyg', {
       autoresize_min_height: lineHeight * this.rows,
       autofocus: false,
       branding: false,
+      content_style: 'body { background-color: transparent; }',
       setup: function(editor) {
         $vm.editor = editor;
 

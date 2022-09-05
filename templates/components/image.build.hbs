@@ -19,6 +19,15 @@
     accept="image/gif, image/jpg, image/jpeg, image/tiff, image/png"
     :data-folder-id="mediaFolderId"
   />
+  <div class="row">
+    <label
+      class="btn btn-primary focus-outline"
+      tabindex="0"
+      :disabled="readonly"
+    >
+      <span :disabled="readonly">{{T "widgets.form.image.instruction"}}</span>
+    </label>
+  </div>
 </div>
 
 <div v-else class="fileUpload" :class="{ 'fileUpload-padding-top': value.length }">
