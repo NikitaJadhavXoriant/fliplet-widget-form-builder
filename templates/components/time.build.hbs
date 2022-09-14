@@ -1,5 +1,4 @@
 <div v-if="description" class="help-block description">\{{ description }}</div>
-
 <template v-if="autofill === 'always' && defaultSource === 'submission'">
   Now
 </template>
@@ -11,7 +10,6 @@
     <i class="fa fa-times fa-fw"></i>
   </div>
 </template>
-
 <p class="text-danger" v-if="$v.value.required === false && $v.value.$dirty">
   {{T "widgets.form.errors.required"}}
 </p>

@@ -1,5 +1,4 @@
 <div v-if="description" class="help-block description">\{{ description }}</div>
-
 <div v-if="readonly" class="fileUpload" :class="{ 'fileUpload-padding-top': value.length }">
   <div class="row">
     <div v-for="(image, index) in value" @click="onImageClick(index)" class="multiple-images-item">
@@ -29,7 +28,6 @@
     </label>
   </div>
 </div>
-
 <div v-else class="fileUpload" :class="{ 'fileUpload-padding-top': value.length }">
   <div class="row">
     <div v-for="(image, index) in value">

@@ -1,11 +1,9 @@
 <div v-if="description" class="help-block description">\{{ description }}</div>
-
 <template>
   <label
     :for="name"
     class="select-proxy-display"
-    :class="{ 'input-focused': isInputFocused ,
-              'readonly': readonly }"
+    :class="{ 'input-focused': isInputFocused , 'readonly': readonly }"
   >
     <select
       class="form-control hidden-select focus-outline"
