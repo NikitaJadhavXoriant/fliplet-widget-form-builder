@@ -1,6 +1,6 @@
 <div v-if="description" class="help-block description">\{{ description }}</div>
 <template>
-  <div v-show="isEditable" class="signature-editor" v-bind:class="{ 'readonly' : readonly}">
+  <div v-show="isEditable" class="signature-editor" :class="{ 'readonly' : readonly }">
     <div class="field-signature focus-outline" tabindex="0">
       <canvas :id="name" ref="canvas"></canvas>
       <a
@@ -9,7 +9,7 @@
         tabindex="0"
         v-on:click.prevent="clean()"
         v-on:keydown.space.prevent="clean()"
-        :hidden="readonly"
+        :class="{ 'hidden' : readonly }"
       >
         <i class="fa fa-times"></i>
         {{T "widgets.form.signature.actions.clear"}}

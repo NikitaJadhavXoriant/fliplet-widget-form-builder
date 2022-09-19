@@ -10,7 +10,7 @@
   :placeholder="placeholder"
   autocomplete="new-password"
   tabindex="0"
-  v-bind:readonly="readonly"
+  :readonly="readonly"
 />
 <p class="text-danger" v-if="$v.value.email === false && $v.value.$dirty">{{T "widgets.form.email.invalid"}}</p>
 <p class="text-danger" v-if="$v.value.required === false && $v.value.$dirty">{{T "widgets.form.errors.required"}}</p>

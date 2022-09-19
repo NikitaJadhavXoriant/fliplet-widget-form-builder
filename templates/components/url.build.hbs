@@ -9,7 +9,7 @@
   :id="name"
   :placeholder="placeholder"
   tabindex="0"
-  v-bind:readonly="readonly"
+  :readonly="readonly"
 />
 <p class="text-danger" v-if="$v.value.url === false && $v.value.$dirty">{{T "widgets.form.url.invalid"}}</p>
 <p class="text-danger" v-if="$v.value.required === false && $v.value.$dirty">{{T "widgets.form.errors.required"}}</p>
