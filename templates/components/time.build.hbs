@@ -5,8 +5,8 @@
 <template v-else>
   <div class="form-group fl-time-picker" :class="{ 'readonly' : readonly }" ref="timePicker">
     <i class="fa fa-clock-o fa-fw"></i>
-    <input type="time" class="form-control" :name="name" :id="name" :tabindex="!readonly ? 0 : -1"/>
-    <input type="text" class="form-control" :tabindex="!readonly ? 0 : -1"/>
+    <input type="time" class="form-control" :name="name" :id="name" :tabindex="readonly ? -1 : 0"/>
+    <input type="text" class="form-control" :tabindex="readonly ? -1 : 0"/>
     <i class="fa fa-times fa-fw"></i>
   </div>
 </template>

@@ -6,7 +6,7 @@
   <div class="form-group fl-date-picker" :class="{ 'readonly' : readonly }" ref="datePicker">
     <i class="fa fa-calendar fa-fw"></i>
     <input type="date" class="form-control" :name="name" :id="name"/>
-    <input type="text" class="form-control" :tabindex="!readonly ? 0 : -1"/>
+    <input type="text" class="form-control" :tabindex="readonly ? -1 : 0"/>
     <i class="fa fa-times fa-fw"></i>
   </div>
 </template>
