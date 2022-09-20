@@ -108,6 +108,10 @@ Fliplet.FormBuilder.field('image', {
         return;
       }
 
+      if (this.readonly) {
+        return;
+      }
+
       if (!this.value.length) {
         $(this.$refs.imageInput).parents('.form-group').addClass('has-error');
 
