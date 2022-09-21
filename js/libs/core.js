@@ -275,10 +275,6 @@ Fliplet.FormBuilder = (function() {
           type: Boolean,
           default: false
         },
-        selectAll: {
-          type: Boolean,
-          default: false
-        },
         canHide: {
           type: Boolean,
           default: true
@@ -374,11 +370,6 @@ Fliplet.FormBuilder = (function() {
       component.props._componentsWithDescription = {
         type: Array,
         default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flStarRating', 'flSignature', 'flImage', 'flFile']
-      };
-
-      component.props._componentsWithSelectAll = {
-        type: Array,
-        default: ['flCheckbox']
       };
 
       component.props._readOnlyComponents = {
@@ -616,6 +607,7 @@ Fliplet.FormBuilder = (function() {
       }
 
       var hasOptions = component.props.options && Array.isArray(component.props.options.type());
+      var hasSelectAll = component.props.addSelectAll && typeof component.props.addSelectAll.default === 'boolean';
 
       // If options is an array, automatically deal with options
       if (hasOptions) {
@@ -655,7 +647,8 @@ Fliplet.FormBuilder = (function() {
 
       component.template = templates['templates.configurations.form']({
         template: template && template() || '',
-        hasOptions: hasOptions
+        hasOptions: hasOptions,
+        hasSelectAll: hasSelectAll
       });
 
       Vue.component(componentName + 'Config', component);

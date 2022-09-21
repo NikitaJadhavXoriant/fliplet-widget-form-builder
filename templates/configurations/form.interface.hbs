@@ -66,14 +66,16 @@
       </div>
     </div>
 
-    <div v-if='_componentsWithSelectAll.includes(_componentName)' class="col-xs-12 form-group">
+    {{#hasSelectAll}}
+    <div class="col-xs-12 form-group">
       <div class="checkbox checkbox-icon">
-        <input type="checkbox" id="selectAll" name="selectAll" v-model="selectAll" v-on:input="required = false">
-        <label for="selectAll">
+        <input type="checkbox" id="select-all" v-model="addSelectAll">
+        <label for="select-all">
           <span class="check"><i class="fa fa-check"></i></span>Include Select All
         </label>
       </div>
     </div>
+    {{/hasSelectAll}}
 
     {{#hasOptions}}
       <div class="form-group cleafix">
