@@ -1,5 +1,5 @@
 Fliplet.FormBuilder.field('paragraph', {
-  name: 'Paragraph',
+  name: 'Format Paragraph',
   category: 'Formatting',
   submit: false,
   props: {
@@ -10,9 +10,7 @@ Fliplet.FormBuilder.field('paragraph', {
     },
     value: {
       type: String,
-      default: function() {
-        return T('widgets.form.paragraph.defaultValue');
-      }
+      default: 'Paragraph'
     },
     canHide: {
       type: Boolean,

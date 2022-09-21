@@ -1,5 +1,5 @@
 Fliplet.FormBuilder.field('title', {
-  name: 'Title',
+  name: 'Format Title',
   category: 'Formatting',
   submit: false,
   props: {
@@ -10,9 +10,7 @@ Fliplet.FormBuilder.field('title', {
     },
     value: {
       type: String,
-      default: function() {
-        return T('widgets.form.title.defaultValue');
-      }
+      default: 'Title'
     },
     canHide: {
       type: Boolean,
