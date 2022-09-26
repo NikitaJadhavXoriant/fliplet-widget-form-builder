@@ -568,7 +568,7 @@ html[dir="rtl"] .radio.radio-icon input[type="radio"] + label > span.check {
 
 .fileUpload-disabled label {
   background-color: #e1e1e1;
-  border-radius: 31px;
+  border-radius: 31px !important;
   width: 100%;
 }
 
@@ -859,6 +859,14 @@ html[dir="rtl"] .radio.radio-icon input[type="radio"] + label > span.check {
 
 [_type="flStarRating"] .rating-input:checked ~ .rating-star .fa.fa-star {
   display: block;
+}
+
+[_type="flStarRating"] .rating-input ~ .readonly.rating-star .fa::before {
+  content: "\f005" !important;
+}
+
+[_type="flStarRating"] .rating-input:checked ~ .readonly.rating-star .fa::before {
+  -webkit-text-stroke: 0px !important;
 }
 
 /* SIGNATURE FIELD */
