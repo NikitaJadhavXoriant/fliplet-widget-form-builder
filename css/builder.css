@@ -704,10 +704,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   border-radius: 5px;
 }
 
-.signature-editor.readonly .field-signature canvas {
+[data-widget-package="com.fliplet.form-builder"] [_type="flSignature"] .signature-editor.readonly .field-signature canvas {
   background-color: transparent;
   border-radius: 0%;
-  border: none;
+  border: none !important;
 }
 
 .signature-editor.readonly .field-signature {

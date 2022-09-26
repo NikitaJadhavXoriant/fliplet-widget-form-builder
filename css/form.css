@@ -907,10 +907,10 @@ html[dir="rtl"] .radio.radio-icon input[type="radio"] + label > span.check {
   flex-direction: column;
 }
 
-.signature-editor.readonly .field-signature canvas {
+[data-widget-package="com.fliplet.form-builder"] [_type="flSignature"] .signature-editor.readonly .field-signature canvas {
   background-color: transparent;
   border-radius: 0%;
-  border: none;
+  border: none !important;
 }
 
 .signature-editor.readonly .field-signature {
