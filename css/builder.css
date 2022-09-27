@@ -632,7 +632,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .component [_type="flStarRating"] .rating-input:checked ~ .readonly.rating-star .fa::before {
-  -webkit-text-stroke: 0px;
+  -webkit-text-stroke: 0px !important;
 }
 
 .checkbox.disabled,

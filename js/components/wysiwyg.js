@@ -95,6 +95,11 @@ Fliplet.FormBuilder.field('wysiwyg', {
         this.hidePlaceholderLabel();
       }
 
+      // for readonly rich text make placeholder text unselectable
+      if (this.editor.settings.readonly) {
+        tinymce.DOM.setStyle(this.labelElement, 'pointer-events', 'none');
+      }
+
       this.editor.execCommand('mceFocus', false);
     },
     onPlaceholderBlur: function() {

@@ -866,7 +866,7 @@ html[dir="rtl"] .radio.radio-icon input[type="radio"] + label > span.check {
 }
 
 [_type="flStarRating"] .rating-input:checked ~ .readonly.rating-star .fa::before {
-  -webkit-text-stroke: 0px;
+  -webkit-text-stroke: 0px !important;
 }
 
 /* SIGNATURE FIELD */
