@@ -862,11 +862,11 @@ html[dir="rtl"] .radio.radio-icon input[type="radio"] + label > span.check {
 }
 
 [_type="flStarRating"] .rating-input ~ .readonly.rating-star .fa::before {
-  content: "\f005" !important;
+  content: "\f005";
 }
 
 [_type="flStarRating"] .rating-input:checked ~ .readonly.rating-star .fa::before {
-  -webkit-text-stroke: 0px !important;
+  -webkit-text-stroke: 0px;
 }
 
 /* SIGNATURE FIELD */

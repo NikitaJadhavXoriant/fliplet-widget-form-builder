@@ -628,11 +628,11 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .component [_type="flStarRating"] .rating-input ~ .readonly.rating-star .fa::before {
-  content: "\f005" !important;
+  content: "\f005";
 }
 
 .component [_type="flStarRating"] .rating-input:checked ~ .readonly.rating-star .fa::before {
-  -webkit-text-stroke: 0px !important;
+  -webkit-text-stroke: 0px;
 }
 
 .checkbox.disabled,
