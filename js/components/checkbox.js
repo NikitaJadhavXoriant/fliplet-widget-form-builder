@@ -47,9 +47,7 @@ Fliplet.FormBuilder.field('checkbox', {
           return option.label || option.id;
         });
 
-        if (_.isEqual(ordered, allOptions)) {
-          this.selectedAll = true;
-        }
+        this.selectedAll = _.isEqual(ordered, allOptions);
       }
     },
     selectedAll: {
