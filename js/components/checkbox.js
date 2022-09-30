@@ -37,7 +37,7 @@ Fliplet.FormBuilder.field('checkbox', {
       handler: function() {
         var $vm = this;
 
-        var ordered = _.sortBy(this.value, function(val) {
+        var ordered = _.sortBy($vm.value, function(val) {
           return _.findIndex($vm.options, function(option) {
             return (option.label || option.id) === val;
           });
@@ -51,7 +51,6 @@ Fliplet.FormBuilder.field('checkbox', {
       }
     },
     selectedAll: {
-      deep: true,
       handler: function(value) {
         var $vm = this;
 
