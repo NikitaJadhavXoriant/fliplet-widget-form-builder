@@ -37,35 +37,40 @@ Fliplet.FormBuilder.field('checkbox', {
   },
   watch: {
     value: {
+      deep: true,
       handler: function() {
-        var $vm = this;
+        if (this.addSelectAll) {
+          var $vm = this;
 
-        var ordered = _.sortBy(this.value, function(val) {
-          return _.findIndex($vm.options, function(option) {
-            return (option.label || option.id) === val;
+          var ordered = _.sortBy(this.value, function(val) {
+            return _.findIndex($vm.options, function(option) {
+              return (option.label || option.id) === val;
+            });
           });
-        });
 
-        var allOptions = _.map(this.options, function(option) {
-          return option.label || option.id;
-        });
+          var allOptions = _.map(this.options, function(option) {
+            return option.label || option.id;
+          });
 
-        this.selectedAll = _.isEqual(ordered, allOptions);
+          this.selectedAll = _.isEqual(ordered, allOptions);
+        }
       }
     },
     selectedAll: {
       deep: true,
       handler: function(val) {
-        var $vm = this;
+        if (this.addSelectAll) {
+          var $vm = this;
 
-        if (val) {
-          this.value = [];
+          if (val) {
+            this.value = [];
 
-          this.options.forEach(function(option) {
-            $vm.value.push(option.label);
-          });
-        } else if (this.value.length === this.options.length) {
-          this.value = [];
+            this.options.forEach(function(option) {
+              $vm.value.push(option.label);
+            });
+          } else if (this.value.length === this.options.length) {
+            this.value = [];
+          }
         }
       }
     }
