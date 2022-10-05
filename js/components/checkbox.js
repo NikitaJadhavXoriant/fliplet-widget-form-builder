@@ -33,6 +33,10 @@ Fliplet.FormBuilder.field('checkbox', {
     selectedAll: {
       type: Boolean,
       default: false
+    },
+    selectedName: {
+      type: String,
+      default: ''
     }
   },
   watch: {
@@ -53,6 +57,10 @@ Fliplet.FormBuilder.field('checkbox', {
           });
 
           this.selectedAll = _.isEqual(ordered, allOptions);
+
+          if (this.name !== this.selectedName && this.addSelectAll) {
+            this.selectedAll = true;
+          }
         }
       }
     },
@@ -71,6 +79,8 @@ Fliplet.FormBuilder.field('checkbox', {
           } else if (this.value.length === this.options.length) {
             this.value = [];
           }
+
+          this.selectedName = this.name;
         }
       }
     }
@@ -98,6 +108,8 @@ Fliplet.FormBuilder.field('checkbox', {
       });
 
       this.highlightError();
+
+      this.selectedName = this.name;
 
       this.$emit('_input', this.name, ordered);
     },
