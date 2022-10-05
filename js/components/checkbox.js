@@ -33,54 +33,57 @@ Fliplet.FormBuilder.field('checkbox', {
     selectedAll: {
       type: Boolean,
       default: false
-    },
-    selectedName: {
-      type: String,
-      default: ''
     }
+  },
+  data: function() {
+    return {
+      selectedAll: false
+    };
   },
   watch: {
     value: {
-      deep: true,
       handler: function() {
-        if (this.addSelectAll) {
-          var $vm = this;
-
-          var ordered = _.sortBy(this.value, function(val) {
-            return _.findIndex($vm.options, function(option) {
-              return (option.label || option.id) === val;
-            });
-          });
-
-          var allOptions = _.map(this.options, function(option) {
-            return option.label || option.id;
-          });
-
-          this.selectedAll = _.isEqual(ordered, allOptions);
-
-          if (this.name !== this.selectedName && this.addSelectAll) {
-            this.selectedAll = true;
-          }
+        if (!this.addSelectAll) {
+          return;
         }
+
+        var $vm = this;
+
+        var ordered = _.sortBy(this.value, function(val) {
+          return _.findIndex($vm.options, function(option) {
+            return (option.label || option.id) === val;
+          });
+        });
+
+        var allOptions = _.map(this.options, function(option) {
+          return option.label || option.id;
+        });
+
+        this.selectedAll = _.isEqual(ordered, allOptions);
       }
     },
     selectedAll: {
-      deep: true,
       handler: function(val) {
-        if (this.addSelectAll) {
-          var $vm = this;
+        if (!this.addSelectAll) {
+          return;
+        }
 
-          if (val) {
-            this.value = [];
+        var $vm = this;
 
-            this.options.forEach(function(option) {
-              $vm.value.push(option.label);
-            });
-          } else if (this.value.length === this.options.length) {
-            this.value = [];
-          }
+        var oldValue = this.value;
 
-          this.selectedName = this.name;
+        if (val) {
+          this.value = [];
+
+          this.options.forEach(function(option) {
+            $vm.value.push(option.label);
+          });
+        } else if (this.value.length === this.options.length) {
+          this.value = [];
+        }
+
+        if (!_.isEqual(oldValue, this.value)) {
+          this.updateValue();
         }
       }
     }
@@ -108,8 +111,6 @@ Fliplet.FormBuilder.field('checkbox', {
       });
 
       this.highlightError();
-
-      this.selectedName = this.name;
 
       this.$emit('_input', this.name, ordered);
     },
