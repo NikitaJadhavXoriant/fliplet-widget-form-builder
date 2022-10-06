@@ -143,7 +143,7 @@ Fliplet.FormBuilder.field('checkbox', {
       this.value = selectedOptions.length ? _.uniqWith(this.value, _.isEqual) : [];
     }
 
-    if (this.defaultValue) {
+    if (!!this.defaultValue) {
       this.value = this.defaultValue.split(/\n/);
       this.updateValue(this.name, this.value);
     } else if (!Array.isArray(this.value)) {
