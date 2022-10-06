@@ -45,12 +45,14 @@ Fliplet.FormBuilder.field('checkbox', {
 
         var $vm = this;
 
+        // Sort selected options by their index as a checkbox input option
         var ordered = _.sortBy(this.value, function(val) {
           return _.findIndex($vm.options, function(option) {
             return (option.label || option.id) === val;
           });
         });
 
+        // Get all options label in array format
         var allOptions = _.map(this.options, function(option) {
           return option.label || option.id;
         });
@@ -65,7 +67,6 @@ Fliplet.FormBuilder.field('checkbox', {
         }
 
         var $vm = this;
-
         var oldValue = this.value;
 
         if (val) {
