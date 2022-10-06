@@ -29,10 +29,6 @@ Fliplet.FormBuilder.field('checkbox', {
     addSelectAll: {
       type: Boolean,
       default: false
-    },
-    selectedAll: {
-      type: Boolean,
-      default: false
     }
   },
   data: function() {
