@@ -599,14 +599,6 @@ Fliplet().then(function () {
                   value = value.toLowerCase();
                 }
 
-                if(type === 'flCheckbox') {
-                  _.some($vm.$children, function(child) {
-                    if(field.addSelectAll && field.name === child.name && !_.isEqual(field.value, child.value)) {
-                      value = child.value;
-                    }
-                  });
-                }
-
                 // Other inputs
                 appendField(field.name, value);
               }
