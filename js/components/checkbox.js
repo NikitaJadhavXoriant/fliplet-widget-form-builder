@@ -48,13 +48,13 @@ Fliplet.FormBuilder.field('checkbox', {
         // Sort selected options by their index as a checkbox input option
         var ordered = _.sortBy(this.value, function(val) {
           return _.findIndex($vm.options, function(option) {
-            return (option.label || option.id) === val;
+            return (option.id || option.label) === val;
           });
         });
 
         // Get all options label in array format
         var allOptions = _.map(this.options, function(option) {
-          return option.label || option.id;
+          return option.id || option.label;
         });
 
         this.selectedAll = _.isEqual(ordered, allOptions);
@@ -73,7 +73,7 @@ Fliplet.FormBuilder.field('checkbox', {
           this.value = [];
 
           this.options.forEach(function(option) {
-            $vm.value.push(option.label);
+            $vm.value.push(option.id || option.label);
           });
         } else if (this.value.length === this.options.length) {
           this.value = [];
