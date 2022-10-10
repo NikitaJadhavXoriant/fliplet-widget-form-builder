@@ -595,6 +595,7 @@ Fliplet.FormBuilder = (function() {
       }
 
       var hasOptions = component.props.options && Array.isArray(component.props.options.type());
+      var hasSelectAll = component.props.addSelectAll && typeof component.props.addSelectAll.default === 'boolean';
 
       // If options is an array, automatically deal with options
       if (hasOptions) {
@@ -634,7 +635,8 @@ Fliplet.FormBuilder = (function() {
 
       component.template = templates['templates.configurations.form']({
         template: template && template() || '',
-        hasOptions: hasOptions
+        hasOptions: hasOptions,
+        hasSelectAll: hasSelectAll
       });
 
       Vue.component(componentName + 'Config', component);
