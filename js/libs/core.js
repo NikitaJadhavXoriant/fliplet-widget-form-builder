@@ -334,6 +334,14 @@ Fliplet.FormBuilder = (function() {
           }
         });
 
+        if (this._componentName === 'flInput') {
+          if (this.generateGuid) {
+            data.idType = 'guid';
+          } else {
+            delete data.idType;
+          }
+        }
+
         eventHub.$emit('field-settings-changed', data);
       };
 

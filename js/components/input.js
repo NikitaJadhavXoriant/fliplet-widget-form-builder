@@ -7,6 +7,14 @@ Fliplet.FormBuilder.field('input', {
     },
     description: {
       type: String
+    },
+    idType: {
+      type: String,
+      default: ''
+    },
+    generateGuid: {
+      type: Boolean,
+      default: false
     }
   },
   validations: function() {
@@ -19,5 +27,17 @@ Fliplet.FormBuilder.field('input', {
     }
 
     return rules;
+  },
+  methods: {
+    getNewGuid: function() {
+      if (!this.value && this.idType === 'guid') {
+        this.value = Fliplet.guid();
+        this.updateValue();
+      }
+    }
+  },
+  created: function() {
+    this.getNewGuid();
+    Fliplet.FormBuilder.on('reset', this.getNewGuid);
   }
 });
