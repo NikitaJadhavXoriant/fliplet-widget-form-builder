@@ -30,7 +30,7 @@ Fliplet.FormBuilder.field('input', {
   },
   methods: {
     getNewGuid: function() {
-      if (!this.value && this.idType === 'guid' && !this.valueIsFromProgress) {
+      if (!this.value && this.idType === 'guid') {
         this.value = Fliplet.guid();
         this.updateValue();
       }
@@ -43,10 +43,13 @@ Fliplet.FormBuilder.field('input', {
     }
   },
   created: function() {
-    this.getNewGuid();
-    Fliplet.FormBuilder.on('reset', this.onReset);
+    if (!this.valueIsFromProgress) {
+      this.getNewGuid();
+    }
+
+    Fliplet.FormBuilder.on('reset', this.onReset, this.$parent.id);
   },
   destroyed: function() {
-    Fliplet.FormBuilder.off('reset', this.onReset);
+    Fliplet.FormBuilder.off('reset', this.onReset, this.$parent.id);
   }
 });

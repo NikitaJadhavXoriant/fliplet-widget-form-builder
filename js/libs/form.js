@@ -274,7 +274,8 @@ Fliplet().then(function () {
           isEditMode: data.dataStore && data.dataStore.indexOf('editDataSource') > -1,
           blockScreen: false,
           today: moment().locale('en').format('YYYY-MM-DD'),
-          now: moment().locale('en').format('HH:mm')
+          now: moment().locale('en').format('HH:mm'),
+          id: data.id
         };
       },
       computed: {
@@ -332,7 +333,7 @@ Fliplet().then(function () {
           });
 
           localStorage.removeItem(progressKey);
-          Fliplet.FormBuilder.emit('reset');
+          Fliplet.FormBuilder.emit('reset', undefined, this.id);
           this.$emit('reset');
         },
         onError: function (fieldName, error) {
