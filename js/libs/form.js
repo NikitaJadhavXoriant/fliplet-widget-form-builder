@@ -238,6 +238,7 @@ Fliplet().then(function () {
 
             if (typeof savedValue !== 'undefined') {
               field.value = savedValue;
+              field.valueIsFromProgress = true;
             }
           }
         });

@@ -282,6 +282,10 @@ Fliplet.FormBuilder = (function() {
         isValid: {
           type: Boolean,
           default: true
+        },
+        valueIsFromProgress: {
+          type: Boolean,
+          default: false
         }
       }, component.props);
 
