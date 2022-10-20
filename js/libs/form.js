@@ -333,7 +333,7 @@ Fliplet().then(function () {
           });
 
           localStorage.removeItem(progressKey);
-          Fliplet.FormBuilder.emit('reset', undefined, this.id);
+          Fliplet.FormBuilder.emit('reset', { id: data.id });
           this.$emit('reset');
         },
         onError: function (fieldName, error) {

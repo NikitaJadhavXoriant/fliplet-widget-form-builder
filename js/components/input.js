@@ -35,7 +35,11 @@ Fliplet.FormBuilder.field('input', {
         this.updateValue();
       }
     },
-    onReset: function() {
+    onReset: function(data) {
+      if (!data || data.id !== this.$parent.id) {
+        return;
+      }
+
       if (this.generateGuid) {
         this.value = '';
         this.getNewGuid();
