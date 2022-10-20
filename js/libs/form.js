@@ -329,6 +329,11 @@ Fliplet().then(function () {
             }
 
             field.value = value;
+
+            if (_.has(field, 'valueIsFromProgress')) {
+              field.valueIsFromProgress = false;
+            }
+
             $vm.triggerChange(field.name, field.value);
           });
 
@@ -599,6 +604,10 @@ Fliplet().then(function () {
 
                 if (type === 'flEmail') {
                   value = value.toLowerCase();
+                }
+
+                if (_.has(field, 'valueIsFromProgress')) {
+                  field.valueIsFromProgress = false;
                 }
 
                 // Other inputs
