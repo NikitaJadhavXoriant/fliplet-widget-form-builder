@@ -1031,6 +1031,18 @@ html[dir="rtl"] .radio.radio-icon input[type="radio"] + label > span.check {
   color: #e1e1e1;
 }
 
+/* SLIDER FIELD */
+
+.form-group.fl-range-slider.readonly .range-slider-handle,
+.form-group.fl-range-slider.readonly .range-slider-handle-value,
+.form-group.fl-range-slider.readonly .range-slider-fill {
+  background: #e1e1e1;
+}
+
+.form-group.fl-range-slider.readonly .range-slider {
+  background: #eeeeee;
+}
+
 /* LINE BREAK */
 
 form hr {

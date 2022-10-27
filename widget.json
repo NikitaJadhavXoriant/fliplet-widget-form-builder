@@ -12,8 +12,10 @@
       "handlebars",
       "lodash",
       "vue.js",
+      "rangeslider",
       "fliplet-studio-ui",
       "fliplet-ui-datetime",
+      "fliplet-ui-rangeslider",
       "fliplet-datasources",
       "codemirror",
       "bootstrap",
@@ -54,6 +56,7 @@
       "js/components/date.js",
       "js/components/time.js",
       "js/components/signature.js",
+      "js/components/slider.js",
 
       "js/configurations/input.js",
       "js/configurations/email.js",
@@ -76,6 +79,7 @@
       "js/configurations/time.js",
       "js/configurations/signature.js",
       "js/configurations/wysiwyg.js",
+      "js/configurations/slider.js",
 
       "js/libs/builder.js",
       "css/builder.css"
@@ -87,8 +91,10 @@
       "handlebars",
       "bootstrap",
       "vue.js",
+      "rangeslider",
       "fliplet-communicate",
       "fliplet-ui-datetime",
+      "fliplet-ui-rangeslider",
       "fliplet-datasources",
       "fliplet-media",
       "font-awesome",
@@ -126,6 +132,7 @@
       "js/components/time.js",
       "js/components/signature.js",
       "js/components/wysiwyg.js",
+      "js/components/slider.js",
 
       "js/libs/form.js",
       "css/form.css"

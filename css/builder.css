@@ -556,6 +556,18 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   opacity: 0;
 }
 
+/* SLIDER FIELD */
+
+.form-group.fl-range-slider.readonly .range-slider-handle,
+.form-group.fl-range-slider.readonly .range-slider-handle-value,
+.form-group.fl-range-slider.readonly .range-slider-fill {
+  background: #e1e1e1;
+}
+
+.form-group.fl-range-slider.readonly .range-slider {
+  background: #eeeeee;
+}
+
 /* STAR RATING */
 .component [_type="flStarRating"] .inverse-direction {
   overflow: hidden;

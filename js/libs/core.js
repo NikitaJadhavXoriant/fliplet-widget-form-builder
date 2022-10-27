@@ -198,6 +198,10 @@ Fliplet.FormBuilder = (function() {
         return this.showLabel || this.showLabel === undefined;
       };
 
+      component.computed._supportsRequired = function() {
+        return this._isFormField && component._componentName !== 'flSlider';
+      };
+
       component.computed._showField = function() {
         if (this.isHidden) {
           return false;
@@ -352,17 +356,17 @@ Fliplet.FormBuilder = (function() {
 
       component.props._componentsWithPersonalization = {
         type: Array,
-        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect']
+        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flSlider']
       };
 
       component.props._componentsWithDescription = {
         type: Array,
-        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flStarRating', 'flSignature', 'flImage', 'flFile']
+        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider']
       };
 
       component.props._readOnlyComponents = {
         type: Array,
-        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flStarRating', 'flSignature', 'flImage', 'flFile']
+        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider']
       };
 
       component.props._idx = {
@@ -596,6 +600,7 @@ Fliplet.FormBuilder = (function() {
 
       var hasOptions = component.props.options && Array.isArray(component.props.options.type());
       var hasSelectAll = component.props.addSelectAll && typeof component.props.addSelectAll.default === 'boolean';
+      var isSlider = component.props._componentName.default === 'flSlider';
 
       // If options is an array, automatically deal with options
       if (hasOptions) {
@@ -636,7 +641,8 @@ Fliplet.FormBuilder = (function() {
       component.template = templates['templates.configurations.form']({
         template: template && template() || '',
         hasOptions: hasOptions,
-        hasSelectAll: hasSelectAll
+        hasSelectAll: hasSelectAll,
+        isSlider: isSlider
       });
 
       Vue.component(componentName + 'Config', component);
