@@ -558,10 +558,18 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 /* SLIDER FIELD */
 
+.form-group.fl-range-slider .range-slider-handle,
+.form-group.fl-range-slider .range-slider-handle-value,
+.form-group.fl-range-slider .range-slider-fill,
 .form-group.fl-range-slider.readonly .range-slider-handle,
 .form-group.fl-range-slider.readonly .range-slider-handle-value,
 .form-group.fl-range-slider.readonly .range-slider-fill {
   background: #e1e1e1;
+}
+
+.form-group.fl-range-slider .range-slider-labels-label,
+.form-group.fl-range-slider .range-slider-handle-value {
+  color: #2d2d2d;
 }
 
 .form-group.fl-range-slider.readonly .range-slider {
