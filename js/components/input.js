@@ -51,9 +51,9 @@ Fliplet.FormBuilder.field('input', {
       this.getNewGuid();
     }
 
-    Fliplet.FormBuilder.on('reset', this.onReset, this.$parent.id);
+    Fliplet.FormBuilder.on('reset', this.onReset);
   },
   destroyed: function() {
-    Fliplet.FormBuilder.off('reset', this.onReset, this.$parent.id);
+    Fliplet.FormBuilder.off('reset', this.onReset);
   }
 });

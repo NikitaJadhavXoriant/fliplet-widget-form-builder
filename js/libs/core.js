@@ -14,14 +14,14 @@ Fliplet.FormBuilder = (function() {
   }
 
   return {
-    on: function(eventName, fn, id) {
-      eventHub.$on(eventName + (id || ''), fn);
+    on: function(eventName, fn) {
+      eventHub.$on(eventName, fn);
     },
-    off: function(eventName, fn, id) {
-      eventHub.$off(eventName + (id || ''), fn);
+    off: function(eventName, fn) {
+      eventHub.$off(eventName, fn);
     },
-    emit: function(eventName, data, id) {
-      eventHub.$emit(eventName + (id || ''), data);
+    emit: function(eventName, data) {
+      eventHub.$emit(eventName, data);
     },
     components: function() {
       return components;
