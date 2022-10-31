@@ -1043,6 +1043,10 @@ html[dir="rtl"] .radio.radio-icon input[type="radio"] + label > span.check {
   background: #eeeeee;
 }
 
+.form-group.fl-range-slider .range-slider.range-slider-active .range-slider-handle{
+  box-shadow: 0px 0px 0px 2px #00abd1
+}
+
 /* LINE BREAK */
 
 form hr {
