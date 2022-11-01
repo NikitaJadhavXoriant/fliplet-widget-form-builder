@@ -29,8 +29,8 @@ Fliplet.FormBuilder.field('input', {
     return rules;
   },
   methods: {
-    getNewGuid: function() {
-      if (!this.value && this.idType === 'guid') {
+    getNewGuid: function(data = {}) {
+      if (!this.value && this.idType === 'guid' && data.id !== this.$parent.id) {
         this.value = Fliplet.guid();
         this.updateValue();
       }
@@ -42,7 +42,7 @@ Fliplet.FormBuilder.field('input', {
 
       if (this.generateGuid) {
         this.value = '';
-        this.getNewGuid();
+        this.getNewGuid(data);
       }
     }
   },
