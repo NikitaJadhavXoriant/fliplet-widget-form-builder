@@ -207,7 +207,7 @@ Fliplet.FormBuilder = (function() {
       };
 
       component.computed._supportsRequired = function() {
-        return this._isFormField && component._componentName !== 'flSlider';
+        return this._isFormField && component.name !== 'Slider';
       };
 
       component.computed._showField = function() {
