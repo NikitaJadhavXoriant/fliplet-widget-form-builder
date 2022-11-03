@@ -576,6 +576,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   background: #eeeeee;
 }
 
+.slider-input{
+  width: 100% !important;
+}
+
 /* STAR RATING */
 .component [_type="flStarRating"] .inverse-direction {
   overflow: hidden;
