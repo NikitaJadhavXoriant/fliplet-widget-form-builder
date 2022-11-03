@@ -41,6 +41,10 @@ Fliplet.FormBuilder.field('slider', {
   },
   mounted: function() {
     this.initSlider();
+    Fliplet.FormBuilder.on('reset', this.onReset);
+  },
+  destroyed: function() {
+    Fliplet.FormBuilder.off('reset', this.onReset);
   },
   methods: {
     initSlider: function() {
@@ -62,6 +66,14 @@ Fliplet.FormBuilder.field('slider', {
         $vm.value = value;
         $vm.updateValue();
       });
+    },
+    onReset: function() {
+      if (this.defaultValueSource !== 'default') {
+        this.setValueFromDefaultSettings({
+          source: this.defaultValueSource,
+          key: this.defaultValueKey
+        });
+      }
     }
   }
 });
