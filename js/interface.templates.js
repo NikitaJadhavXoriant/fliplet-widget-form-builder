@@ -60,7 +60,7 @@ this["Fliplet"]["Widget"]["Templates"]["templates.configurations.image"] = Handl
 },"useData":true});
 
 this["Fliplet"]["Widget"]["Templates"]["templates.configurations.input"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "<div v-show=\"defaultValueSource === 'default'\" class=\"form-group\">\r\n  <label>Default value</label>\r\n  <input class=\"form-control\" type=\"text\" v-model.trim=\"value\" placeholder=\"Default value\" />\r\n</div>\r\n<div class=\"form-group\">\r\n  <label>Placeholder</label>\r\n  <input class=\"form-control\" type=\"text\" v-model.trim=\"placeholder\" placeholder=\"Placeholder text\" />\r\n</div>\r\n";
+    return "<div v-show=\"defaultValueSource === 'default'\" class=\"form-group\">\r\n  <label>Default value</label>\r\n  <input class=\"form-control\" type=\"text\" v-model.trim=\"value\" placeholder=\"Default value\" />\r\n</div>\r\n<div class=\"form-group\">\r\n  <label>Placeholder</label>\r\n  <input class=\"form-control\" type=\"text\" v-model.trim=\"placeholder\" placeholder=\"Placeholder text\" />\r\n</div>\r\n<div class=\"form-group\">\r\n  <div class=\"checkbox checkbox-icon\">\r\n    <input type=\"checkbox\" id=\"generate-guid\" v-model=\"generateGuid\">\r\n    <label for=\"generate-guid\">\r\n      <span class=\"check\"><i class=\"fa fa-check\"></i></span> Have this form field act as an ID generator\r\n    </label>\r\n  </div>\r\n</div>\r\n";
 },"useData":true});
 
 this["Fliplet"]["Widget"]["Templates"]["templates.configurations.number"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {

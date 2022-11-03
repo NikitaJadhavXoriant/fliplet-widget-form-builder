@@ -294,6 +294,10 @@ Fliplet.FormBuilder = (function() {
         isValid: {
           type: Boolean,
           default: true
+        },
+        valueIsFromProgress: {
+          type: Boolean,
+          default: false
         }
       }, component.props);
 
@@ -345,6 +349,14 @@ Fliplet.FormBuilder = (function() {
             data[prop] = $vm[prop];
           }
         });
+
+        if (this._componentName === 'flInput') {
+          if (this.generateGuid) {
+            data.idType = 'guid';
+          } else {
+            delete data.idType;
+          }
+        }
 
         eventHub.$emit('field-settings-changed', data);
       };
