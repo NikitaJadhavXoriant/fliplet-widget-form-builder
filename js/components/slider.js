@@ -33,7 +33,7 @@ Fliplet.FormBuilder.field('slider', {
   watch: {
     value: function(val) {
       if (this.slider) {
-        this.slider.set(val, false);
+        this.slider.set(val);
       }
 
       this.$emit('_input', this.name, val, false, true);
@@ -41,6 +41,8 @@ Fliplet.FormBuilder.field('slider', {
   },
   mounted: function() {
     this.initSlider();
+  },
+  created: function() {
     Fliplet.FormBuilder.on('reset', this.onReset);
   },
   destroyed: function() {
@@ -64,7 +66,6 @@ Fliplet.FormBuilder.field('slider', {
 
       this.slider.change(function(value) {
         $vm.value = value;
-        $vm.updateValue();
       });
     },
     onReset: function() {
@@ -72,6 +73,8 @@ Fliplet.FormBuilder.field('slider', {
         this.setValueFromDefaultSettings({
           source: this.defaultValueSource,
           key: this.defaultValueKey
+        }).then(function() {
+          this.$emit('_input', this.name, this.value, false, true);
         });
       }
     }
