@@ -88,6 +88,18 @@ this["Fliplet"]["Widget"]["Templates"]["templates.components.interface"] = Handl
     + "\r\n    </div>\r\n  </div>\r\n</div>\r\n\r\n";
 },"useData":true});
 
+this["Fliplet"]["Widget"]["Templates"]["templates.components.matrix"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "<div v-if=\"description\" class=\"help-block description\">{{ description }}</div>\r\n<div class=\"fl-matrix\">\r\n  <table>\r\n    <thead>\r\n      <tr>\r\n        <th></th>\r\n        <th v-for=\"(column, index) in columnOptions\">"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.column : depth0)) != null ? stack1.label : stack1), depth0))
+    + "</th>\r\n      </tr>\r\n    </thead>\r\n    <tbody>\r\n      <tr v-for=\"(row, rowIndex) in rowOptions\">\r\n        <th>"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.row : depth0)) != null ? stack1.label : stack1), depth0))
+    + "</th>\r\n        <td v-for=\"(column, colIndex) in columnOptions\">\r\n          <div class=\"radio radio-icon\" :class=\"{ 'readonly' : readonly }\">\r\n            <input type=\"radio\" :id=\"getOptionId(rowIndex, colIndex)\" :name=\"getOptionNme(rowIndex)\" :value=\"column.id\">\r\n            <label v-on:click=\"readonly ? false : clickHandler(row, column)\">\r\n              <span class=\"check focus-outline\"\r\n                v-on:keydown.space.prevent=\"readonly ? false : clickHandler(row, column)\"\r\n                @blur=\"onBlur()\"\r\n                tabindex=\"0\"\r\n              >\r\n                <i class=\"fa fa-circle\"></i>\r\n              </span>\r\n            </label>\r\n          </div>\r\n        </td>\r\n      </tr>\r\n    </tbody>\r\n  </table>\r\n</div>\r\n<p class=\"text-danger\" v-if=\"$v.value.required === false && $v.value.$dirty\">"
+    + alias2((helpers.T || (depth0 && depth0.T) || helpers.helperMissing).call(depth0 != null ? depth0 : (container.nullContext || {}),"widgets.form.errors.required",{"name":"T","hash":{},"data":data}))
+    + "</p>\r\n";
+},"useData":true});
+
 this["Fliplet"]["Widget"]["Templates"]["templates.components.number"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3=container.escapeExpression;
 

@@ -61,6 +61,16 @@
         },
         "selectAll": "Select All"
       },
+      "matrix": {
+        "defaultOptions": {
+          "row1": "Row 1",
+          "row2": "Row 2",
+          "row3": "Row 3",
+          "column1": "Column 1",
+          "column2": "Column 2",
+          "column3": "Column 3"
+        }
+      },
       "radio": {
         "defaultOptions": {
           "option1": "Option 1",
