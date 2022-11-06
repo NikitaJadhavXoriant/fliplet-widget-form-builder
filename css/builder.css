@@ -558,13 +558,17 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 /* SLIDER FIELD */
 
-.form-group.fl-range-slider .range-slider-handle,
+.form-group.fl-range-slider .range-slider .range-slider-handle,
 .form-group.fl-range-slider .range-slider-handle-value,
 .form-group.fl-range-slider .range-slider-fill,
 .form-group.fl-range-slider.readonly .range-slider-handle,
 .form-group.fl-range-slider.readonly .range-slider-handle-value,
 .form-group.fl-range-slider.readonly .range-slider-fill {
   background: #e1e1e1;
+}
+
+[data-widget-package="com.fliplet.form-builder"] .form-group.fl-range-slider.readonly .range-slider-handle-value::before {
+  border-top-color: #e1e1e1;
 }
 
 .form-group.fl-range-slider .range-slider-labels-label,
@@ -576,7 +580,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   background: #eeeeee;
 }
 
-.slider-input{
+.slider-input {
   width: 100% !important;
 }
 

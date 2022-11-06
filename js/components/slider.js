@@ -54,18 +54,12 @@ Fliplet.FormBuilder.field('slider', {
         return;
       }
 
-      var $vm = this;
-
       this.slider = Fliplet.UI.RangeSlider(this.$refs.slider, {
         min: this.min,
         max: this.max,
         step: this.step,
         value: this.value,
         readonly: this.readonly
-      });
-
-      this.slider.change(function(value) {
-        $vm.value = value;
       });
     },
     onReset: function() {
@@ -76,6 +70,12 @@ Fliplet.FormBuilder.field('slider', {
         }).then(function() {
           this.$emit('_input', this.name, this.value, false, true);
         });
+      } else {
+        if (this.value === '') {
+          this.value = 50;
+        }
+
+        this.slider.set(this.value);
       }
     }
   }
