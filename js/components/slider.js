@@ -36,7 +36,7 @@ Fliplet.FormBuilder.field('slider', {
         this.slider.set(val);
       }
 
-      this.$emit('_input', this.name, val, false, true);
+      this.$emit('_input', this.name, val);
     }
   },
   mounted: function() {
@@ -61,22 +61,26 @@ Fliplet.FormBuilder.field('slider', {
         value: this.value,
         readonly: this.readonly
       });
+
+      var $vm = this;
+
+      this.slider.change(function(val) {
+        $vm.value = val;
+      });
     },
     onReset: function() {
       if (this.defaultValueSource !== 'default') {
         this.setValueFromDefaultSettings({
           source: this.defaultValueSource,
           key: this.defaultValueKey
-        }).then(function() {
-          this.$emit('_input', this.name, this.value, false, true);
         });
-      } else {
-        if (this.value === '') {
-          this.value = 50;
-        }
-
-        this.slider.set(this.value);
       }
+
+      if (this.value === ''  || !this.value) {
+        this.value = 50;
+      }
+
+      this.slider.set(this.value);
     }
   }
 });

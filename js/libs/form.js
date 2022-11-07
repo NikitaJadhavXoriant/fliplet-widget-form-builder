@@ -225,6 +225,11 @@ Fliplet().then(function () {
               case 'flCheckbox': // There is no validation and value assignment as there is no access to checkbox options. This is implemented in the checkbox component.
               case 'flRadio': // There is no validation and value assignment as there is no access to radio options. This is implemented in the radio component.
 
+              case 'flSlider':
+                if (progress && progress[field.name]) {
+                  field.value = progress[field.name];
+                }
+                break;
               default:
                 field.value = fieldData;
                 break;
