@@ -76,10 +76,6 @@ Fliplet.FormBuilder.field('slider', {
         });
       }
 
-      if (this.value === ''  || !this.value) {
-        this.value = 50;
-      }
-
       this.slider.set(this.value);
     }
   }
