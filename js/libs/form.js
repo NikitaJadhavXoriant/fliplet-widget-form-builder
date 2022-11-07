@@ -236,7 +236,7 @@ Fliplet().then(function () {
           if (progress && !isEditMode) {
             var savedValue = progress[field.name];
 
-            if (typeof savedValue !== 'undefined') {
+            if (typeof savedValue !== 'undefined' && savedValue !== '') {
               field.value = savedValue;
               field.valueIsFromProgress = true;
             }
@@ -329,6 +329,8 @@ Fliplet().then(function () {
             }
 
             field.value = value;
+
+            console.log('reset', field.valueIsFromProgress);
 
             if (_.has(field, 'valueIsFromProgress')) {
               field.valueIsFromProgress = false;
@@ -604,8 +606,12 @@ Fliplet().then(function () {
                 }
 
                 if (type === 'flEmail') {
-                  value = value.toLowerCase();
+                  if(value){
+                    value = value.toLowerCase();
+                  }
                 }
+
+                console.log('form submission', field.valueIsFromProgress);
 
                 if (_.has(field, 'valueIsFromProgress')) {
                   field.valueIsFromProgress = false;
