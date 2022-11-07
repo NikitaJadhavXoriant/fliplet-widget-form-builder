@@ -81,10 +81,39 @@ Fliplet.FormBuilder.field('matrix', {
      *
      * @param {Object} column - an column object which includes id and label
      *
+     * @param {Number} rowIndex - an row index
+     *
+     * @param {Number} colIndex - an column index
+     *
      * @returns {undefined}
      */
-    clickHandler: function(row, column) {
-      this.value[row.id] = column.id;
+    clickHandler: function(row, column, rowIndex, colIndex) {
+      var el = this.getOptionId(rowIndex, colIndex);
+
+      $('#' + el).prop('checked', true);
+
+      $('#' + el).focus();
+
+      this.value[row.label] = column.label;
+    },
+
+    /**
+     * Click handler for each radio button in matrix
+     *
+     * @param {Number} rowIndex - an row index
+     *
+     * @param {Number} colIndex - an column index
+     *
+     * @returns {undefined}
+     */
+    focusHandler: function(rowIndex, colIndex) {
+      if (rowIndex >= 0 && colIndex >= 0) {
+        var row = this.rowOptions[rowIndex];
+        var col = this.columnOptions[colIndex];
+
+        this.value[row.id] = this.columnOptions[colIndex].id;
+        this.clickHandler(row, col, rowIndex, colIndex);
+      }
     }
   },
   validations: function() {
@@ -96,7 +125,7 @@ Fliplet.FormBuilder.field('matrix', {
     rules.value.required = function() {
       // Check that every row has a non-empty value
       return _.every($vm.rowOptions, function(row) {
-        return typeof $vm.value[row.id] !== 'undefined';
+        return typeof $vm.value[row.label] !== 'undefined';
       });
     };
 
@@ -111,7 +140,7 @@ Fliplet.FormBuilder.field('matrix', {
 
     _.forEach(this.rowOptions, function(row) {
       // Add reactive properties
-      $vm.$set($vm.value, row.id, undefined);
+      $vm.$set($vm.value, row.label, undefined);
     });
   }
 });
