@@ -64,6 +64,13 @@ Fliplet.FormBuilder.field('slider', {
 
       var $vm = this;
 
+      if (this.defaultValueSource !== 'default') {
+        this.setValueFromDefaultSettings({
+          source: this.defaultValueSource,
+          key: this.defaultValueKey
+        });
+      }
+
       this.slider.change(function(val) {
         $vm.value = val;
       });
