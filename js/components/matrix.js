@@ -57,10 +57,12 @@ Fliplet.FormBuilder.field('matrix', {
      *
      * @param {Number} columnIndex - an column index
      *
+     * @param {String} type - an element type
+     *
      * @returns {String} an ID unique to the form widget instance, field, row and column
      */
-    getOptionId: function(rowIndex, columnIndex) {
-      return _.kebabCase(this.$parent.id + '-' + this.name + '-' + rowIndex + '-' + columnIndex);
+    getOptionId: function(rowIndex, columnIndex, type) {
+      return _.kebabCase(this.$parent.id + '-' + this.name + '-' + rowIndex + '-' + columnIndex + '-' + type);
     },
 
     /**
@@ -88,13 +90,11 @@ Fliplet.FormBuilder.field('matrix', {
      * @returns {undefined}
      */
     clickHandler: function(row, column, rowIndex, colIndex) {
-      var el = this.getOptionId(rowIndex, colIndex);
+      var el = this.getOptionId(rowIndex, colIndex, 'input');
 
       $('#' + el).prop('checked', true);
 
-      $('#' + el).focus();
-
-      this.value[row.label] = column.label;
+      this.value[row.id || row.label] = column.id || column.label;
     },
 
     /**
@@ -107,11 +107,17 @@ Fliplet.FormBuilder.field('matrix', {
      * @returns {undefined}
      */
     focusHandler: function(rowIndex, colIndex) {
+      var $vm = this;
+
       if (rowIndex >= 0 && colIndex >= 0) {
         var row = this.rowOptions[rowIndex];
         var col = this.columnOptions[colIndex];
 
-        this.value[row.id] = this.columnOptions[colIndex].id;
+        $('#' + $vm.getOptionId(rowIndex, colIndex, 'input')).focus();
+
+        $('#' + $vm.getOptionId(rowIndex, colIndex, 'span')).focus();
+
+        this.value[row.id || row.label] = col.id || col.label;
         this.clickHandler(row, col, rowIndex, colIndex);
       }
     }
@@ -125,7 +131,7 @@ Fliplet.FormBuilder.field('matrix', {
     rules.value.required = function() {
       // Check that every row has a non-empty value
       return _.every($vm.rowOptions, function(row) {
-        return typeof $vm.value[row.label] !== 'undefined';
+        return typeof $vm.value[row.id || row.label] !== 'undefined';
       });
     };
 
@@ -140,7 +146,7 @@ Fliplet.FormBuilder.field('matrix', {
 
     _.forEach(this.rowOptions, function(row) {
       // Add reactive properties
-      $vm.$set($vm.value, row.label, undefined);
+      $vm.$set($vm.value, row.id || row.label, undefined);
     });
   }
 });
