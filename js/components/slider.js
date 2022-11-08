@@ -9,20 +9,16 @@ Fliplet.FormBuilder.field('slider', {
       type: String
     },
     min: {
-      type: Number,
-      default: 0
+      type: Number
     },
     max: {
-      type: Number,
-      default: 100
+      type: Number
     },
     value: {
-      type: Number,
-      default: 50
+      type: Number
     },
     step: {
-      type: Number,
-      default: 1
+      type: Number
     }
   },
   data: function() {
