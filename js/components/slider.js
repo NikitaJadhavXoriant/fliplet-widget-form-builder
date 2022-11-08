@@ -75,15 +75,17 @@ Fliplet.FormBuilder.field('slider', {
         $vm.value = val;
       });
     },
-    onReset: function() {
-      if (this.defaultValueSource !== 'default') {
-        this.setValueFromDefaultSettings({
-          source: this.defaultValueSource,
-          key: this.defaultValueKey
-        });
-      }
+    onReset: function(data) {
+      if (data.id === this.$parent.id) {
+        if (this.defaultValueSource !== 'default') {
+          this.setValueFromDefaultSettings({
+            source: this.defaultValueSource,
+            key: this.defaultValueKey
+          });
+        }
 
-      this.slider.set(this.value);
+        this.slider.set(this.value);
+      }
     }
   }
 });
