@@ -330,8 +330,6 @@ Fliplet().then(function () {
 
             field.value = value;
 
-            console.log('reset', field.valueIsFromProgress);
-
             if (_.has(field, 'valueIsFromProgress')) {
               field.valueIsFromProgress = false;
             }
@@ -610,8 +608,6 @@ Fliplet().then(function () {
                     value = value.toLowerCase();
                   }
                 }
-
-                console.log('form submission', field.valueIsFromProgress);
 
                 if (_.has(field, 'valueIsFromProgress')) {
                   field.valueIsFromProgress = false;
