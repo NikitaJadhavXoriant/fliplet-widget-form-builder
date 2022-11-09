@@ -9,12 +9,7 @@ Fliplet.FormBuilder.field('matrix', {
       type: String
     },
     value: {
-      type: Object,
-      default: {}
-    },
-    defaultValue: {
-      type: Object,
-      default: {}
+      type: Object
     },
     rowOptions: {
       type: Array,
@@ -95,6 +90,8 @@ Fliplet.FormBuilder.field('matrix', {
       $('#' + el).prop('checked', true);
 
       this.value[row.id || row.label] = column.id || column.label;
+
+      this.$emit('_input', this.name, this.value);
     },
 
     /**
@@ -120,6 +117,36 @@ Fliplet.FormBuilder.field('matrix', {
         this.value[row.id || row.label] = col.id || col.label;
         this.clickHandler(row, col, rowIndex, colIndex);
       }
+    },
+    setValue: function() {
+      var $vm = this;
+
+      if ($vm.value === undefined || _.isEmpty($vm.value)) {
+        $vm.value = {};
+        _.forEach(this.rowOptions, function(row) {
+          $vm.$set($vm.value, row.id || row.label, undefined);
+        });
+      } else if (this.defaultValueSource !== 'default') {
+        _.forOwn($vm.value, function(key, value) {
+          var row = _.find($vm.rowOptions, function(row) {
+            return row.id || row.label === value;
+          });
+
+          var rowIndex = _.findIndex($vm.rowOptions, function(row) {
+            return row.id || row.label === value;
+          });
+
+          var col = _.find($vm.columnOptions, function(col) {
+            return col.id || col.label === key;
+          });
+
+          var colIndex = _.findIndex($vm.columnOptions, function(col) {
+            return col.id || col.label === key;
+          });
+
+          $vm.clickHandler(row, col, rowIndex, colIndex);
+        });
+      }
     }
   },
   validations: function() {
@@ -128,25 +155,27 @@ Fliplet.FormBuilder.field('matrix', {
       value: {}
     };
 
-    rules.value.required = function() {
+    if (this.required && !this.readonly) {
+      rules.value.required = function() {
       // Check that every row has a non-empty value
-      return _.every($vm.rowOptions, function(row) {
-        return typeof $vm.value[row.id || row.label] !== 'undefined';
-      });
-    };
+        return _.every($vm.rowOptions, function(row) {
+          return typeof $vm.value[row.id || row.label] !== 'undefined';
+        });
+      };
+    }
 
     return rules;
   },
-  created: function() {
+  mounted: function() {
     var $vm = this;
 
-    if (typeof this.value !== Object) {
-      this.value = {};
+    if (this.defaultValueSource !== 'default') {
+      this.setValueFromDefaultSettings({ source: this.defaultValueSource, key: this.defaultValueKey }).then(function() {
+        $vm.setValue();
+      });
     }
-
-    _.forEach(this.rowOptions, function(row) {
-      // Add reactive properties
-      $vm.$set($vm.value, row.id || row.label, undefined);
-    });
+  },
+  created: function() {
+    this.setValue();
   }
 });
