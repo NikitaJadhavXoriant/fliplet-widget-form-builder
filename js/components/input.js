@@ -28,9 +28,16 @@ Fliplet.FormBuilder.field('input', {
 
     return rules;
   },
+  watch: {
+    value: function(val) {
+      if (!val || val === '') {
+        this.getNewGuid();
+      }
+    }
+  },
   methods: {
     getNewGuid: function(data = {}) {
-      if (!this.value && this.idType === 'guid' && data.id !== this.$parent.id) {
+      if (!this.value && this.idType === 'guid' && this.generateGuid && data.id !== this.$parent.id) {
         this.value = Fliplet.guid();
         this.updateValue();
       }
@@ -47,9 +54,7 @@ Fliplet.FormBuilder.field('input', {
     }
   },
   created: function() {
-    if (!this.valueIsFromProgress) {
-      this.getNewGuid();
-    }
+    this.getNewGuid();
 
     Fliplet.FormBuilder.on('reset', this.onReset);
   },
