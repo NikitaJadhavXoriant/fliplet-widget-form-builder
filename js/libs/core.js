@@ -161,6 +161,8 @@ Fliplet.FormBuilder = (function() {
 
         if ($vm.$v && $vm.$v.value) {
           if ($vm.$v.passwordConfirmation) {
+            $vm.isValid = !$vm.$v.value.$error;
+
             return;
           }
 
@@ -171,6 +173,12 @@ Fliplet.FormBuilder = (function() {
       component.methods.onInput = _.debounce(function($event) {
         this.$emit('_input', this.name, $event.target.value, false, true);
       }, 200);
+
+      // Define method to execute on blur form field
+      component.methods.onBlur = function() {
+        this.$v.value.$touch();
+        this.highlightError();
+      };
 
       component.methods.browserSupport = function(browserType) {
         switch (browserType) {
@@ -282,6 +290,10 @@ Fliplet.FormBuilder = (function() {
         isValid: {
           type: Boolean,
           default: true
+        },
+        valueIsFromProgress: {
+          type: Boolean,
+          default: false
         }
       }, component.props);
 
@@ -333,6 +345,14 @@ Fliplet.FormBuilder = (function() {
             data[prop] = $vm[prop];
           }
         });
+
+        if (this._componentName === 'flInput') {
+          if (this.generateGuid) {
+            data.idType = 'guid';
+          } else {
+            delete data.idType;
+          }
+        }
 
         eventHub.$emit('field-settings-changed', data);
       };
