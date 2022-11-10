@@ -2,9 +2,6 @@ Fliplet.FormBuilder.field('slider', {
   name: 'Slider',
   category: 'Advanced',
   props: {
-    placeholder: {
-      type: String
-    },
     description: {
       type: String
     },
@@ -46,11 +43,11 @@ Fliplet.FormBuilder.field('slider', {
   },
   methods: {
     initSlider: function() {
-      if (this.slider || !this.$refs.slider) {
+      if (this.slider || !this.$refs.Slider) {
         return;
       }
 
-      this.slider = Fliplet.UI.RangeSlider(this.$refs.slider, {
+      this.slider = Fliplet.UI.RangeSlider(this.$refs.Slider, {
         min: this.min,
         max: this.max,
         step: this.step,

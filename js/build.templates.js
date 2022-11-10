@@ -157,7 +157,7 @@ this["Fliplet"]["Widget"]["Templates"]["templates.components.signature"] = Handl
 },"useData":true});
 
 this["Fliplet"]["Widget"]["Templates"]["templates.components.slider"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "<div v-if=\"description\" class=\"help-block description\">{{ description }}</div>\r\n<div class=\"form-group fl-range-slider\" :class=\"{ 'readonly': readonly }\" ref=\"slider\">\r\n <input\r\n    type=\"range\"\r\n    :name=\"name\"\r\n    :id=\"name\"\r\n    :min=\"min\"\r\n    :max=\"max\"\r\n    :step=\"step\"\r\n    v-model=\"value\"\r\n    :tabindex=\"readonly ? -1 : 0\"\r\n    class=\"slider-input\"\r\n  />\r\n</div>\r\n";
+    return "<div v-if=\"description\" class=\"help-block description\">{{ description }}</div>\r\n<div class=\"form-group fl-range-slider\" :class=\"{ 'readonly': readonly }\" ref=\"Slider\">\r\n <input\r\n    type=\"range\"\r\n    :name=\"name\"\r\n    :id=\"name\"\r\n    :min=\"min\"\r\n    :max=\"max\"\r\n    :step=\"step\"\r\n    v-model=\"value\"\r\n    :tabindex=\"readonly ? -1 : 0\"\r\n    class=\"slider-input\"\r\n  />\r\n</div>\r\n";
 },"useData":true});
 
 this["Fliplet"]["Widget"]["Templates"]["templates.components.starRating"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {

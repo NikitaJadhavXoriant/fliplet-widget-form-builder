@@ -1054,20 +1054,6 @@ html[dir="rtl"] .radio.radio-icon input[type="radio"] + label > span.check {
   color: #ffffff;
 }
 
-.form-group.fl-range-slider.readonly .range-slider-handle,
-.form-group.fl-range-slider.readonly .range-slider-handle-value,
-.form-group.fl-range-slider.readonly .range-slider-fill {
-  background: #e1e1e1;
-}
-
-.form-group.fl-range-slider.readonly .range-slider {
-  background: #eeeeee;
-}
-
-[data-widget-package="com.fliplet.form-builder"] .form-group.fl-range-slider .range-slider.range-slider-active .range-slider-handle {
-  box-shadow: 0px 0px 0px 2px rgb(0 171 209 / 25%);
-}
-
 [data-widget-package="com.fliplet.form-builder"] .form-group.fl-range-slider.readonly .range-slider-handle-value::before {
   border-top-color: #e1e1e1;
 }
