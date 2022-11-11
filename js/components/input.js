@@ -37,7 +37,7 @@ Fliplet.FormBuilder.field('input', {
   },
   methods: {
     getNewGuid: function(data = {}) {
-      if (!this.value && this.idType === 'guid' && this.generateGuid && data.id !== this.$parent.id) {
+      if (!this.value && this.idType === 'guid' && data.id !== this.$parent.id) {
         this.value = Fliplet.guid();
         this.updateValue();
       }

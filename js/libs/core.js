@@ -343,8 +343,10 @@ Fliplet.FormBuilder = (function() {
         });
 
         if (this._componentName === 'flInput') {
-          if (this.generateGuid) {
+          if (this.generateGuid && typeof data.idType === 'undefined') {
             data.idType = 'guid';
+          } else if (this.idType === 'guid' && typeof this.generateGuid === 'undefined') {
+            this.generateGuid = true;
           } else {
             delete data.idType;
           }

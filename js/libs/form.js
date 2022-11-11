@@ -126,6 +126,20 @@ Fliplet().then(function () {
             delete progress[field.name];
           }
         }
+
+        //To ensure ID generator field settings
+        if (field._type === 'flInput') {
+          if(field.generateGuid && field.idType === 'guid') {
+            return;
+          }
+          if (field.generateGuid && typeof field.idType === 'undefined') {
+            field.idType = 'guid';
+          } else if (field.idType === 'guid' && typeof field.generateGuid === 'undefined') {
+            field.generateGuid = true;
+          } else {
+            delete field.idType;
+          }
+        }
       });
 
       if (fields.length && (data.saveProgress && typeof progress === 'object') || entry) {
