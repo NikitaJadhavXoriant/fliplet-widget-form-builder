@@ -5,11 +5,9 @@ Fliplet.FormBuilder.field('matrix', {
     description: {
       type: String
     },
-    placeholder: {
-      type: String
-    },
     value: {
-      type: Object
+      type: Object,
+      default: {}
     },
     rowOptions: {
       type: Array,
@@ -41,6 +39,13 @@ Fliplet.FormBuilder.field('matrix', {
             label: T('widgets.form.matrix.defaultOptions.column3')
           }
         ];
+      }
+    }
+  },
+  watch: {
+    value: function(val) {
+      if (val) {
+        this.setValue();
       }
     }
   },
@@ -91,7 +96,7 @@ Fliplet.FormBuilder.field('matrix', {
 
       this.value[row.id || row.label] = column.id || column.label;
 
-      this.$emit('_input', this.name, this.value);
+      this.updateValue();
     },
 
     /**
@@ -129,24 +134,31 @@ Fliplet.FormBuilder.field('matrix', {
       } else if (this.defaultValueSource !== 'default') {
         _.forOwn($vm.value, function(key, value) {
           var row = _.find($vm.rowOptions, function(row) {
-            return row.id || row.label === value;
+            return (_.has(row, 'label') && _.has(row, 'id')) ? row.id === value : row.label === value;
           });
 
           var rowIndex = _.findIndex($vm.rowOptions, function(row) {
-            return row.id || row.label === value;
+            return (_.has(row, 'label') && _.has(row, 'id')) ? row.id === value : row.label === value;
           });
 
           var col = _.find($vm.columnOptions, function(col) {
-            return col.id || col.label === key;
+            return (_.has(col, 'label') && _.has(col, 'id')) ? col.id === key : col.label === key;
           });
 
           var colIndex = _.findIndex($vm.columnOptions, function(col) {
-            return col.id || col.label === key;
+            return (_.has(col, 'label') && _.has(col, 'id')) ? col.id === key : col.label === key;
           });
 
           $vm.clickHandler(row, col, rowIndex, colIndex);
         });
       }
+    },
+    onReset: function() {
+      if (this.defaultValueSource !== 'default') {
+        this.setValueFromDefaultSettings({ source: this.defaultValueSource, key: this.defaultValueKey });
+      }
+
+      this.$emit('_input', this.name, this.value);
     }
   },
   validations: function() {
@@ -177,5 +189,9 @@ Fliplet.FormBuilder.field('matrix', {
   },
   created: function() {
     this.setValue();
+    Fliplet.FormBuilder.on('reset', this.onReset);
+  },
+  destroyed: function() {
+    Fliplet.FormBuilder.off('reset', this.onReset);
   }
 });

@@ -1288,6 +1288,7 @@ form hr {
 
 .fl-matrix table {
   border-collapse: collapse;
+  border-collapse: separate;
   border-spacing: 0;
   position: relative;
 }
@@ -1320,9 +1321,11 @@ form hr {
   padding: 8px;
   min-width: 150px;
   background: white;
+  word-break: break-all;
+  vertical-align: middle;
 }
 
-.fl-matrix table th{
+.fl-matrix table th {
   color: rgb(85, 85, 85);
   font-weight: normal;
   line-height: 20px;
@@ -1331,6 +1334,10 @@ form hr {
 .fl-matrix table th:last-child,
 .fl-matrix table td:last-child {
   border-right-width: 0;
+}
+
+.fl-matrix .radio {
+  margin-bottom: 0px;
 }
 
 @media screen and (min-width: 640px) {

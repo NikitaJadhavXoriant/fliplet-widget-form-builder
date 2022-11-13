@@ -95,7 +95,7 @@ Fliplet.FormBuilder = (function() {
               throw new Error('A key is required to fetch data from the user\'s profile');
             }
 
-            result = Fliplet.User.getCachedSession()
+            result = Fliplet.User.getCachedSession({ force: true })
               .then(function(session) {
                 if (session && session.entries) {
                   if (session.entries.dataSource) {
@@ -207,11 +207,11 @@ Fliplet.FormBuilder = (function() {
       };
 
       component.computed._supportsRowOptions = function() {
-        return this._isFormField && component._componentName !== 'flMatrix';
+        return this._isFormField && component.props._componentName.default === 'flMatrix';
       };
 
       component.computed._supportsColumnOptions = function() {
-        return this._isFormField && component._componentName !== 'flMatrix';
+        return this._isFormField && component.props._componentName.default === 'flMatrix';
       };
 
       component.computed._showField = function() {
@@ -661,6 +661,8 @@ Fliplet.FormBuilder = (function() {
         }
 
         component.methods._setOptions = function setOptions(str, attribute) {
+          console.log(str, attribute);
+
           if (!attribute) {
             throw new Error('Attribute must be provided');
           }
