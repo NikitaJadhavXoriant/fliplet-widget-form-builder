@@ -67,6 +67,10 @@ Fliplet.FormBuilder.field('slider', {
       this.slider.change(function(val) {
         $vm.value = val;
       });
+
+      if (this.value !== this.slider.get()) {
+        this.value = this.slider.get();
+      }
     },
     onReset: function(data) {
       if (data.id === this.$parent.id) {
