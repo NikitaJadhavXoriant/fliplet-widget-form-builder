@@ -12,7 +12,7 @@ Fliplet.FormBuilder.field('slider', {
       type: Number
     },
     value: {
-      type: Number
+      type: String
     },
     step: {
       type: Number
