@@ -30,7 +30,7 @@ Fliplet.FormBuilder.field('input', {
   },
   watch: {
     value: function(val) {
-      if (!val || val === '') {
+      if (!val) {
         this.getNewGuid();
       }
     }
