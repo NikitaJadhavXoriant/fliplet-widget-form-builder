@@ -6,8 +6,7 @@ Fliplet.FormBuilder.field('matrix', {
       type: String
     },
     value: {
-      type: Object,
-      default: {}
+      type: String
     },
     rowOptions: {
       type: Array,
@@ -44,7 +43,9 @@ Fliplet.FormBuilder.field('matrix', {
   },
   watch: {
     value: function(val) {
-      if (val) {
+      if (this.checkValue(val) === 'clear') {
+        this.clearValue();
+      } else {
         this.setValue();
       }
     }
@@ -94,9 +95,9 @@ Fliplet.FormBuilder.field('matrix', {
 
       $('#' + el).prop('checked', true);
 
-      this.value[row.id || row.label] = column.id || column.label;
+      this.value[row.id || row.label] = column ? column.id || column.label : undefined;
 
-      this.updateValue();
+      this.$emit('_input', this.name, this.value);
     },
 
     /**
@@ -131,7 +132,11 @@ Fliplet.FormBuilder.field('matrix', {
         _.forEach(this.rowOptions, function(row) {
           $vm.$set($vm.value, row.id || row.label, undefined);
         });
-      } else if (this.defaultValueSource !== 'default') {
+      } else {
+        if (typeof $vm.value === 'string') {
+          $vm.value = JSON.parse($vm.value);
+        }
+
         _.forOwn($vm.value, function(key, value) {
           var row = _.find($vm.rowOptions, function(row) {
             return (_.has(row, 'label') && _.has(row, 'id')) ? row.id === value : row.label === value;
@@ -149,16 +154,62 @@ Fliplet.FormBuilder.field('matrix', {
             return (_.has(col, 'label') && _.has(col, 'id')) ? col.id === key : col.label === key;
           });
 
-          $vm.clickHandler(row, col, rowIndex, colIndex);
+          setTimeout(function() {
+            $vm.clickHandler(row, col, rowIndex, colIndex);
+          });
         });
       }
+    },
+    clearValue() {
+      if (!this.$refs.matrix) {
+        return;
+      }
+
+      var $vm = this;
+
+      _.forEach(this.rowOptions, function(row, rowIndex) {
+        _.forEach($vm.columnOptions, function(col, colIndex) {
+          var el = $vm.getOptionId(rowIndex, colIndex, 'input');
+
+          $('#' + el).prop('checked', false);
+        });
+      });
+    },
+    checkValue: function(val) {
+      var flag = '';
+
+      if (val === '') {
+        val = {};
+        flag = 'clear';
+      } else if (!_.isEmpty(val)) {
+        var result = [];
+
+        _.forOwn(val, function(value) {
+          if (typeof value !== 'undefined') {
+            result.push(value);
+          }
+        });
+
+        if (result.length === 0) {
+          flag = 'clear';
+        } else {
+          flag = 'set';
+        }
+      } else {
+        flag = 'set';
+      }
+
+      return flag;
     },
     onReset: function() {
       if (this.defaultValueSource !== 'default') {
         this.setValueFromDefaultSettings({ source: this.defaultValueSource, key: this.defaultValueKey });
+        this.$emit('_input', this.name, this.value);
       }
 
-      this.$emit('_input', this.name, this.value);
+      if (this.checkValue(this.value) === 'clear') {
+        this.clearValue();
+      }
     }
   },
   validations: function() {

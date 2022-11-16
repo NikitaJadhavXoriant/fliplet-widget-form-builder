@@ -1291,6 +1291,7 @@ form hr {
   border-collapse: separate;
   border-spacing: 0;
   position: relative;
+  margin-bottom: 0px;
 }
 
 .fl-matrix table thead th {
