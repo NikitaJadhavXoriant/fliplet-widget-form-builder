@@ -17,9 +17,6 @@ Fliplet.FormBuilder.field('matrix', {
           },
           {
             label: T('widgets.form.matrix.defaultOptions.row2')
-          },
-          {
-            label: T('widgets.form.matrix.defaultOptions.row3')
           }
         ];
       }
@@ -33,9 +30,6 @@ Fliplet.FormBuilder.field('matrix', {
           },
           {
             label: T('widgets.form.matrix.defaultOptions.column2')
-          },
-          {
-            label: T('widgets.form.matrix.defaultOptions.column3')
           }
         ];
       }
@@ -95,7 +89,7 @@ Fliplet.FormBuilder.field('matrix', {
 
       $('#' + el).prop('checked', true);
 
-      this.value[row.id || row.label] = column ? column.id || column.label : undefined;
+      this.value[row.id || row.label] = column.id || column.label;
 
       this.$emit('_input', this.name, this.value);
     },
@@ -155,7 +149,9 @@ Fliplet.FormBuilder.field('matrix', {
           });
 
           setTimeout(function() {
-            $vm.clickHandler(row, col, rowIndex, colIndex);
+            if (row && col) {
+              $vm.clickHandler(row, col, rowIndex, colIndex);
+            }
           });
         });
       }
@@ -176,11 +172,17 @@ Fliplet.FormBuilder.field('matrix', {
       });
     },
     checkValue: function(val) {
-      var flag = '';
+      if (typeof val === 'string') {
+        val = JSON.parse(this.value);
+      }
+
+      var checkFlag = '';
+      var $vm = this;
+      var columnOpt = [];
 
       if (val === '') {
         val = {};
-        flag = 'clear';
+        checkFlag = 'clear';
       } else if (!_.isEmpty(val)) {
         var result = [];
 
@@ -190,26 +192,62 @@ Fliplet.FormBuilder.field('matrix', {
           }
         });
 
+        if (result.length > 0) {
+          _.forEach(result, function(col) {
+            _.find($vm.columnOptions, function(column) {
+              if (column.label === col || column.id === col) {
+                columnOpt.push(column);
+              }
+            });
+          });
+        }
+
         if (result.length === 0) {
-          flag = 'clear';
+          checkFlag = 'clear';
+        } else if (columnOpt.length === 0) {
+          checkFlag = 'clear';
         } else {
-          flag = 'set';
+          checkFlag = 'set';
         }
       } else {
-        flag = 'set';
+        checkFlag = 'set';
       }
 
-      return flag;
+      return checkFlag;
     },
-    onReset: function() {
-      if (this.defaultValueSource !== 'default') {
-        this.setValueFromDefaultSettings({ source: this.defaultValueSource, key: this.defaultValueKey });
-        this.$emit('_input', this.name, this.value);
+    onReset: function(data) {
+      if (data.id === this.$parent.id) {
+        if (this.defaultValueSource !== 'default') {
+          this.setValueFromDefaultSettings({ source: this.defaultValueSource, key: this.defaultValueKey });
+          this.$emit('_input', this.name, this.value);
+        }
+
+        if (this.checkValue(this.value) === 'clear') {
+          this.clearValue();
+        }
+      }
+    },
+    checkInvalidValue: function() {
+      if (!this.value) {
+        return;
       }
 
-      if (this.checkValue(this.value) === 'clear') {
-        this.clearValue();
+      var validColumns = [];
+      var $vm = this;
+
+      _.forOwn(this.value, function(key) {
+        _.find($vm.columnOptions, function(col) {
+          if (col.label === key || col.id === col) {
+            validColumns.push(col);
+          }
+        });
+      });
+
+      if (validColumns.length > 0) {
+        return true;
       }
+
+      return false;
     }
   },
   validations: function() {
@@ -239,7 +277,16 @@ Fliplet.FormBuilder.field('matrix', {
     }
   },
   created: function() {
+    if (typeof this.value === 'string') {
+      this.value = JSON.parse(this.value);
+    }
+
+    if (!this.checkInvalidValue()) {
+      this.value = {};
+    }
+
     this.setValue();
+
     Fliplet.FormBuilder.on('reset', this.onReset);
   },
   destroyed: function() {

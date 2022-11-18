@@ -709,7 +709,11 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   border-radius: 5px;
 }
 
-[data-widget-package="com.fliplet.form-builder"] [_type="flSignature"] .signature-editor.readonly .field-signature canvas {
+[data-widget-package="com.fliplet.form-builder"]
+  [_type="flSignature"]
+  .signature-editor.readonly
+  .field-signature
+  canvas {
   background-color: transparent;
   border-radius: 0%;
   border: none !important;
@@ -1112,7 +1116,7 @@ form hr {
   border: solid #eee;
   border-width: 0 1px 1px 0;
   padding: 8px;
-  min-width: 100px;
+  min-width: 130px;
   background: white;
   font-size: 12px;
   word-break: break-all;
