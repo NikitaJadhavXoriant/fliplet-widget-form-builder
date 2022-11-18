@@ -172,7 +172,7 @@ Fliplet.FormBuilder.field('matrix', {
       });
     },
     checkValue: function(val) {
-      if (typeof val === 'string') {
+      if (typeof val === 'string' && val !== '') {
         val = JSON.parse(this.value);
       }
 
@@ -277,7 +277,7 @@ Fliplet.FormBuilder.field('matrix', {
     }
   },
   created: function() {
-    if (typeof this.value === 'string') {
+    if (typeof this.value === 'string' && this.value !== '') {
       this.value = JSON.parse(this.value);
     }
 
