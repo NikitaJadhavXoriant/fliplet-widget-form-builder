@@ -43,11 +43,11 @@ Fliplet.FormBuilder.field('slider', {
   },
   methods: {
     initSlider: function() {
-      if (this.slider || !this.$refs.Slider) {
+      if (this.slider || !this.$refs.slider) {
         return;
       }
 
-      this.slider = Fliplet.UI.RangeSlider(this.$refs.Slider, {
+      this.slider = Fliplet.UI.RangeSlider(this.$refs.slider, {
         min: this.min,
         max: this.max,
         step: this.step,
