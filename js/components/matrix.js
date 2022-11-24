@@ -67,7 +67,7 @@ Fliplet.FormBuilder.field('matrix', {
      *
      * @returns {String} an name unique to the form widget instance, field, row and column
      */
-    getOptionNme: function(rowIndex) {
+    getOptionName: function(rowIndex) {
       return _.kebabCase(this.name + '-' + rowIndex);
     },
 
@@ -118,14 +118,19 @@ Fliplet.FormBuilder.field('matrix', {
         this.clickHandler(row, col, rowIndex, colIndex);
       }
     },
+    setDefaultValue: function() {
+      var $vm = this;
+
+      $vm.value = {};
+      _.forEach(this.rowOptions, function(row) {
+        $vm.$set($vm.value, row.id || row.label, undefined);
+      });
+    },
     setValue: function() {
       var $vm = this;
 
       if ($vm.value === undefined || _.isEmpty($vm.value)) {
-        $vm.value = {};
-        _.forEach(this.rowOptions, function(row) {
-          $vm.$set($vm.value, row.id || row.label, undefined);
-        });
+        this.setDefaultValue();
       } else {
         if (typeof $vm.value === 'string') {
           $vm.value = JSON.parse($vm.value);
@@ -170,6 +175,10 @@ Fliplet.FormBuilder.field('matrix', {
           $('#' + el).prop('checked', false);
         });
       });
+
+      if (this.value === '') {
+        this.setDefaultValue();
+      }
     },
     checkValue: function(val) {
       if (typeof val === 'string' && val !== '') {
