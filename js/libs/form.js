@@ -133,7 +133,7 @@ Fliplet().then(function () {
           if (entry && entry.data && field.populateOnUpdate !== false) {
             var fieldData = entry.data[field.name];
 
-            if (typeof fieldData === 'undefined' && field.submit) {
+            if (typeof fieldData === 'undefined' && field._submit) {
               return; // do not update the field value
             }
 
