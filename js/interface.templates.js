@@ -84,7 +84,7 @@ this["Fliplet"]["Widget"]["Templates"]["templates.configurations.signature"] = H
 },"useData":true});
 
 this["Fliplet"]["Widget"]["Templates"]["templates.configurations.slider"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "<div v-show=\"defaultValueSource === 'default'\" class=\"form-group\">\r\n  <label>Default value</label>\r\n  <input class=\"form-control\" v-model.trim=\"value\" placeholder=\"Default value\"></input>\r\n</div>\r\n";
+    return "<div v-show=\"defaultValueSource === 'default'\" class=\"form-group\">\r\n  <label>Default value</label>\r\n  <input class=\"form-control\" v-model.trim=\"value\" placeholder=\"Default value\" />\r\n</div>\r\n";
 },"useData":true});
 
 this["Fliplet"]["Widget"]["Templates"]["templates.configurations.starRating"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
