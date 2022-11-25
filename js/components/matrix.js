@@ -65,10 +65,12 @@ Fliplet.FormBuilder.field('matrix', {
      *
      * @param {Number} rowIndex - an row index
      *
+     * @param {Number} columnIndex - an column index
+     *
      * @returns {String} an name unique to the form widget instance, field, row and column
      */
-    getOptionName: function(rowIndex) {
-      return _.kebabCase(this.name + '-' + rowIndex);
+    getOptionName: function(rowIndex, columnIndex) {
+      return _.kebabCase(this.name + '-' + rowIndex + '-' + columnIndex );
     },
 
     /**
@@ -118,6 +120,12 @@ Fliplet.FormBuilder.field('matrix', {
         this.clickHandler(row, col, rowIndex, colIndex);
       }
     },
+
+    /**
+     * Set default undefined value for each row if value is blank
+     *
+     * @returns {undefined}
+     */
     setDefaultValue: function() {
       var $vm = this;
 
@@ -126,6 +134,12 @@ Fliplet.FormBuilder.field('matrix', {
         $vm.$set($vm.value, row.id || row.label, undefined);
       });
     },
+
+    /**
+     * Set value for each row as per selection and default value
+     *
+     * @returns {undefined}
+     */
     setValue: function() {
       var $vm = this;
 
@@ -153,6 +167,7 @@ Fliplet.FormBuilder.field('matrix', {
             return (_.has(col, 'label') && _.has(col, 'id')) ? col.id === key : col.label === key;
           });
 
+          // setTimeout using to load all HTML and then execute below piece of code.
           setTimeout(function() {
             if (row && col) {
               $vm.clickHandler(row, col, rowIndex, colIndex);
@@ -161,6 +176,12 @@ Fliplet.FormBuilder.field('matrix', {
         });
       }
     },
+
+    /**
+     * Clears the value for each row
+     *
+     * @returns {undefined}
+     */
     clearValue() {
       if (!this.$refs.matrix) {
         return;
@@ -180,6 +201,14 @@ Fliplet.FormBuilder.field('matrix', {
         this.setDefaultValue();
       }
     },
+
+    /**
+     * Check if all rows has column values or not
+     *
+     * @param {object} val - value of selected options
+     *
+     * @returns {undefined}
+     */
     checkValue: function(val) {
       if (typeof val === 'string' && val !== '') {
         val = JSON.parse(this.value);
@@ -236,6 +265,12 @@ Fliplet.FormBuilder.field('matrix', {
         }
       }
     },
+
+    /**
+     * Check if the value has correct rowOptions and columnOptions or not
+     *
+     * @returns {undefined}
+     */
     checkInvalidValue: function() {
       if (!this.value) {
         return;
