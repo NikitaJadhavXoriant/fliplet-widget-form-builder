@@ -12,7 +12,7 @@
         <th>\{{ row.label }}</th>
         <td v-for="(column, colIndex) in columnOptions">
           <div class="radio radio-icon" :class="{ 'readonly' : readonly }">
-            <input type="radio" class="matrix-radio-input" :id="getOptionId(rowIndex, colIndex, 'input')" :name="getOptionName(rowIndex, colIndex)" :value="column.id" v-model.lazy="$v.value.$model" tabindex="-1">
+            <input type="radio" class="matrix-radio-input" :id="getOptionId(rowIndex, colIndex, 'input')" :name="getOptionName(rowIndex)" :value="column.id" v-model.lazy="$v.value.$model">
             <label v-on:click="readonly ? false : clickHandler(row, column, rowIndex, colIndex)">
               <span class="check focus-outline"
                 :id="getOptionId(rowIndex, colIndex,'span')"

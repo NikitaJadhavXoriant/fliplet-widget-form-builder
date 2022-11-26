@@ -65,12 +65,10 @@ Fliplet.FormBuilder.field('matrix', {
      *
      * @param {Number} rowIndex - an row index
      *
-     * @param {Number} columnIndex - an column index
-     *
      * @returns {String} an name unique to the form widget instance, field, row and column
      */
-    getOptionName: function(rowIndex, columnIndex) {
-      return _.kebabCase(this.name + '-' + rowIndex + '-' + columnIndex );
+    getOptionName: function(rowIndex) {
+      return _.kebabCase(this.name + '-' + rowIndex);
     },
 
     /**
@@ -90,6 +88,14 @@ Fliplet.FormBuilder.field('matrix', {
       var el = this.getOptionId(rowIndex, colIndex, 'input');
 
       $('#' + el).prop('checked', true);
+
+      if (row.id && this.value[row.id]) {
+        delete this.value[row.id];
+      }
+
+      if (this.value[row.label]) {
+        delete this.value[row.label];
+      }
 
       this.value[row.id || row.label] = column.id || column.label;
 
@@ -130,6 +136,7 @@ Fliplet.FormBuilder.field('matrix', {
       var $vm = this;
 
       $vm.value = {};
+
       _.forEach(this.rowOptions, function(row) {
         $vm.$set($vm.value, row.id || row.label, undefined);
       });
@@ -156,7 +163,7 @@ Fliplet.FormBuilder.field('matrix', {
           });
 
           var rowIndex = _.findIndex($vm.rowOptions, function(row) {
-            return (_.has(row, 'label') && _.has(row, 'id')) ? row.id === value : row.label === value;
+            return (_.has(row, 'label') && _.has(row, 'id')) ? row.id === value || row.label === value : row.label === value;
           });
 
           var col = _.find($vm.columnOptions, function(col) {
@@ -164,13 +171,15 @@ Fliplet.FormBuilder.field('matrix', {
           });
 
           var colIndex = _.findIndex($vm.columnOptions, function(col) {
-            return (_.has(col, 'label') && _.has(col, 'id')) ? col.id === key : col.label === key;
+            return (_.has(col, 'label') && _.has(col, 'id')) ? col.id === key || col.label === key : col.label === key;
           });
 
           // setTimeout using to load all HTML and then execute below piece of code.
           setTimeout(function() {
             if (row && col) {
               $vm.clickHandler(row, col, rowIndex, colIndex);
+            } else if (rowIndex >= 0) {
+              $vm.clickHandler($vm.rowOptions[rowIndex], $vm.columnOptions[colIndex], rowIndex, colIndex);
             }
           });
         });

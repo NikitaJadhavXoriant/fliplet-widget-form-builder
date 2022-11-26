@@ -657,8 +657,6 @@ Fliplet.FormBuilder = (function() {
         }
 
         component.methods._setOptions = function setOptions(str, attribute) {
-          console.log(str, attribute);
-
           if (!attribute) {
             throw new Error('Attribute must be provided');
           }
