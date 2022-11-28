@@ -602,19 +602,6 @@ Fliplet().then(function () {
                     value = value.toLowerCase();
                 }
 
-                if(type === 'flMatrix'){
-                  var $vm = this;
-                  _.forOwn(value, function(key, val) {
-                    var row = _.find(field.rowOptions, function(row) {
-                      return (_.has(row, 'label') && _.has(row, 'id')) ? row.id === val : row.label === val;
-                    });
-
-                    if(!row){
-                      delete value[val];
-                    }
-                  });
-                }
-
                 // Other inputs
                 appendField(field.name, value);
               }

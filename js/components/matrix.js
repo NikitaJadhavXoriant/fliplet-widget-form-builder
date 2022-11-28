@@ -85,9 +85,11 @@ Fliplet.FormBuilder.field('matrix', {
      * @returns {undefined}
      */
     clickHandler: function(row, column, rowIndex, colIndex) {
-      var el = this.getOptionId(rowIndex, colIndex, 'input');
+      if (rowIndex >= 0 && colIndex >= 0) {
+        var el = this.getOptionId(rowIndex, colIndex, 'input');
 
-      $('#' + el).prop('checked', true);
+        $('#' + el).prop('checked', true);
+      }
 
       if (row.id && this.value[row.id]) {
         delete this.value[row.id];
@@ -97,7 +99,7 @@ Fliplet.FormBuilder.field('matrix', {
         delete this.value[row.label];
       }
 
-      this.value[row.id || row.label] = column.id || column.label;
+      this.value[row.id || row.label] = column ? column.id || column.label : undefined;
 
       this.$emit('_input', this.name, this.value);
     },
@@ -275,6 +277,20 @@ Fliplet.FormBuilder.field('matrix', {
       }
     },
 
+    onBeforeSubmit: function(data) {
+      var $vm = this;
+
+      _.forOwn(data[this.name], function(key, val) {
+        var row = _.find($vm.rowOptions, function(row) {
+          return (_.has(row, 'label') && _.has(row, 'id')) ? row.id === val : row.label === val;
+        });
+
+        if (!row) {
+          delete data[$vm.name][val];
+        }
+      });
+    },
+
     /**
      * Check if the value has correct rowOptions and columnOptions or not
      *
@@ -340,9 +356,11 @@ Fliplet.FormBuilder.field('matrix', {
 
     this.setValue();
 
+    Fliplet.Hooks.on('beforeFormSubmit', this.onBeforeSubmit);
     Fliplet.FormBuilder.on('reset', this.onReset);
   },
   destroyed: function() {
+    Fliplet.Hooks.off('beforeFormSubmit', this.onBeforeSubmit);
     Fliplet.FormBuilder.off('reset', this.onReset);
   }
 });
