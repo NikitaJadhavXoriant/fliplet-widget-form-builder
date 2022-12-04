@@ -96,14 +96,14 @@
     </div>
 
     {{#isSlider}}
-    <div class="form-group cleafix">
-      <div class="col-xs-12">
-        <label>Minimum Value Number</label>
+    <div class="form-group cleafix" :class="{ 'has-error': _fieldSliderError }">
+      <div class="col-xs-12 slider-margin-bottom">
+        <label>Minimum value number</label>
         <input class="form-control" type="number" v-model.trim="min" placeholder="Default: 0"/>
       </div>
 
-      <div class="col-xs-12">
-        <label>Maximum Value Number</label>
+      <div class="col-xs-12 slider-margin-bottom">
+        <label>Maximum value number</label>
         <input class="form-control" type="number" v-model.trim="max" placeholder="Default: 100"/>
       </div>
 
@@ -111,6 +111,7 @@
         <label>Number of steps</label>
         <input class="form-control" type="number" v-model.trim="step" placeholder="Default: 1"/>
       </div>
+      <p class="col-xs-12 help-block" v-if="_fieldSliderError" v-html="_fieldSliderError"></p>
     </div>
     {{/isSlider}}
 

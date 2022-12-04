@@ -570,6 +570,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   width: 100% !important;
 }
 
+.slider-margin-bottom {
+  margin-bottom: 15px;
+}
+
 /* STAR RATING */
 .component [_type="flStarRating"] .inverse-direction {
   overflow: hidden;

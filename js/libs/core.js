@@ -333,7 +333,7 @@ Fliplet.FormBuilder = (function() {
           return 'Key field is required';
         }
 
-        if (this._fieldNameError || this._fieldLabelError) {
+        if (this._fieldNameError || this._fieldLabelError || this._fieldSliderError) {
           return;
         }
 
@@ -438,6 +438,18 @@ Fliplet.FormBuilder = (function() {
         }
 
         return '';
+      };
+
+      component.computed._fieldSliderError = function() {
+        if (this._componentName === 'flSlider') {
+          if (this.step >= (this.max - this.min)) {
+            return 'Number of steps should be less than or equal to the difference between maximum value and minimum value';
+          }
+
+          if (this.min >= this.max) {
+            return 'The minimum value cannot be higher than the maximum value';
+          }
+        }
       };
 
       component.methods.browserSupport = function(browserType) {
