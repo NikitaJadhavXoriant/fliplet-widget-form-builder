@@ -105,7 +105,7 @@ Fliplet.FormBuilder.field('matrix', {
     },
 
     /**
-     * Click handler for each radio button in matrix
+     * Focus handler for each radio button in matrix
      *
      * @param {Number} rowIndex - an row index
      *
@@ -218,14 +218,14 @@ Fliplet.FormBuilder.field('matrix', {
      *
      * @param {object} val - value of selected options
      *
-     * @returns {undefined}
+     * @returns {String} checkFlag
      */
     checkValue: function(val) {
       if (typeof val === 'string' && val !== '') {
         val = JSON.parse(this.value);
       }
 
-      var checkFlag = '';
+      var checkFlag = 'set';
       var $vm = this;
       var columnOpt = [];
 
@@ -251,19 +251,16 @@ Fliplet.FormBuilder.field('matrix', {
           });
         }
 
-        if (result.length === 0) {
-          checkFlag = 'clear';
-        } else if (columnOpt.length === 0) {
+        if (result.length === 0 || columnOpt.length === 0) {
           checkFlag = 'clear';
         } else {
           checkFlag = 'set';
         }
-      } else {
-        checkFlag = 'set';
       }
 
       return checkFlag;
     },
+
     onReset: function(data) {
       if (data.id === this.$parent.id) {
         if (this.defaultValueSource !== 'default') {
