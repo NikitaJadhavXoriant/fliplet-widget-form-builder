@@ -440,14 +440,26 @@ Fliplet.FormBuilder = (function() {
         return '';
       };
 
-      component.computed._fieldSliderError = function() {
-        if (this._componentName === 'flSlider') {
-          if (this.step >= (this.max - this.min)) {
-            return 'Number of steps should be less than or equal to the difference between maximum value and minimum value';
-          }
+      component.computed._fieldSliderMaxMinError = function() {
+        if (!this.min && !this.max) {
+          return;
+        }
 
+        if (this._componentName === 'flSlider') {
           if (this.min >= this.max) {
             return 'The minimum value cannot be higher than the maximum value';
+          }
+        }
+      };
+
+      component.computed._fieldSliderStepError = function() {
+        if (!this.min && !this.max && !this.step) {
+          return;
+        }
+
+        if (this._componentName === 'flSlider') {
+          if (this.step > (this.max - this.min) || (this.max - this.min) % this.step) {
+            return 'Number of steps should be less than or equal to the difference between maximum value and minimum value';
           }
         }
       };
