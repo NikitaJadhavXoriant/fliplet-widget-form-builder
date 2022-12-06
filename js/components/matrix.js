@@ -46,20 +46,20 @@ Fliplet.FormBuilder.field('matrix', {
   },
   methods: {
     /**
-     * Returns unique ID to the form widget instance, field, row and column.
+     * Returns unique ID to the row with combination of form widget instance, name, rowIndex and columnIndex.
      * @param {Number} rowIndex - a row index
      * @param {Number} columnIndex - a column index
      * @param {String} type - an element type
-     * @returns {String} an ID unique to the form widget instance, field, row and column
+     * @returns {String} an ID unique to the row
      */
     getOptionId: function(rowIndex, columnIndex, type) {
       return _.kebabCase(this.$parent.id + '-' + this.name + '-' + rowIndex + '-' + columnIndex + '-' + type);
     },
 
     /**
-     * Returns unique name to the form widget instance, field, row and column.
+     * Returns unique name to the row with combination of name and rowIndex.
      * @param {Number} rowIndex - a row index
-     * @returns {String} a name unique to the form widget instance, field, row and column
+     * @returns {String} a name unique to the row
      */
     getOptionName: function(rowIndex) {
       return _.kebabCase(this.name + '-' + rowIndex);
