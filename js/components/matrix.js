@@ -47,13 +47,9 @@ Fliplet.FormBuilder.field('matrix', {
   methods: {
     /**
      * Returns unique ID to the form widget instance, field, row and column.
-     *
-     * @param {Number} rowIndex - an row index
-     *
-     * @param {Number} columnIndex - an column index
-     *
+     * @param {Number} rowIndex - a row index
+     * @param {Number} columnIndex - a column index
      * @param {String} type - an element type
-     *
      * @returns {String} an ID unique to the form widget instance, field, row and column
      */
     getOptionId: function(rowIndex, columnIndex, type) {
@@ -62,10 +58,8 @@ Fliplet.FormBuilder.field('matrix', {
 
     /**
      * Returns unique name to the form widget instance, field, row and column.
-     *
-     * @param {Number} rowIndex - an row index
-     *
-     * @returns {String} an name unique to the form widget instance, field, row and column
+     * @param {Number} rowIndex - a row index
+     * @returns {String} a name unique to the form widget instance, field, row and column
      */
     getOptionName: function(rowIndex) {
       return _.kebabCase(this.name + '-' + rowIndex);
@@ -73,15 +67,10 @@ Fliplet.FormBuilder.field('matrix', {
 
     /**
      * Click handler for each radio button in matrix
-     *
-     * @param {Object} row - an row object which includes id and label
-     *
-     * @param {Object} column - an column object which includes id and label
-     *
-     * @param {Number} rowIndex - an row index
-     *
-     * @param {Number} colIndex - an column index
-     *
+     * @param {Object} row - a row object which includes id and label
+     * @param {Object} column - a column object which includes id and label
+     * @param {Number} rowIndex - a row index
+     * @param {Number} colIndex - a column index
      * @returns {undefined}
      */
     clickHandler: function(row, column, rowIndex, colIndex) {
@@ -106,11 +95,8 @@ Fliplet.FormBuilder.field('matrix', {
 
     /**
      * Focus handler for each radio button in matrix
-     *
-     * @param {Number} rowIndex - an row index
-     *
-     * @param {Number} colIndex - an column index
-     *
+     * @param {Number} rowIndex - a row index
+     * @param {Number} colIndex - a column index
      * @returns {undefined}
      */
     focusHandler: function(rowIndex, colIndex) {
@@ -131,7 +117,6 @@ Fliplet.FormBuilder.field('matrix', {
 
     /**
      * Set default undefined value for each row if value is blank
-     *
      * @returns {undefined}
      */
     setDefaultValue: function() {
@@ -146,7 +131,6 @@ Fliplet.FormBuilder.field('matrix', {
 
     /**
      * Set value for each row as per selection and default value
-     *
      * @returns {undefined}
      */
     setValue: function() {
@@ -190,7 +174,6 @@ Fliplet.FormBuilder.field('matrix', {
 
     /**
      * Clears the value for each row
-     *
      * @returns {undefined}
      */
     clearValue() {
@@ -215,9 +198,7 @@ Fliplet.FormBuilder.field('matrix', {
 
     /**
      * Check if all rows has column values or not
-     *
      * @param {object} val - value of selected options
-     *
      * @returns {String} checkFlag
      */
     checkValue: function(val) {
@@ -290,7 +271,6 @@ Fliplet.FormBuilder.field('matrix', {
 
     /**
      * Check if the value has correct rowOptions and columnOptions or not
-     *
      * @returns {undefined}
      */
     checkInvalidValue: function() {

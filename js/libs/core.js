@@ -666,25 +666,31 @@ Fliplet.FormBuilder = (function() {
             throw new Error('Attribute must be provided');
           }
 
-          this[attribute] = _.compact(str.split(/\r?\n/).map(function(rawOption) {
-            rawOption = rawOption.trim();
-
-            var regex = /<.*>$/g;
-            var match = rawOption.match(regex);
-            var option = {};
-
-            if (match) {
-              option.label = rawOption.replace(regex, '').trim();
-
-              var value = match[0].substring(1, match[0].length - 1).trim();
-
-              option.id = value || option.label;
-            } else {
-              option.label = rawOption;
-              option.id = rawOption;
+          this[attribute] = _.compact(_.map(str.split(/\r?\n/), function(option) {
+            if (option !== '') {
+              return option.trim();
             }
+          }).map(function(rawOption) {
+            if (rawOption) {
+              rawOption = rawOption.trim();
 
-            return option;
+              var regex = /<.*>$/g;
+              var match = rawOption.match(regex);
+              var option = {};
+
+              if (match) {
+                option.label = rawOption.replace(regex, '').trim();
+
+                var value = match[0].substring(1, match[0].length - 1).trim();
+
+                option.id = value || option.label;
+              } else {
+                option.label = rawOption;
+                option.id = rawOption;
+              }
+
+              return option;
+            }
           }));
         };
       }
