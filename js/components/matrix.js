@@ -143,7 +143,7 @@ Fliplet.FormBuilder.field('matrix', {
           $vm.value = JSON.parse($vm.value);
         }
 
-        _.forOwn($vm.value, function(key, value) {
+        _.forIn($vm.value, function(key, value) {
           var row = _.find($vm.rowOptions, function(row) {
             return (_.has(row, 'label') && _.has(row, 'id')) ? row.id === value : row.label === value;
           });
@@ -216,7 +216,7 @@ Fliplet.FormBuilder.field('matrix', {
       } else if (!_.isEmpty(val)) {
         var result = [];
 
-        _.forOwn(val, function(value) {
+        _.forIn(val, function(value) {
           if (typeof value !== 'undefined') {
             result.push(value);
           }
@@ -258,7 +258,7 @@ Fliplet.FormBuilder.field('matrix', {
     onBeforeSubmit: function(data) {
       var $vm = this;
 
-      _.forOwn(data[this.name], function(key, val) {
+      _.forIn(data[this.name], function(key, val) {
         var row = _.find($vm.rowOptions, function(row) {
           return (_.has(row, 'label') && _.has(row, 'id')) ? row.id === val : row.label === val;
         });
@@ -281,7 +281,7 @@ Fliplet.FormBuilder.field('matrix', {
       var validColumns = [];
       var $vm = this;
 
-      _.forOwn(this.value, function(key) {
+      _.forIn(this.value, function(key) {
         _.find($vm.columnOptions, function(col) {
           if (col.label === key || col.id === col) {
             validColumns.push(col);
