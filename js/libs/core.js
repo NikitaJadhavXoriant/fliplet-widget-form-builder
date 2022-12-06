@@ -333,7 +333,7 @@ Fliplet.FormBuilder = (function() {
           return 'Key field is required';
         }
 
-        if (this._fieldNameError || this._fieldLabelError || this._fieldSliderError) {
+        if (this._fieldNameError || this._fieldLabelError || this._fieldSliderMaxMinError || this._fieldSliderStepError) {
           return;
         }
 
