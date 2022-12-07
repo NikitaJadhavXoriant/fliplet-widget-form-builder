@@ -625,11 +625,11 @@ Fliplet.FormBuilder = (function() {
       var hasOptions = component.props.options && Array.isArray(component.props.options.type());
       var hasSelectAll = component.props.addSelectAll && typeof component.props.addSelectAll.default === 'boolean';
       var isSlider = component.props._componentName.default === 'flSlider';
-      var isMatrixField = component.props._componentName.default === 'flMatrix';
+      var isMatrix = component.props._componentName.default === 'flMatrix';
 
       // If options is an array, automatically deal with options
-      if (hasOptions || isMatrixField) {
-        if (isMatrixField) {
+      if (hasOptions || isMatrix) {
+        if (isMatrix) {
           component.computed._rowOptions = function generateOptions() {
             return this.rowOptions.map(function(option) {
               if (option.id && option.label && option.id != option.label) {

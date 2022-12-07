@@ -106,8 +106,6 @@ Fliplet.FormBuilder.field('matrix', {
         var row = this.rowOptions[rowIndex];
         var col = this.columnOptions[colIndex];
 
-        $('#' + $vm.getOptionId(rowIndex, colIndex, 'input')).focus();
-
         $('#' + $vm.getOptionId(rowIndex, colIndex, 'span')).focus();
 
         this.value[row.id || row.label] = col.id || col.label;
@@ -144,21 +142,17 @@ Fliplet.FormBuilder.field('matrix', {
         }
 
         _.forIn($vm.value, function(key, value) {
-          var row = _.find($vm.rowOptions, function(row) {
-            return (_.has(row, 'label') && _.has(row, 'id')) ? row.id === value : row.label === value;
-          });
-
           var rowIndex = _.findIndex($vm.rowOptions, function(row) {
             return (_.has(row, 'label') && _.has(row, 'id')) ? row.id === value || row.label === value : row.label === value;
           });
 
-          var col = _.find($vm.columnOptions, function(col) {
-            return (_.has(col, 'label') && _.has(col, 'id')) ? col.id === key : col.label === key;
-          });
+          var row = $vm.rowOptions[rowIndex];
 
           var colIndex = _.findIndex($vm.columnOptions, function(col) {
             return (_.has(col, 'label') && _.has(col, 'id')) ? col.id === key || col.label === key : col.label === key;
           });
+
+          var col = $vm.columnOptions[colIndex];
 
           // setTimeout using to load all HTML and then execute below piece of code.
           setTimeout(function() {
@@ -167,7 +161,7 @@ Fliplet.FormBuilder.field('matrix', {
             } else if (rowIndex >= 0) {
               $vm.clickHandler($vm.rowOptions[rowIndex], $vm.columnOptions[colIndex], rowIndex, colIndex);
             }
-          });
+          }, 0);
         });
       }
     },
@@ -181,15 +175,7 @@ Fliplet.FormBuilder.field('matrix', {
         return;
       }
 
-      var $vm = this;
-
-      _.forEach(this.rowOptions, function(row, rowIndex) {
-        _.forEach($vm.columnOptions, function(col, colIndex) {
-          var el = $vm.getOptionId(rowIndex, colIndex, 'input');
-
-          $('#' + el).prop('checked', false);
-        });
-      });
+      $('.matrix-radio-input:checked').prop('checked', false);
 
       if (this.value === '') {
         this.setDefaultValue();
@@ -304,7 +290,7 @@ Fliplet.FormBuilder.field('matrix', {
 
     if (this.required && !this.readonly) {
       rules.value.required = function() {
-      // Check that every row has a non-empty value
+        // Check that every row has a non-empty value
         return _.every($vm.rowOptions, function(row) {
           return typeof $vm.value[row.id || row.label] !== 'undefined';
         });
