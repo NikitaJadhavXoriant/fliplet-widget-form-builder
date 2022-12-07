@@ -354,6 +354,12 @@ Fliplet.FormBuilder = (function() {
           }
         }
 
+        if (this._componentName === 'flSlider') {
+          if ((data.max - data.min) % data.step != 0) {
+            data.max = data.max - ((data.max - data.min) % data.step);
+          }
+        }
+
         eventHub.$emit('field-settings-changed', data);
       };
 
@@ -458,7 +464,7 @@ Fliplet.FormBuilder = (function() {
         }
 
         if (this._componentName === 'flSlider') {
-          if (this.step > (this.max - this.min) || (this.max - this.min) % this.step) {
+          if (this.step > (this.max - this.min)) {
             return 'Number of steps should be less than or equal to the difference between maximum value and minimum value';
           }
         }
