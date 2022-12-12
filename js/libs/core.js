@@ -355,8 +355,10 @@ Fliplet.FormBuilder = (function() {
         }
 
         if (this._componentName === 'flSlider') {
-          if ((data.max - data.min) % data.step != 0) {
-            data.max = data.max - ((data.max - data.min) % data.step);
+          if (this.min && this.max && this.step) {
+            if ((Number(data.max) - Number(data.min)) % Number(data.step) != 0) {
+              data.max = Number(data.max) - ((Number(data.max) - Number(data.min)) % Number(data.step));
+            }
           }
         }
 
@@ -447,26 +449,22 @@ Fliplet.FormBuilder = (function() {
       };
 
       component.computed._fieldSliderMaxMinError = function() {
-        if (!this.min && !this.max) {
+        if (this._componentName !== 'flSlider' || !this.min && !this.max) {
           return;
         }
 
-        if (this._componentName === 'flSlider') {
-          if (this.min >= this.max) {
-            return 'The minimum value cannot be higher than the maximum value';
-          }
+        if (Number(this.min) >= Number(this.max)) {
+          return 'The minimum value cannot be higher than the maximum value';
         }
       };
 
       component.computed._fieldSliderStepError = function() {
-        if (!this.min && !this.max && !this.step) {
+        if (this._componentName !== 'flSlider' || !this.min && !this.max || !this.step) {
           return;
         }
 
-        if (this._componentName === 'flSlider') {
-          if (this.step > (this.max - this.min)) {
-            return 'Number of steps should be less than or equal to the difference between maximum value and minimum value';
-          }
+        if (Number(this.step) > (Number(this.max) - Number(this.min))) {
+          return 'Number of steps should be less than or equal to the difference between maximum value and minimum value';
         }
       };
 
