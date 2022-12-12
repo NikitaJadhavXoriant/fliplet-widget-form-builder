@@ -355,10 +355,21 @@ Fliplet.FormBuilder = (function() {
         }
 
         if (this._componentName === 'flSlider') {
-          if (this.min && this.max && this.step) {
-            if ((Number(data.max) - Number(data.min)) % Number(data.step) != 0) {
-              data.max = Number(data.max) - ((Number(data.max) - Number(data.min)) % Number(data.step));
-            }
+          if (!this.step) {
+            data.step = 1;
+          }
+
+
+          if (!this.min) {
+            data.min = 0;
+          }
+
+          if (!this.max) {
+            data.max = 100;
+          }
+
+          if ((Number(data.max) - Number(data.min)) % Number(data.step) != 0) {
+            data.max = Number(data.max) - ((Number(data.max) - Number(data.min)) % Number(data.step));
           }
         }
 
