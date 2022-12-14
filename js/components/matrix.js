@@ -197,7 +197,11 @@ Fliplet.FormBuilder.field('matrix', {
      */
     checkValue: function(val) {
       if (typeof val === 'string' && val !== '') {
-        val = JSON.parse(this.value);
+        try {
+          val = JSON.parse(this.value);
+        } catch (e) {
+          val = '';
+        }
       }
 
       var checkFlag = 'set';
@@ -311,7 +315,11 @@ Fliplet.FormBuilder.field('matrix', {
   },
   created: function() {
     if (typeof this.value === 'string' && this.value !== '') {
-      this.value = JSON.parse(this.value);
+      try {
+        this.value = JSON.parse(this.value);
+      } catch (e) {
+        this.value = {};
+      }
     }
 
     if (!this.checkInvalidValue()) {
