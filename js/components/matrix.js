@@ -37,9 +37,9 @@ Fliplet.FormBuilder.field('matrix', {
   },
   watch: {
     value: function(val) {
-      if (this.checkValue(val) === 'clear') {
-        this.clearValue();
-      } else {
+      this.clearValue();
+
+      if (this.checkValue(val) === 'set') {
         this.setValue();
       }
     }
@@ -175,7 +175,15 @@ Fliplet.FormBuilder.field('matrix', {
         return;
       }
 
-      $('.matrix-radio-input:checked').prop('checked', false);
+      var $vm = this;
+
+      _.each($('.matrix-radio-input:checked'), function(checkbox) {
+        if (!checkbox.id.includes($vm.$parent.id)) {
+          return;
+        }
+
+        $(checkbox).prop('checked', false);
+      });
 
       if (this.value === '') {
         this.setDefaultValue();
@@ -230,13 +238,10 @@ Fliplet.FormBuilder.field('matrix', {
 
     onReset: function(data) {
       if (data.id === this.$parent.id) {
+        this.clearValue();
+
         if (this.defaultValueSource !== 'default') {
           this.setValueFromDefaultSettings({ source: this.defaultValueSource, key: this.defaultValueKey });
-          this.$emit('_input', this.name, this.value);
-        }
-
-        if (this.checkValue(this.value) === 'clear') {
-          this.clearValue();
         }
       }
     },
@@ -300,12 +305,8 @@ Fliplet.FormBuilder.field('matrix', {
     return rules;
   },
   mounted: function() {
-    var $vm = this;
-
     if (this.defaultValueSource !== 'default') {
-      this.setValueFromDefaultSettings({ source: this.defaultValueSource, key: this.defaultValueKey }).then(function() {
-        $vm.setValue();
-      });
+      this.setValueFromDefaultSettings({ source: this.defaultValueSource, key: this.defaultValueKey });
     }
   },
   created: function() {
