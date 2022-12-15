@@ -476,7 +476,7 @@ Fliplet.FormBuilder = (function() {
       component.methods._getErrors = function() {
         this.errors = {};
 
-        if (this._componentName !== 'flSlider' || !this.min && !this.max || !this.step) {
+        if (this._componentName !== 'flSlider' || !this.min && !this.max && !this.step) {
           return;
         }
 
