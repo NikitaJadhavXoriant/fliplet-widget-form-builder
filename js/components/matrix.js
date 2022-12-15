@@ -188,6 +188,14 @@ Fliplet.FormBuilder.field('matrix', {
       if (this.value === '') {
         this.setDefaultValue();
       }
+
+      if (typeof this.value === 'string' && this.value !== '') {
+        try {
+          this.value = JSON.parse(this.value);
+        } catch (e) {
+          this.value = '';
+        }
+      }
     },
 
     /**
