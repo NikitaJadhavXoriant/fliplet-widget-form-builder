@@ -68,7 +68,7 @@
 
     <div class="form-group cleafix" v-if="_supportsRowOptions">
       <div class="col-xs-12">
-        <label class="control-label">Row Options (one per line)</label>
+        <label class="control-label">Row options (one per line)</label>
       </div>
       <div class="col-xs-12">
         <textarea v-on:input="_setOptions($event.target.value, 'rowOptions')" class="form-control" rows="5">\{{ _rowOptions }}</textarea>
@@ -77,7 +77,7 @@
 
     <div class="form-group cleafix" v-if="_supportsColumnOptions">
       <div class="col-xs-12">
-        <label class="control-label">Column Options (one per line)</label>
+        <label class="control-label">Column options (one per line)</label>
       </div>
       <div class="col-xs-12">
         <textarea v-on:input="_setOptions($event.target.value, 'columnOptions')" class="form-control" rows="5">\{{ _columnOptions }}</textarea>
