@@ -98,6 +98,10 @@ Fliplet.FormBuilder.field('image', {
       $vm.$emit('_input', $vm.name, $vm.value);
     },
     onReset: function() {
+      if (this.readonly) {
+        return;
+      }
+
       this.value = [];
       this.$emit('_input', this.name, this.value);
     },
