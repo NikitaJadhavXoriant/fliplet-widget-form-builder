@@ -464,17 +464,21 @@ Fliplet.FormBuilder = (function() {
       component.methods._getErrors = function() {
         this.errors = {};
 
-        if (this._componentName !== 'flSlider' || !this.min && !this.max && !this.step) {
+        if (this._componentName !== 'flSlider') {
           return;
         }
 
-        if (Number(this.min) >= Number(this.max)) {
+        var max = !this.max ? 100 : Number(this.max);
+        var min = !this.min ? 0 : Number(this.min);
+        var step = !this.step ? 1 : Number(this.step);
+
+        if (min >= max) {
           _.assignIn(this.errors, {
             sliderMinMax: 'The maximum value must be higher than the minimum value'
           });
         }
 
-        if (Number(this.step) > (Number(this.max) - Number(this.min))) {
+        if (step > (max - min)) {
           _.assignIn(this.errors, {
             sliderStep: 'Number of steps should be less than or equal to the difference between maximum value and minimum value'
           });
