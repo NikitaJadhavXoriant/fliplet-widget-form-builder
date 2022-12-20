@@ -131,7 +131,7 @@ Fliplet().then(function () {
       if (fields.length && (data.saveProgress && typeof progress === 'object') || entry) {
         fields.forEach(function(field) {
           if (entry && entry.data && field.populateOnUpdate !== false) {
-            var fieldData = entry.data[field.name];
+            var fieldData = entry.data[field.defaultValueKey || field.name];
 
             if (typeof fieldData === 'undefined' && field._submit) {
               return; // do not update the field value
@@ -325,6 +325,10 @@ Fliplet().then(function () {
             // Clone value if it's an array to ensure the original object does not mutate
             if (Array.isArray(value)) {
               value = value.slice(0);
+            }
+
+            if (field.defaultValueSource !== 'default') {
+              $vm.loadEntryForUpdate();
             }
 
             field.value = value;
