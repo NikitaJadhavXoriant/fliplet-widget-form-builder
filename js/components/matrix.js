@@ -158,8 +158,6 @@ Fliplet.FormBuilder.field('matrix', {
           setTimeout(function() {
             if (row && col) {
               $vm.clickHandler(row, col, rowIndex, colIndex);
-            } else if (rowIndex >= 0) {
-              $vm.clickHandler($vm.rowOptions[rowIndex], $vm.columnOptions[colIndex], rowIndex, colIndex);
             }
           }, 0);
         });
@@ -240,8 +238,6 @@ Fliplet.FormBuilder.field('matrix', {
 
         if (result.length === 0 || columnOpt.length === 0) {
           checkFlag = 'clear';
-        } else {
-          checkFlag = 'set';
         }
       }
 
