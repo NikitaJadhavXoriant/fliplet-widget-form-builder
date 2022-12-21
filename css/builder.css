@@ -580,17 +580,14 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 .form-group.fl-range-slider .range-slider-handle-value,
-.form-group.fl-range-slider .range-slider-handle {
+.form-group.fl-range-slider .range-slider-handle,
+.form-group.fl-range-slider .range-slider-fill {
   color: #2D2D2D;
   background-color: #E1E1E1;
 }
 
 .form-group.fl-range-slider .range-slider-handle-value:before {
   border-top-color: #E1E1E1;
-}
-
-.form-group.fl-range-slider .range-slider-fill {
-  background-color: #E1E1E1;
 }
 
 /* STAR RATING */
