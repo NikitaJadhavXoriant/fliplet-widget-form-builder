@@ -1,5 +1,5 @@
 <div v-if="description" class="help-block description">\{{ description }}</div>
-<div class="fl-matrix">
+<div class="fl-matrix" ref="matrix">
   <table>
     <thead>
       <tr>
@@ -16,7 +16,6 @@
             <label v-on:click="readonly ? false : clickHandler(row, column, rowIndex, colIndex)">
               <span class="check focus-outline"
                 :id="getOptionId(rowIndex, colIndex,'span')"
-                ref="matrix"
                 v-on:keydown.right.prevent="readonly ? false : focusHandler(rowIndex, colIndex + 1)"
                 v-on:keydown.down.prevent="readonly ? false : focusHandler(rowIndex, colIndex + 1)"
                 v-on:keydown.left.prevent="readonly ? false : focusHandler(rowIndex, colIndex - 1)"

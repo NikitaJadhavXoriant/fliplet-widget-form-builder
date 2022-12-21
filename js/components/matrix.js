@@ -173,15 +173,7 @@ Fliplet.FormBuilder.field('matrix', {
         return;
       }
 
-      var $vm = this;
-
-      _.each($('.matrix-radio-input:checked'), function(checkbox) {
-        if (!checkbox.id.includes($vm.$parent.id)) {
-          return;
-        }
-
-        $(checkbox).prop('checked', false);
-      });
+      $(this.$refs.matrix).find('.matrix-radio-input:checked').prop('checked', false);
 
       if (this.value === '') {
         this.setDefaultValue();
