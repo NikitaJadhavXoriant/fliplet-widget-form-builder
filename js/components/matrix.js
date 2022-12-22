@@ -280,11 +280,7 @@ Fliplet.FormBuilder.field('matrix', {
         });
       });
 
-      if (validColumns.length > 0) {
-        return true;
-      }
-
-      return false;
+      return validColumns.length > 0 ? true : false;
     }
   },
   validations: function() {
