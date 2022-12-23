@@ -74,6 +74,7 @@ Fliplet().then(function () {
     var entryId = !Fliplet.Env.get('interact') && data.dataSourceId && Fliplet.Navigate.query.dataSourceEntryId;
     var formMode = Fliplet.Navigate.query.mode;
     var entry;
+    var isReset = false;
 
     var formReady;
     var formPromise = new Promise(function (resolve) {
@@ -197,10 +198,14 @@ Fliplet().then(function () {
                 var img = fieldData;
                 field.value = [];
 
-                if (Array.isArray(img)) {
-                  field.value = img;
-                } else if (typeof img === 'string') {
-                  field.value.push(img);
+                if (!isReset) {
+                  if (Array.isArray(img)) {
+                    field.value = img;
+                  } else if (typeof img === 'string') {
+                    field.value.push(img);
+                  }
+                } else {
+                  isReset = false;
                 }
 
                 break;
@@ -300,6 +305,8 @@ Fliplet().then(function () {
           }
 
           var $vm = this;
+          var entryLoaded = false;
+          isReset = true;
 
           this.fields.forEach(function(field, index) {
             var value;
@@ -327,8 +334,9 @@ Fliplet().then(function () {
               value = value.slice(0);
             }
 
-            if (typeof field.defaultValueSource !== 'undefined' && field.defaultValueSource !== 'default') {
-              $vm.loadEntryForUpdate();
+            if (typeof field.defaultValueSource !== 'undefined' && field.defaultValueSource !== 'default' && !entryLoaded) {
+                $vm.loadEntryForUpdate();
+                entryLoaded = true;
             }
 
             field.value = value;
