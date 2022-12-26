@@ -310,7 +310,7 @@ Fliplet().then(function () {
             var value;
             var fieldSettings = data.fields[index];
 
-            if (field.isHidden || fieldSettings.readonly) {
+            if (field.isHidden) {
               return;
             }
 
