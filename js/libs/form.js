@@ -204,8 +204,6 @@ Fliplet().then(function () {
                   } else if (typeof img === 'string') {
                     field.value.push(img);
                   }
-                } else {
-                  isReset = false;
                 }
 
                 break;
