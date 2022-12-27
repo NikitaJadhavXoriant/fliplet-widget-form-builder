@@ -304,7 +304,10 @@ Fliplet().then(function () {
 
           var $vm = this;
           var entryLoaded = false;
-          isReset = true;
+
+          if (typeof trackEvents === 'undefined') {
+            isReset = true;
+          }
 
           this.fields.forEach(function(field, index) {
             var value;
