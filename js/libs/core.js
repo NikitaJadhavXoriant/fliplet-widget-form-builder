@@ -672,37 +672,34 @@ Fliplet.FormBuilder = (function() {
       var isSlider = component.props._componentName.default === 'flSlider';
       var isMatrix = component.props._componentName.default === 'flMatrix';
 
+      /**
+      * Generate text configurations for radio/checkbox options, separated by new lines
+      * @param {Array} options - A list of options to be mapped
+      * @returns {String} Text options for the configuration interface
+      */
+      var generateOptionsAsText = function(options) {
+        return options.map(function(option) {
+          if (option.id && option.label && option.id != option.label) {
+            return option.label + ' <' + option.id + '>';
+          }
+
+          return option.label || option.id;
+        }).join('\r\n');
+      };
+
       // If options is an array, automatically deal with options
       if (hasOptions || isMatrix) {
         if (isMatrix) {
           component.computed._rowOptions = function generateOptions() {
-            return this.rowOptions.map(function(option) {
-              if (option.id && option.label && option.id != option.label) {
-                return option.label + ' <' + option.id + '>';
-              }
-
-              return option.label || option.id;
-            }).join('\r\n');
+            return generateOptionsAsText(this.rowOptions);
           };
 
           component.computed._columnOptions = function generateOptions() {
-            return this.columnOptions.map(function(option) {
-              if (option.id && option.label && option.id != option.label) {
-                return option.label + ' <' + option.id + '>';
-              }
-
-              return option.label || option.id;
-            }).join('\r\n');
+            return generateOptionsAsText(this.columnOptions);
           };
         } else {
           component.computed._options = function generateOptions() {
-            return this.options.map(function(option) {
-              if (option.id && option.label && option.id != option.label) {
-                return option.label + ' <' + option.id + '>';
-              }
-
-              return option.label || option.id;
-            }).join('\r\n');
+            return generateOptionsAsText(this.options);
           };
         }
 
