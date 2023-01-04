@@ -1306,3 +1306,87 @@ form hr {
   -ms-transform: scale(1);
   transform: scale(1);
 }
+
+/* Matrix Field */
+
+.fl-matrix {
+  position: relative;
+  overflow: auto;
+  width: 100%;
+  max-height: 98vh;
+  border: 1px solid #eee;
+}
+
+.fl-matrix table {
+  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  position: relative;
+  margin-bottom: 0px;
+}
+
+.fl-matrix table thead th {
+  text-align: center;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  width: 100vw;
+}
+
+.fl-matrix table thead th:first-child {
+  z-index: 2;
+}
+
+.fl-matrix table tbody th {
+  text-align: left;
+  z-index: 1;
+}
+
+.fl-matrix table tbody td {
+  text-align: center;
+}
+
+.fl-matrix table th,
+.fl-matrix table td {
+  border: solid #eee;
+  border-width: 0 1px 1px 0;
+  padding: 8px;
+  min-width: 150px;
+  background: white;
+  word-break: break-all;
+  vertical-align: middle;
+}
+
+.fl-matrix table th {
+  color: rgb(85, 85, 85);
+  font-weight: normal;
+  line-height: 20px;
+}
+
+.fl-matrix table th:last-child,
+.fl-matrix table td:last-child {
+  border-right-width: 0;
+}
+
+.fl-matrix .radio {
+  margin-bottom: 0px;
+}
+
+@media screen and (min-width: 640px) {
+  .fl-matrix table th,
+  .fl-matrix table td {
+    max-width: auto;
+  }
+}
+
+.fl-matrix table tr > th:first-child,
+.fl-matrix table tr > td:first-child {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+}
+
+.fl-matrix table tbody tr:last-child th,
+.fl-matrix table tbody tr:last-child td {
+  border-bottom-width: 0;
+}
