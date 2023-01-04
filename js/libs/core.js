@@ -678,8 +678,12 @@ Fliplet.FormBuilder = (function() {
       * @returns {String} Text options for the configuration interface
       */
       var generateOptionsAsText = function(options) {
+        if (!options) {
+          return;
+        }
+
         return options.map(function(option) {
-          if (option.id && option.label && option.id != option.label) {
+          if (option.id && option.label && option.id !== option.label) {
             return option.label + ' <' + option.id + '>';
           }
 
