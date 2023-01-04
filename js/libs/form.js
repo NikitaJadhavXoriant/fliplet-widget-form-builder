@@ -74,7 +74,7 @@ Fliplet().then(function () {
     var entryId = !Fliplet.Env.get('interact') && data.dataSourceId && Fliplet.Navigate.query.dataSourceEntryId;
     var formMode = Fliplet.Navigate.query.mode;
     var entry;
-    var isReset = false;
+    var isResetAction = false;
 
     var formReady;
     var formPromise = new Promise(function (resolve) {
@@ -198,7 +198,7 @@ Fliplet().then(function () {
                 var img = fieldData;
                 field.value = [];
 
-                if (!isReset) {
+                if (!isResetAction) {
                   if (Array.isArray(img)) {
                     field.value = img;
                   } else if (typeof img === 'string') {
@@ -294,7 +294,11 @@ Fliplet().then(function () {
           }
           this.isSent = false;
         },
-        reset: function(trackEvents) {
+        reset: function () {
+            isResetAction = true;
+            this.resetForm();
+        },
+        resetForm: function(trackEvents) {
           if (trackEvents !== false) {
             Fliplet.Analytics.trackEvent({
               category: 'form',
@@ -304,10 +308,6 @@ Fliplet().then(function () {
 
           var $vm = this;
           var entryLoaded = false;
-
-          if (typeof trackEvents === 'undefined') {
-            isReset = true;
-          }
 
           this.fields.forEach(function(field, index) {
             var value;
@@ -710,7 +710,7 @@ Fliplet().then(function () {
                 }
               });
               $vm.isSending = false;
-              $vm.reset(false);
+              $vm.resetForm(false);
               /**
                * When we try to submit a form in Edge or IE11 and use components date picker and rich text
                * (only in this sequence) we could saw that rich text textarea become empty but there was no
