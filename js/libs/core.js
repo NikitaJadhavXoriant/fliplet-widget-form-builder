@@ -694,11 +694,11 @@ Fliplet.FormBuilder = (function() {
       // If options is an array, automatically deal with options
       if (hasOptions || isMatrix) {
         if (isMatrix) {
-          component.computed._rowOptions = function generateOptions() {
+          component.computed._rowOptions = function generateRowOptions() {
             return generateOptionsAsText(this.rowOptions);
           };
 
-          component.computed._columnOptions = function generateOptions() {
+          component.computed._columnOptions = function generateColumnOptions() {
             return generateOptionsAsText(this.columnOptions);
           };
         } else {
