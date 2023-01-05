@@ -466,6 +466,8 @@ Fliplet().then(function () {
             action: 'submit'
           });
 
+          isResetAction = false;
+
           if (!(trackEventOp instanceof Promise)) {
             trackEventOp = Promise.resolve();
           }
