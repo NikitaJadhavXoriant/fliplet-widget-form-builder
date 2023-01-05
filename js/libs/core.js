@@ -95,7 +95,7 @@ Fliplet.FormBuilder = (function() {
               throw new Error('A key is required to fetch data from the user\'s profile');
             }
 
-            result = Fliplet.User.getCachedSession()
+            result = Fliplet.User.getCachedSession({ force: true })
               .then(function(session) {
                 if (session && session.entries) {
                   if (session.entries.dataSource) {
@@ -208,6 +208,14 @@ Fliplet.FormBuilder = (function() {
 
       component.computed._supportsRequired = function() {
         return this._isFormField && component.name !== 'Slider';
+      };
+
+      component.computed._supportsRowOptions = function() {
+        return this._isFormField && component.props._componentName.default === 'flMatrix';
+      };
+
+      component.computed._supportsColumnOptions = function() {
+        return this._isFormField && component.props._componentName.default === 'flMatrix';
       };
 
       component.computed._showField = function() {
@@ -382,17 +390,17 @@ Fliplet.FormBuilder = (function() {
 
       component.props._componentsWithPersonalization = {
         type: Array,
-        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flSlider']
+        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flSlider', 'flMatrix']
       };
 
       component.props._componentsWithDescription = {
         type: Array,
-        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider']
+        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider', 'flMatrix']
       };
 
       component.props._readOnlyComponents = {
         type: Array,
-        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider']
+        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider', 'flMatrix']
       };
 
       component.props._idx = {
@@ -662,39 +670,73 @@ Fliplet.FormBuilder = (function() {
       var hasOptions = component.props.options && Array.isArray(component.props.options.type());
       var hasSelectAll = component.props.addSelectAll && typeof component.props.addSelectAll.default === 'boolean';
       var isSlider = component.props._componentName.default === 'flSlider';
+      var isMatrix = component.props._componentName.default === 'flMatrix';
+
+      /**
+      * Generate text configurations for radio/checkbox options, separated by new lines
+      * @param {Array} options - A list of options to be mapped
+      * @returns {String} Text options for the configuration interface
+      */
+      var generateOptionsAsText = function(options) {
+        if (!options) {
+          return;
+        }
+
+        return options.map(function(option) {
+          if (option.id && option.label && option.id !== option.label) {
+            return option.label + ' <' + option.id + '>';
+          }
+
+          return option.label || option.id;
+        }).join('\r\n');
+      };
 
       // If options is an array, automatically deal with options
-      if (hasOptions) {
-        component.computed._options = function generateOptions() {
-          return this.options.map(function(option) {
-            if (option.id && option.label && option.id != option.label) {
-              return option.label + ' <' + option.id + '>';
+      if (hasOptions || isMatrix) {
+        if (isMatrix) {
+          component.computed._rowOptions = function generateRowOptions() {
+            return generateOptionsAsText(this.rowOptions);
+          };
+
+          component.computed._columnOptions = function generateColumnOptions() {
+            return generateOptionsAsText(this.columnOptions);
+          };
+        } else {
+          component.computed._options = function generateOptions() {
+            return generateOptionsAsText(this.options);
+          };
+        }
+
+        component.methods._setOptions = function setOptions(str, attribute) {
+          if (!attribute) {
+            throw new Error('Attribute must be provided');
+          }
+
+          this[attribute] = _.compact(_.map(str.split(/\r?\n/), function(option) {
+            if (option !== '') {
+              return option.trim();
             }
+          }).map(function(rawOption) {
+            if (rawOption) {
+              rawOption = rawOption.trim();
 
-            return option.label || option.id;
-          }).join('\r\n');
-        };
+              var regex = /<.*>$/g;
+              var match = rawOption.match(regex);
+              var option = {};
 
-        component.methods._setOptions = function setOptions(str) {
-          this.options = _.compact(str.split(/\r?\n/).map(function(rawOption) {
-            rawOption = rawOption.trim();
+              if (match) {
+                option.label = rawOption.replace(regex, '').trim();
 
-            var regex = /<.*>$/g;
-            var match = rawOption.match(regex);
-            var option = {};
+                var value = match[0].substring(1, match[0].length - 1).trim();
 
-            if (match) {
-              option.label = rawOption.replace(regex, '').trim();
+                option.id = value || option.label;
+              } else {
+                option.label = rawOption;
+                option.id = rawOption;
+              }
 
-              var value = match[0].substring(1, match[0].length - 1).trim();
-
-              option.id = value || option.label;
-            } else {
-              option.label = rawOption;
-              option.id = rawOption;
+              return option;
             }
-
-            return option;
           }));
         };
       }
