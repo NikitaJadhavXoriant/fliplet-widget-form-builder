@@ -4,6 +4,12 @@
   </div>
   <div>
     <div class="radio radio-icon">
+      <input type="radio" id="specific-date" name="specific-date" value='custom' v-model="autofill">
+      <label for="specific-date">
+        <span class="check"><i class="fa fa-circle"></i></span>Autofill with specific date if it's empty
+      </label>
+    </div>
+    <div class="radio radio-icon">
       <input type="radio" id="default" name="default" value='default' v-model="autofill">
       <label for="default">
         <span class="check"><i class="fa fa-circle"></i></span>Autofill with current date if it's empty
@@ -16,6 +22,12 @@
       </label>
     </div>
   </div>
+</div>
+
+<div v-if="autofill === 'custom'" class="form-group" :class="{ 'has-error': errors.requiredField }">
+  <label>Default value</label>
+  <p class="help-block" v-if="errors.requiredField">\{{ errors.requiredField }}</p>
+  <input class="form-control" type="date" v-model.trim="value" />
 </div>
 
 <div v-if="isApplyCurrentDateField" class="form-group">
