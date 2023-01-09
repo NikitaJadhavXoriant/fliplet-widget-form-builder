@@ -466,8 +466,6 @@ Fliplet().then(function () {
             action: 'submit'
           });
 
-          isResetAction = false;
-
           if (!(trackEventOp instanceof Promise)) {
             trackEventOp = Promise.resolve();
           }
@@ -712,6 +710,7 @@ Fliplet().then(function () {
                 }
               });
               $vm.isSending = false;
+              $vm.isResetAction = false;
               $vm.resetForm(false);
               /**
                * When we try to submit a form in Edge or IE11 and use components date picker and rich text
