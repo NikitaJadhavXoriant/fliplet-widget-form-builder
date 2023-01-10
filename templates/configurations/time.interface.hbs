@@ -26,7 +26,7 @@
 
 <div v-if="autofill === 'custom'" class="form-group">
   <label>Default value</label>
-  <p class="text-danger" v-if="errors.requiredField"> \{{ errors.requiredField }} </p>
+  <div class="text-danger" v-if="errors.requiredField"> \{{ errors.requiredField }} </div>
   <input type="time" class="form-control basic-time-picker" v-model.trim="value" />
 </div>
 
