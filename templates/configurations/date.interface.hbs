@@ -24,7 +24,7 @@
   </div>
 </div>
 
-<div v-if="autofill === 'custom'" class="form-group" :class="{ 'has-error': errors.requiredField }">
+<div v-if="autofill === 'custom'" class="form-group">
   <label>Default value</label>
   <p class="help-block" v-if="errors.requiredField"> \{{ errors.requiredField }} </p>
   <input class="form-control" type="date" v-model.trim="value" />
