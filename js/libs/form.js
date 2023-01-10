@@ -336,8 +336,8 @@ Fliplet().then(function () {
             }
 
             if (typeof field.defaultValueSource !== 'undefined' && field.defaultValueSource !== 'default' && !entryLoaded) {
-                $vm.loadEntryForUpdate();
-                entryLoaded = true;
+              $vm.loadEntryForUpdate();
+              entryLoaded = true;
             }
 
             field.value = value;
