@@ -294,7 +294,7 @@ Fliplet().then(function () {
           }
           this.isSent = false;
         },
-        reset: function () {
+        reset: function() {
             isResetAction = true;
             this.resetForm();
         },
