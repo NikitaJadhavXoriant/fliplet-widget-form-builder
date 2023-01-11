@@ -503,6 +503,7 @@ Fliplet.FormBuilder = (function() {
             break;
 
           default:
+            // nothing
         }
       };
 
