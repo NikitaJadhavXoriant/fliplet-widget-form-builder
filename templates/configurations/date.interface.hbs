@@ -24,12 +24,6 @@
   </div>
 </div>
 
-<div v-if="autofill === 'custom'" class="form-group">
-  <label>Default value</label>
-  <div class="text-danger" v-if="errors.requiredField"> \{{ errors.requiredField }} </div>
-  <input class="form-control" type="date" v-model.trim="value" />
-</div>
-
 <div v-if="isApplyCurrentDateField" class="form-group">
   <div>
     <label class="control-label">When applying the current date</label>
@@ -48,4 +42,10 @@
       </label>
     </div>
   </div>
+</div>
+
+<div v-else class="form-group">
+  <label>Default value</label>
+  <div class="text-danger" v-if="errors.requiredField"> \{{ errors.requiredField }} </div>
+  <input class="form-control" type="date" v-model.trim="value" />
 </div>
