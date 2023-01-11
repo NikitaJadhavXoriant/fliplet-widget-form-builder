@@ -295,8 +295,8 @@ Fliplet().then(function () {
           this.isSent = false;
         },
         reset: function() {
-            isResetAction = true;
-            this.resetForm();
+          isResetAction = true;
+          this.resetForm();
         },
         resetForm: function(trackEvents) {
           if (trackEvents !== false) {
