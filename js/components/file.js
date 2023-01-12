@@ -144,10 +144,6 @@ Fliplet.FormBuilder.field('file', {
       return TN(bytes.toFixed(decimals)) + ' ' + units[unitIndex];
     },
     onReset: function() {
-      if (this.readonly) {
-        return;
-      }
-
       var $vm = this;
 
       $vm.value = [];

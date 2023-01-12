@@ -74,6 +74,7 @@ Fliplet().then(function () {
     var entryId = !Fliplet.Env.get('interact') && data.dataSourceId && Fliplet.Navigate.query.dataSourceEntryId;
     var formMode = Fliplet.Navigate.query.mode;
     var entry;
+    var isResetAction = false;
 
     var formReady;
     var formPromise = new Promise(function (resolve) {
@@ -131,7 +132,7 @@ Fliplet().then(function () {
       if (fields.length && (data.saveProgress && typeof progress === 'object') || entry) {
         fields.forEach(function(field) {
           if (entry && entry.data && field.populateOnUpdate !== false) {
-            var fieldData = entry.data[field.name];
+            var fieldData = entry.data[field.defaultValueKey || field.name];
 
             if (typeof fieldData === 'undefined' && field._submit) {
               return; // do not update the field value
@@ -197,10 +198,12 @@ Fliplet().then(function () {
                 var img = fieldData;
                 field.value = [];
 
-                if (Array.isArray(img)) {
-                  field.value = img;
-                } else if (typeof img === 'string') {
-                  field.value.push(img);
+                if (!isResetAction) {
+                  if (Array.isArray(img)) {
+                    field.value = img;
+                  } else if (typeof img === 'string') {
+                    field.value.push(img);
+                  }
                 }
 
                 break;
@@ -291,7 +294,11 @@ Fliplet().then(function () {
           }
           this.isSent = false;
         },
-        reset: function(trackEvents) {
+        reset: function() {
+          isResetAction = true;
+          this.resetForm();
+        },
+        resetForm: function(trackEvents) {
           if (trackEvents !== false) {
             Fliplet.Analytics.trackEvent({
               category: 'form',
@@ -300,12 +307,13 @@ Fliplet().then(function () {
           }
 
           var $vm = this;
+          var entryLoaded = false;
 
           this.fields.forEach(function(field, index) {
             var value;
             var fieldSettings = data.fields[index];
 
-            if (field.isHidden || fieldSettings.readonly) {
+            if (field.isHidden) {
               return;
             }
 
@@ -325,6 +333,11 @@ Fliplet().then(function () {
             // Clone value if it's an array to ensure the original object does not mutate
             if (Array.isArray(value)) {
               value = value.slice(0);
+            }
+
+            if (typeof field.defaultValueSource !== 'undefined' && field.defaultValueSource !== 'default' && !entryLoaded) {
+              $vm.loadEntryForUpdate();
+              entryLoaded = true;
             }
 
             field.value = value;
@@ -697,7 +710,8 @@ Fliplet().then(function () {
                 }
               });
               $vm.isSending = false;
-              $vm.reset(false);
+              $vm.isResetAction = false;
+              $vm.resetForm(false);
               /**
                * When we try to submit a form in Edge or IE11 and use components date picker and rich text
                * (only in this sequence) we could saw that rich text textarea become empty but there was no
