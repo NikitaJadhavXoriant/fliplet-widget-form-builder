@@ -505,13 +505,13 @@ Fliplet.FormBuilder = (function() {
           case 'flMatrix':
             if (this.columnOptions.length <= 0) {
               _.assignIn(this.errors, {
-                matrixColumnOptions: 'Please enter column options for the matrix field.'
+                matrixColumnOptions: 'Please enter column options for the matrix field'
               });
             }
 
             if (this.rowOptions.length <= 0) {
               _.assignIn(this.errors, {
-                matrixRowOptions: 'Please enter row options for the matrix field.'
+                matrixRowOptions: 'Please enter row options for the matrix field'
               });
             }
 
