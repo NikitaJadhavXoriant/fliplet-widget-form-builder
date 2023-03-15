@@ -83,7 +83,7 @@
       <div class="col-xs-12">
         <textarea v-on:input="_setOptions($event.target.value, 'columnOptions')" class="form-control" rows="5">\{{ _columnOptions }}</textarea>
       </div>
-      <p class="col-xs-12 help-block" v-if="errors.matrixRowOptions">\{{ errors.matrixColumnOptions }}</p>
+      <p class="col-xs-12 help-block" v-if="errors.matrixColumnOptions">\{{ errors.matrixColumnOptions }}</p>
     </div>
 
     {{#hasSelectAll}}
