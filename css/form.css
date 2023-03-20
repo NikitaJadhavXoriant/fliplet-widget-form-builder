@@ -667,7 +667,6 @@ html[dir="rtl"] .radio.radio-icon input[type="radio"] + label > span.check {
   top: 50%;
   margin-top: -10px;
   color: #fff;
-  opacity: 0.5;
 }
 
 .fileUpload input[type="file"] {
