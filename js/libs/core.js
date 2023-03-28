@@ -206,6 +206,10 @@ Fliplet.FormBuilder = (function() {
         return this.showLabel || this.showLabel === undefined;
       };
 
+      component.computed._isPreventClicked = function() {
+        return component.props._componentName.default === 'flCheckbox' || component.props._componentName.default === 'flRadio' ? '' : this.name;
+      };
+
       component.computed._supportsRequired = function() {
         return this._isFormField && component.name !== 'Slider';
       };
