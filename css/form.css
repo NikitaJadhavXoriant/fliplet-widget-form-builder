@@ -1090,10 +1090,6 @@ form hr {
     height: 130px;
   }
 
-  .fileUpload .btn-primary > span {
-    margin-right: -4px;
-  }
-
   .fileUpload .fa:not(.fa-file) {
     display: inline-block;
     width: auto;
