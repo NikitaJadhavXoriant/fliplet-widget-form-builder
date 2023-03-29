@@ -206,8 +206,8 @@ Fliplet.FormBuilder = (function() {
         return this.showLabel || this.showLabel === undefined;
       };
 
-      component.computed._isPreventClicked = function() {
-        return component.props._componentName.default === 'flCheckbox' || component.props._componentName.default === 'flRadio' ? '' : this.name;
+      component.computed._labelName = function() {
+        return ['flRadio', 'flCheckbox'].indexOf(component.props._componentName.default) > -1 ? '' : this.name;
       };
 
       component.computed._supportsRequired = function() {
