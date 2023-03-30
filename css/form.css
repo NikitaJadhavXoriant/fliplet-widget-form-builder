@@ -122,7 +122,7 @@ form.placeholder button {
 /* Buttons */
 
 .btn-primary {
-  display: flex;
+  display: flex !important;
   clear: both;
   width: 100%;
   padding: 10px 16px;
