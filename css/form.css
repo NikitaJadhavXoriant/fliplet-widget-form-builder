@@ -122,7 +122,7 @@ form.placeholder button {
 /* Buttons */
 
 .btn-primary {
-  display: flex;
+  display: flex !important;
   clear: both;
   width: 100%;
   padding: 10px 16px;
@@ -1072,7 +1072,7 @@ form hr {
   .btn-primary,
   .btn-secondary {
     clear: none;
-    display: table-cell;
+    display: table-cell !important;
     width: auto;
     max-width: 100%;
   }
