@@ -1,0 +1,46 @@
+<template>
+  <label
+    v-if="showPredefinedRanges"
+    :for="name"
+    class="select-proxy-display"
+    :class="{ 'input-focused': isInputFocused , 'readonly': readonly }"
+  >
+    <select
+      class="form-control hidden-select focus-outline"
+      name="predefinedRangesOptions"
+      id="predefinedRangesOptions"
+      v-model.lazy="selectedRange"
+      v-on:keydown.prevent="readonly ? false : true"
+      tabindex="0"
+      @blur="onBlur()"
+    >
+      <option v-if="placeholder" value="">\{{ placeholder }}</option>
+      <option v-for="option in predefinedRanges" :value="(_.isNumber(option.id) || _.isString(option.id)) ? option.id : option.label" :disabled="option.disabled">
+        \{{ option.label || option.id }}
+      </option>
+    </select>
+    <span class="icon fa fa-chevron-down"></span>
+    <span class="select-value-proxy"><template v-if="selectedRange && selectedRange !== ''">\{{ selectedRange }}</template><template v-else>\{{ placeholder }}</template></span>
+  </label>
+  <div class="date-range fl-date-range" ref="dateRange">
+    <div class="form-html">
+      <div class="form-group fl-date-picker date-picker-start focus-outline">
+        <i class="fa fa-calendar fa-fw"></i>
+        <input type="date" class="form-control" :name="name" :id="name"/>
+        <input type="text" class="form-control" :tabindex="readonly ? -1 : 0"/>
+        <i class="fa fa-times fa-fw"></i>
+      </div>
+    </div>
+    <div class="form-html">
+      <div class="form-group fl-date-picker date-picker-end focus-outline">
+        <i class="fa fa-calendar fa-fw"></i>
+        <input type="date" class="form-control" :name="name" :id="name"/>
+        <input type="text" class="form-control" :tabindex="readonly ? -1 : 0"/>
+        <i class="fa fa-times fa-fw"></i>
+      </div>
+    </div>
+  </div>
+</template>
+<p class="text-danger" v-if="$v.value.required === false && $v.value.$dirty">
+  {{T "widgets.form.errors.required"}}
+</p>
