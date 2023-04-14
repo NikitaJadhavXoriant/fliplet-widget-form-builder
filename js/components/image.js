@@ -283,6 +283,7 @@ Fliplet.FormBuilder.field('image', {
         addThumbnailToCanvas(imgBase64Url, $vm.value.length - 1, $vm);
         $vm.$emit('_input', $vm.name, $vm.value);
       }).catch(function(error) {
+        /* eslint-disable-next-line */
         console.error(error);
       });
     },
