@@ -4,10 +4,7 @@ Fliplet.FormBuilder.field('dateRange', {
   props: {
     value: {
       type: Object,
-      default: {
-        start: '',
-        end: ''
-      }
+      default: null
     },
     description: {
       type: String

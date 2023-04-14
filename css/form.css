@@ -1032,28 +1032,6 @@ html[dir="rtl"] .radio.radio-icon input[type="radio"] + label > span.check {
   color: #e1e1e1;
 }
 
-.fl-date-range {
-  display: flex;
-  align-items: center;
-  margin-top: 12px;
-  flex-wrap: nowrap;
-}
-
-.fl-date-range .form-group {
-  width: 100%;
-  min-width: 156px;
-}
-
-@media screen and (max-width: 376px) {
-  .fl-date-range .form-group {
-    width: 48%;
-  }
-
-  .fl-date-range {
-    flex-wrap: wrap;
-  }
-}
-
 /* SLIDER FIELD */
 
 [data-widget-package="com.fliplet.form-builder"] .form-group.fl-range-slider .range-slider {
