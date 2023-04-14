@@ -1,6 +1,6 @@
 Fliplet.FormBuilder.field('dateRange', {
   name: 'Date range',
-  category: 'Text inputs',
+  category: 'Date & time',
   props: {
     value: {
       type: Object,
@@ -20,7 +20,7 @@ Fliplet.FormBuilder.field('dateRange', {
       type: String,
       default: 'submission'
     },
-    defaultEndDays: {
+    defaultRangeDuration: {
       type: Number,
       default: 2
     },
@@ -41,12 +41,40 @@ Fliplet.FormBuilder.field('dateRange', {
       isInputFocused: false,
       isPreview: Fliplet.Env.get('preview'),
       today: moment().locale('en').format('YYYY-MM-DD'),
-      selectedRange: ''
+      selectedRange: '',
+      predefinedRanges: [
+        {
+          label: T('widgets.form.dateRange.predefinedRanges.today'),
+          value: 'today'
+        },
+        {
+          label: T('widgets.form.dateRange.predefinedRanges.yesterday'),
+          value: 'yesterday'
+        },
+        {
+          label: T('widgets.form.dateRange.predefinedRanges.tomorrow'),
+          value: 'tomorrow'
+        },
+        {
+          label: T('widgets.form.dateRange.predefinedRanges.nextWeek'),
+          value: 'nextWeek'
+        },
+        {
+          label: T('widgets.form.dateRange.predefinedRanges.lastWeek'),
+          value: 'lastWeek'
+        },
+        {
+          label: T('widgets.form.dateRange.predefinedRanges.nextMonth'),
+          value: 'nextMonth'
+        },
+        {
+          label: T('widgets.form.dateRange.predefinedRanges.lastMonth'),
+          value: 'lastMonth'
+        }
+      ]
     };
   },
   mounted: function() {
-    this.initDaterange();
-
     if (this.defaultValueSource !== 'default') {
       this.setValueFromDefaultSettings({
         source: this.defaultValueSource,
@@ -54,22 +82,23 @@ Fliplet.FormBuilder.field('dateRange', {
       });
     }
 
-    if (this.autofill === 'default' || this.autofill === 'always') {
-      this.value = {
-        start: this.today,
-        end: this.today
-      };
-      this.empty = false;
+    switch (this.autofill) {
+      case 'default':
+      case 'always':
+        this.value = {
+          start: this.today,
+          end: this.today
+        };
+        this.empty = false;
+        break;
+      case 'empty':
+        this.value = null;
+        break;
+      default:
+        break;
     }
 
-    if (this.autofill === 'empty') {
-      this.value = {
-        start: '',
-        end: ''
-      };
-
-      return;
-    }
+    this.initDaterange();
 
     this.$emit('_input', this.name, this.value, false, true);
     this.$v.$reset();
@@ -88,31 +117,6 @@ Fliplet.FormBuilder.field('dateRange', {
   computed: {
     isApplyCurrentDateField: function() {
       return this.autofill === 'always' || this.autofill === 'default';
-    },
-    predefinedRanges: function() {
-      return [
-        {
-          label: T('widgets.form.dateRange.predefinedRanges.today')
-        },
-        {
-          label: T('widgets.form.dateRange.predefinedRanges.yesterday')
-        },
-        {
-          label: T('widgets.form.dateRange.predefinedRanges.tomorrow')
-        },
-        {
-          label: T('widgets.form.dateRange.predefinedRanges.nextWeek')
-        },
-        {
-          label: T('widgets.form.dateRange.predefinedRanges.lastWeek')
-        },
-        {
-          label: T('widgets.form.dateRange.predefinedRanges.nextMonth')
-        },
-        {
-          label: T('widgets.form.dateRange.predefinedRanges.lastMonth')
-        }
-      ];
     }
   },
   watch: {
@@ -122,14 +126,6 @@ Fliplet.FormBuilder.field('dateRange', {
           start: this.today,
           end: this.today
         };
-
-        if (this.dateRange) {
-          this.dateRange.set(val, true);
-        }
-
-        this.$emit('_input', this.name, val, false, true);
-
-        return;
       }
 
       if (this.isPreview && this.$v.value.$invalid) {
@@ -142,45 +138,10 @@ Fliplet.FormBuilder.field('dateRange', {
 
       this.$emit('_input', this.name, val, false, true);
     },
-    selectedRange: function(val) {
-      var newDate = {
-        start: '',
-        end: ''
-      };
-
-      switch (val) {
-        case T('widgets.form.dateRange.predefinedRanges.today'):
-          newDate = this.getDate('today');
-          break;
-        case T('widgets.form.dateRange.predefinedRanges.yesterday'):
-          newDate = this.getDate('yesterday');
-          break;
-        case T('widgets.form.dateRange.predefinedRanges.tomorrow'):
-          newDate = this.getDate('tomorrow');
-          break;
-        case T('widgets.form.dateRange.predefinedRanges.nextWeek'):
-          newDate = this.getDate('nextWeek');
-          break;
-        case T('widgets.form.dateRange.predefinedRanges.lastWeek'):
-          newDate = this.getDate('lastWeek');
-          break;
-        case T('widgets.form.dateRange.predefinedRanges.nextMonth'):
-          newDate = this.getDate('nextMonth');
-          break;
-        case T('widgets.form.dateRange.predefinedRanges.lastMonth'):
-          newDate = this.getDate('lastMonth');
-          break;
-        default:
-          newDate = this.getDate('today');
-          break;
-      }
-
-      if (this.dateRange) {
-        this.dateRange.set(newDate, true);
-      }
+    selectedRange: function(range) {
+      var newDate = this.getDate(range);
 
       this.value = newDate;
-      this.$emit('_input', this.name, this.value, false, true);
     }
   },
   created: function() {
@@ -212,9 +173,7 @@ Fliplet.FormBuilder.field('dateRange', {
       });
 
       this.dateRange.change(function(value) {
-        if (!value || !value.start || !value.end) {
-          this.selectedRange = '';
-        }
+        this.selectedRange = '';
 
         $vm.value = value;
         $vm.updateValue();
@@ -224,55 +183,55 @@ Fliplet.FormBuilder.field('dateRange', {
       switch (option) {
         case 'today':
           return {
-            start: moment().locale('en').format('YYYY-MM-DD'),
-            end: moment().locale('en').format('YYYY-MM-DD')
+            start: this.getLocaleDate(moment()),
+            end: this.getLocaleDate(moment())
           };
         case 'yesterday':
           return {
-            start: moment().subtract(1, 'days').locale('en').format('YYYY-MM-DD'),
-            end: moment().subtract(1, 'days').locale('en').format('YYYY-MM-DD')
+            start: this.getLocaleDate(moment().subtract(1, 'days')),
+            end: this.getLocaleDate(moment().subtract(1, 'days'))
           };
         case 'tomorrow':
           return {
-            start: moment().add(1, 'days').locale('en').format('YYYY-MM-DD'),
-            end: moment().add(1, 'days').locale('en').format('YYYY-MM-DD')
+            start: this.getLocaleDate(moment().add(1, 'days')),
+            end: this.getLocaleDate(moment().add(1, 'days'))
           };
         case 'nextWeek':
           return {
-            start: moment().add(1, 'days').locale('en').format('YYYY-MM-DD'),
-            end: moment().add(7, 'days').locale('en').format('YYYY-MM-DD')
+            start: this.getLocaleDate(moment().add(1, 'days')),
+            end: this.getLocaleDate(moment().add(7, 'days'))
           };
         case 'lastWeek':
           return {
-            start: moment().subtract(7, 'days').locale('en').format('YYYY-MM-DD'),
-            end: moment().subtract(1, 'days').locale('en').format('YYYY-MM-DD')
+            start: this.getLocaleDate(moment().subtract(7, 'days')),
+            end: this.getLocaleDate(moment().subtract(1, 'days'))
           };
         case 'nextMonth':
           return {
-            start: moment().add(1, 'days').locale('en').format('YYYY-MM-DD'),
-            end: moment().add(30, 'days').locale('en').format('YYYY-MM-DD')
+            start: this.getLocaleDate(moment().add(1, 'days')),
+            end: this.getLocaleDate(moment().add(30, 'days'))
           };
         case 'lastMonth':
           return {
-            start: moment().subtract(30, 'days').locale('en').format('YYYY-MM-DD'),
-            end: moment().subtract(1, 'days').locale('en').format('YYYY-MM-DD')
+            start: this.getLocaleDate(moment().subtract(30, 'days')),
+            end: this.getLocaleDate(moment().subtract(1, 'days'))
           };
         default:
-          break;
+          return {
+            start: this.getLocaleDate(moment()),
+            end: this.getLocaleDate(moment())
+          };
       }
+    },
+    getLocaleDate: function(date) {
+      return date.locale('en').format('YYYY-MM-DD');
     },
     onBeforeSubmit: function(data) {
       // Empty date fields are validated to null before this hook is called
       if (this.autofill === 'always' && data[this.name] === null) {
-        data[this.name] = this.defaultSource === 'submission' ?
-          {
-            start: moment().locale('en').format('YYYY-MM-DD'),
-            end: moment().locale('en').format('YYYY-MM-DD')
-          } :
-          {
-            start: this.today,
-            end: this.today
-          };
+        data[this.name] = this.defaultSource === 'submission'
+          ? { start: this.getLocaleDate(moment()), end: this.getLocaleDate(moment()) }
+          : { start: this.today, end: this.today };
       }
     }
   }

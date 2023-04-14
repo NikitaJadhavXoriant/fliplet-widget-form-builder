@@ -83,6 +83,18 @@
           "option2": "Option 2"
         }
       },
+      "dateRange": {
+        "rangePlaceholder": "Select range",
+        "predefinedRanges": {
+          "today": "Today",
+          "yesterday": "Yesterday",
+          "tomorrow": "Tomorrow",
+          "nextWeek": "Next week",
+          "lastWeek": "Last week",
+          "nextMonth": "Next month",
+          "lastMonth": "Last month"
+        }
+      },
       "signature": {
         "actions": {
           "clear": "Clear",
