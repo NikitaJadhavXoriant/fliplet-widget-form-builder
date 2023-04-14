@@ -40,7 +40,7 @@ Fliplet.FormBuilder.field('dateRange', {
       dateRange: null,
       isInputFocused: false,
       isPreview: Fliplet.Env.get('preview'),
-      today: moment().locale('en').format('YYYY-MM-DD'),
+      today: this.formatLocaleDate(moment()),
       selectedRange: '',
       predefinedRanges: [
         {
@@ -183,54 +183,54 @@ Fliplet.FormBuilder.field('dateRange', {
       switch (option) {
         case 'today':
           return {
-            start: this.getLocaleDate(moment()),
-            end: this.getLocaleDate(moment())
+            start: this.formatLocaleDate(moment()),
+            end: this.formatLocaleDate(moment())
           };
         case 'yesterday':
           return {
-            start: this.getLocaleDate(moment().subtract(1, 'days')),
-            end: this.getLocaleDate(moment().subtract(1, 'days'))
+            start: this.formatLocaleDate(moment().subtract(1, 'days')),
+            end: this.formatLocaleDate(moment().subtract(1, 'days'))
           };
         case 'tomorrow':
           return {
-            start: this.getLocaleDate(moment().add(1, 'days')),
-            end: this.getLocaleDate(moment().add(1, 'days'))
+            start: this.formatLocaleDate(moment().add(1, 'days')),
+            end: this.formatLocaleDate(moment().add(1, 'days'))
           };
         case 'nextWeek':
           return {
-            start: this.getLocaleDate(moment().add(1, 'days')),
-            end: this.getLocaleDate(moment().add(7, 'days'))
+            start: this.formatLocaleDate(moment().add(1, 'days')),
+            end: this.formatLocaleDate(moment().add(7, 'days'))
           };
         case 'lastWeek':
           return {
-            start: this.getLocaleDate(moment().subtract(7, 'days')),
-            end: this.getLocaleDate(moment().subtract(1, 'days'))
+            start: this.formatLocaleDate(moment().subtract(7, 'days')),
+            end: this.formatLocaleDate(moment().subtract(1, 'days'))
           };
         case 'nextMonth':
           return {
-            start: this.getLocaleDate(moment().add(1, 'days')),
-            end: this.getLocaleDate(moment().add(30, 'days'))
+            start: this.formatLocaleDate(moment().add(1, 'days')),
+            end: this.formatLocaleDate(moment().add(30, 'days'))
           };
         case 'lastMonth':
           return {
-            start: this.getLocaleDate(moment().subtract(30, 'days')),
-            end: this.getLocaleDate(moment().subtract(1, 'days'))
+            start: this.formatLocaleDate(moment().subtract(30, 'days')),
+            end: this.formatLocaleDate(moment().subtract(1, 'days'))
           };
         default:
           return {
-            start: this.getLocaleDate(moment()),
-            end: this.getLocaleDate(moment())
+            start: this.formatLocaleDate(moment()),
+            end: this.formatLocaleDate(moment())
           };
       }
     },
-    getLocaleDate: function(date) {
+    formatLocaleDate: function(date) {
       return date.locale('en').format('YYYY-MM-DD');
     },
     onBeforeSubmit: function(data) {
       // Empty date fields are validated to null before this hook is called
       if (this.autofill === 'always' && data[this.name] === null) {
         data[this.name] = this.defaultSource === 'submission'
-          ? { start: this.getLocaleDate(moment()), end: this.getLocaleDate(moment()) }
+          ? { start: this.formatLocaleDate(moment()), end: this.formatLocaleDate(moment()) }
           : { start: this.today, end: this.today };
       }
     }

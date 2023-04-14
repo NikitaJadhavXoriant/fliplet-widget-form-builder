@@ -9,11 +9,6 @@ var systemTemplates = [{
       label: 'Enter your first question'
     },
     {
-      _type: 'flDateRange',
-      name: 'Date range',
-      label: 'Select date range'
-    },
-    {
       _type: 'flButtons',
       name: 'buttons',
       label: 'Form buttons',
