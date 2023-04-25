@@ -68,6 +68,7 @@ Fliplet.FormBuilder.field('file', {
   },
   created: function() {
     Fliplet.FormBuilder.on('reset', this.onReset);
+    Fliplet.Hooks.on('beforeFormSubmit', this.onBeforeSubmit);
   },
   updated: function() {
     if (this.readonly || this.isValueUrlLink) {
@@ -103,6 +104,7 @@ Fliplet.FormBuilder.field('file', {
   },
   destroyed: function() {
     Fliplet.FormBuilder.off('reset', this.onReset);
+    Fliplet.Hooks.off('beforeFormSubmit', this.onBeforeSubmit);
     this.selectedFiles.length = 0;
   },
   methods: {
@@ -218,6 +220,13 @@ Fliplet.FormBuilder.field('file', {
     },
     openFileDialog: function() {
       this.$refs.fileInput.click();
+    },
+    onBeforeSubmit: function(data) {
+      var result = _.map(this.value, function(val) {
+        return val instanceof File ? val : val.url;
+      });
+
+      data[this.name] = result;
     }
   }
 });
