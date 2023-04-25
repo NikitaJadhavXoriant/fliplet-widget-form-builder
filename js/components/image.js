@@ -283,15 +283,18 @@ Fliplet.FormBuilder.field('image', {
         addThumbnailToCanvas(imgBase64Url, $vm.value.length - 1, $vm);
         $vm.$emit('_input', $vm.name, $vm.value);
       }).catch(function(error) {
+        /* eslint-disable-next-line */
         console.error(error);
       });
     },
-    onFileChange: function() {
+    onFileChange: function(e) {
       var files = this.$refs.imageInput.files;
 
       for (var i = 0; i < files.length; i++) {
         this.processImage(files.item(i), true);
       }
+
+      e.target.value = '';
     },
     onImageClick: function(index) {
       var imagesData = {
