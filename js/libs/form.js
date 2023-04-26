@@ -333,6 +333,8 @@ Fliplet().then(function() {
               value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('YYYY-MM-DD') : $vm.today;
             } else if (field._type === 'flTime' && ['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
               value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('HH:mm') : $vm.now;
+            } else if (field._type === 'flDateRange' && ['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
+              value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('YYYY-MM-DD') : $vm.today;
             } else {
               value = fieldSettings.value;
             }
@@ -624,6 +626,13 @@ Fliplet().then(function() {
 
                 if (type === 'flEmail' && typeof value === 'string') {
                   value = value.toLowerCase();
+                }
+
+                if (type === 'flDateRange' && typeof value === 'object') {
+                  value = JSON.stringify({
+                    start: value.start,
+                    end: value.end
+                  });
                 }
 
                 // Other inputs
