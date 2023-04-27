@@ -222,7 +222,11 @@ Fliplet.FormBuilder.field('file', {
     openFileDialog: function() {
       this.$refs.fileInput.click();
     },
-    onBeforeSubmit: function(data) {
+    onBeforeSubmit: function(data, form) {
+      if (form.instance.id !== this.$parent.id) {
+        return;
+      }
+
       var result = _.map(this.value, function(val) {
         return val instanceof File ? val : val.url;
       });
