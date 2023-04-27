@@ -114,6 +114,62 @@ Fliplet().then(function() {
       };
     }
 
+    function loadEntryForStorage(field) {
+      var $vm = this;
+
+      $vm.isLoading = true;
+
+      if (!field.defaultValueKey) {
+        throw new Error('A key is required to fetch data from the storage');
+      }
+
+      var storage = field.source === 'storage'
+        ? Fliplet.Storage
+        : Fliplet.App.Storage;
+
+      var result = storage.get(field.defaultValueKey);
+
+      if (!(result instanceof Promise)) {
+        result = Promise.resolve(result);
+      }
+
+      return result.then(function(value) {
+        if (typeof value === 'undefined') {
+          value = '';
+        }
+
+        field.value = value;
+
+        $vm.isLoading = false;
+      });
+    }
+
+    function loadEntryForQuery(field) {
+      var $vm = this;
+
+      $vm.isLoading = true;
+
+      if (!field.defaultValueKey) {
+        throw new Error('A key is required to fetch data from the navigation query parameters');
+      }
+
+      var result = Fliplet.Navigate.query[field.defaultValueKey];
+
+      if (!(result instanceof Promise)) {
+        result = Promise.resolve(result);
+      }
+
+      return result.then(function(value) {
+        if (typeof value === 'undefined') {
+          value = '';
+        }
+
+        field.value = value;
+
+        $vm.isLoading = false;
+      });
+    }
+
     function getFields(isEditMode) {
       var fields = _.compact(JSON.parse(JSON.stringify(data.fields || [])));
       var progress = getProgress();
@@ -236,6 +292,14 @@ Fliplet().then(function() {
               default:
                 field.value = fieldData;
                 break;
+            }
+
+            if (field.defaultValueSource === 'appStorage') {
+              loadEntryForStorage(field);
+            }
+
+            if (field.defaultValueSource === 'query') {
+              loadEntryForQuery(field);
             }
 
             return field.value;
