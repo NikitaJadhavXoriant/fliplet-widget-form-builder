@@ -413,6 +413,14 @@ Fliplet().then(function() {
               entryLoaded = true;
             }
 
+            if (field.defaultValueSource === 'appStorage') {
+              loadEntryForStorage(field);
+            }
+
+            if (field.defaultValueSource === 'query') {
+              loadEntryForQuery(field);
+            }
+
             field.value = value;
 
             $vm.triggerChange(field.name, field.value);
