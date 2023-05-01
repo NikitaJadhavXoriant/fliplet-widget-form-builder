@@ -115,10 +115,6 @@ Fliplet().then(function() {
     }
 
     function loadEntryForStorage(field) {
-      var $vm = this;
-
-      $vm.isLoading = true;
-
       if (!field.defaultValueKey) {
         throw new Error('A key is required to fetch data from the storage');
       }
@@ -133,22 +129,13 @@ Fliplet().then(function() {
         result = Promise.resolve(result);
       }
 
-      return result.then(function(value) {
-        if (typeof value === 'undefined') {
-          value = '';
-        }
-
-        field.value = value;
-
-        $vm.isLoading = false;
+      result.then(function(val) {
+        field.value = val;
+        debounce();
       });
     }
 
     function loadEntryForQuery(field) {
-      var $vm = this;
-
-      $vm.isLoading = true;
-
       if (!field.defaultValueKey) {
         throw new Error('A key is required to fetch data from the navigation query parameters');
       }
@@ -159,14 +146,9 @@ Fliplet().then(function() {
         result = Promise.resolve(result);
       }
 
-      return result.then(function(value) {
-        if (typeof value === 'undefined') {
-          value = '';
-        }
-
-        field.value = value;
-
-        $vm.isLoading = false;
+      result.then(function(val) {
+        field.value = val;
+        debounce();
       });
     }
 
@@ -191,7 +173,7 @@ Fliplet().then(function() {
       if (fields.length && (data.saveProgress && typeof progress === 'object') || entry) {
         fields.forEach(function(field) {
           if (entry && entry.data && field.populateOnUpdate !== false) {
-            var fieldData = entry.data[field.defaultValueKey || field.name];
+            var fieldData = entry.data[field.name || field.defaultValueKey];
 
             if (typeof fieldData === 'undefined' && field._submit) {
               return; // do not update the field value
@@ -292,14 +274,6 @@ Fliplet().then(function() {
               default:
                 field.value = fieldData;
                 break;
-            }
-
-            if (field.defaultValueSource === 'appStorage') {
-              loadEntryForStorage(field);
-            }
-
-            if (field.defaultValueSource === 'query') {
-              loadEntryForQuery(field);
             }
 
             return field.value;
@@ -408,7 +382,7 @@ Fliplet().then(function() {
               value = value.slice(0);
             }
 
-            if (typeof field.defaultValueSource !== 'undefined' && field.defaultValueSource !== 'default' && !entryLoaded) {
+            if (typeof field.defaultValueSource !== 'undefined' && field.defaultValueSource === 'profile' && !entryLoaded) {
               $vm.loadEntryForUpdate();
               entryLoaded = true;
             }
