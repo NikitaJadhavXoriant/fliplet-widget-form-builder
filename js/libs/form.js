@@ -637,7 +637,7 @@ Fliplet().then(function() {
 
                 if (type === 'flFile') {
                   var result = _.map(value, function(val) {
-                    return val instanceof File ? val : val.url;
+                    return val instanceof File || !val.url ? val : val.url;
                   });
 
                   value = result;
