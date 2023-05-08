@@ -130,6 +130,12 @@ Fliplet().then(function() {
       }
 
       result.then(function(val) {
+        if (field._type === 'flCheckbox') {
+          if (!Array.isArray(val)) {
+            val = _.compact([val]);
+          }
+        }
+
         field.value = val;
         debounce();
       });
@@ -147,6 +153,12 @@ Fliplet().then(function() {
       }
 
       result.then(function(val) {
+        if (field._type === 'flCheckbox') {
+          if (!Array.isArray(val)) {
+            val = _.compact([val]);
+          }
+        }
+
         field.value = val;
         debounce();
       });
@@ -173,7 +185,7 @@ Fliplet().then(function() {
       if (fields.length && (data.saveProgress && typeof progress === 'object') || entry) {
         fields.forEach(function(field) {
           if (entry && entry.data && field.populateOnUpdate !== false) {
-            var fieldData = entry.data[field.name || field.defaultValueKey];
+            var fieldData = entry.data[field.defaultValueKey || field.name];
 
             if (typeof fieldData === 'undefined' && field._submit) {
               return; // do not update the field value
@@ -266,6 +278,10 @@ Fliplet().then(function() {
                     id: '' + (i + 1)
                   };
                 });
+
+                if (!isResetAction) {
+                  field.value = fieldData;
+                }
 
                 break;
 
