@@ -185,9 +185,15 @@ Fliplet().then(function() {
       if (fields.length && (data.saveProgress && typeof progress === 'object') || entry) {
         fields.forEach(function(field) {
           if (entry && entry.data && field.populateOnUpdate !== false) {
-            var fieldData = entry.data[field.defaultValueKey || field.name];
+            var fieldKey = isResetAction ? field.defaultValueKey || field.name : field.name || field.defaultValueKey;
 
-            if (typeof fieldData === 'undefined' && field._submit) {
+            var fieldData = entry.data[fieldKey];
+
+            if (typeof fieldData === 'undefined') {
+              fieldData = entry.data[field.name] || entry.data[field.defaultValueKey];
+            }
+
+            if (!field._submit) {
               return; // do not update the field value
             }
 
