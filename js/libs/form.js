@@ -114,39 +114,28 @@ Fliplet().then(function() {
       };
     }
 
-    function loadEntryForStorage(field) {
-      if (!field.defaultValueKey) {
-        throw new Error('A key is required to fetch data from the storage');
+    function loadFieldValueFromSource(field) {
+      var result;
+
+      switch (field.defaultValueSource) {
+        case 'appStorage':
+          var storage = field.source === 'storage'
+            ? Fliplet.Storage
+            : Fliplet.App.Storage;
+
+          result = storage.get(field.defaultValueKey);
+
+          break;
+
+        case 'query':
+          result = Fliplet.Navigate.query[field.defaultValueKey];
+
+          break;
+
+        default:
+          break;
       }
 
-      var storage = field.source === 'storage'
-        ? Fliplet.Storage
-        : Fliplet.App.Storage;
-
-      var result = storage.get(field.defaultValueKey);
-
-      if (!(result instanceof Promise)) {
-        result = Promise.resolve(result);
-      }
-
-      result.then(function(val) {
-        if (field._type === 'flCheckbox') {
-          if (!Array.isArray(val)) {
-            val = _.compact([val]);
-          }
-        }
-
-        field.value = val;
-        debounce();
-      });
-    }
-
-    function loadEntryForQuery(field) {
-      if (!field.defaultValueKey) {
-        throw new Error('A key is required to fetch data from the navigation query parameters');
-      }
-
-      var result = Fliplet.Navigate.query[field.defaultValueKey];
 
       if (!(result instanceof Promise)) {
         result = Promise.resolve(result);
@@ -185,7 +174,9 @@ Fliplet().then(function() {
       if (fields.length && (data.saveProgress && typeof progress === 'object') || entry) {
         fields.forEach(function(field) {
           if (entry && entry.data && field.populateOnUpdate !== false) {
-            var fieldKey = isResetAction ? field.defaultValueKey || field.name : field.name || field.defaultValueKey;
+            var fieldKey = isResetAction
+              ? field.defaultValueKey || field.name
+              : field.name || field.defaultValueKey;
 
             var fieldData = entry.data[fieldKey];
 
@@ -404,17 +395,34 @@ Fliplet().then(function() {
               value = value.slice(0);
             }
 
-            if (typeof field.defaultValueSource !== 'undefined' && field.defaultValueSource === 'profile' && !entryLoaded) {
-              $vm.loadEntryForUpdate();
-              entryLoaded = true;
-            }
+            if (typeof field.defaultValueSource !== 'undefined') {
+              switch (field.defaultValueSource) {
+                case 'profile':
+                  if (!entryLoaded) {
+                    $vm.loadEntryForUpdate();
+                    entryLoaded = true;
+                  }
 
-            if (field.defaultValueSource === 'appStorage') {
-              loadEntryForStorage(field);
-            }
+                  break;
+                case 'appStorage':
+                  if (!field.defaultValueKey) {
+                    throw new Error('A key is required to fetch data from the storage');
+                  }
 
-            if (field.defaultValueSource === 'query') {
-              loadEntryForQuery(field);
+                  loadFieldValueFromSource(field);
+
+                  break;
+                case 'query':
+                  if (!field.defaultValueKey) {
+                    throw new Error('A key is required to fetch data from the navigation query parameters');
+                  }
+
+                  loadFieldValueFromSource(field);
+
+                  break;
+                default:
+                  break;
+              }
             }
 
             field.value = value;
