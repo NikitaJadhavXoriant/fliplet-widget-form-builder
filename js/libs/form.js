@@ -221,10 +221,6 @@ Fliplet().then(function() {
                 }
 
                 break;
-              case 'flDateRange':
-              case 'flTimeRange':
-                field.value = fieldData.includes('start') ? JSON.parse(fieldData) : fieldData;
-                break;
               case 'flStarRating':
                 field.options = _.times(5, function(i) {
                   return {
@@ -629,7 +625,17 @@ Fliplet().then(function() {
                   if (moment(value).isValid()) {
                     value = value.format('YYYY-MM-DD');
                   } else {
-                    value = null;
+                    value = ['default', 'always'].indexOf(field.autofill) > -1 ? $vm.today : null;
+                  }
+                }
+
+                if (type === 'flTime') {
+                  value = moment(value);
+
+                  if (moment(value).isValid()) {
+                    value = value.format('HH:mm');
+                  } else {
+                    value = ['default', 'always'].indexOf(field.autofill) > -1 ? $vm.now : null;
                   }
                 }
 
@@ -638,17 +644,46 @@ Fliplet().then(function() {
                 }
 
                 if (type === 'flTimeRange' && typeof value === 'object') {
-                  value = JSON.stringify({
-                    start: value.start,
-                    end: value.end
-                  });
+                  if (!value.start && !value.end) {
+                    switch (field.autofill) {
+                      case 'default':
+                      case 'always':
+                        value = {
+                          start: field.defaultSource === 'submission' ? moment().format('HH:mm') : $vm.now,
+                          end: field.defaultSource === 'submission' ? moment().format('HH:mm') : $vm.now
+                        };
+
+                        break;
+                      case 'custom':
+                        value = null;
+                        break;
+                      default:
+                        break;
+                    }
+                  }
                 }
 
                 if (type === 'flDateRange' && typeof value === 'object') {
-                  value = JSON.stringify({
-                    start: value.start,
-                    end: value.end
-                  });
+                  if (!value.start && !value.end) {
+                    switch (field.autofill) {
+                      case 'default':
+                      case 'always':
+                        value = {
+                          start: field.defaultSource === 'submission' ? moment().format('YYYY-MM-DD') : $vm.today,
+                          end: field.defaultSource === 'submission' ? moment().format('YYYY-MM-DD') : $vm.today
+                        };
+
+                        break;
+
+                      case 'custom':
+                        value = null;
+
+                        break;
+
+                      default:
+                        break;
+                    }
+                  }
                 }
 
                 if (type === 'flFile') {
