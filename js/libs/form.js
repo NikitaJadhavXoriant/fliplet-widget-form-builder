@@ -328,10 +328,18 @@ Fliplet().then(function() {
               if (!Array.isArray(value)) {
                 value = value.split(/\n/);
               }
-            } else if (field._type === 'flDate' && ['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
-              value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('YYYY-MM-DD') : $vm.today;
-            } else if (field._type === 'flTime' && ['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
-              value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('HH:mm') : $vm.now;
+            } else if (field._type === 'flDate') {
+              if (['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
+                value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('YYYY-MM-DD') : $vm.today;
+              } else if (fieldSettings.autofill === 'empty' && fieldSettings.defaultSource === 'load') {
+                $vm.loadEntryForUpdate();
+              }
+            } else if (field._type === 'flTime') {
+              if (['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
+                value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('HH:mm') : $vm.now;
+              } else if (fieldSettings.autofill === 'empty' && fieldSettings.defaultSource === 'load') {
+                $vm.loadEntryForUpdate();
+              }
             } else if (field._type === 'flDateRange' && ['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
               value = fieldSettings.defaultSource === 'submission'
                 ? { start: moment().locale('en').format('YYYY-MM-DD'), end: moment().locale('en').format('YYYY-MM-DD') }
