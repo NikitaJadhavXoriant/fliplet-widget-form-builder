@@ -652,7 +652,7 @@ Fliplet().then(function() {
                 }
 
                 if (type === 'flTime') {
-                  value = moment(value);
+                  value = moment(value, 'HH:mm a');
 
                   if (moment(value).isValid()) {
                     value = value.format('HH:mm');
