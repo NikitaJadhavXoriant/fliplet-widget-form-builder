@@ -333,12 +333,16 @@ Fliplet().then(function() {
                 value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('YYYY-MM-DD') : $vm.today;
               } else if (fieldSettings.autofill === 'empty' && fieldSettings.defaultSource === 'load') {
                 $vm.loadEntryForUpdate();
+              } else {
+                value = fieldSettings.value;
               }
             } else if (field._type === 'flTime') {
               if (['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
                 value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('HH:mm') : $vm.now;
               } else if (fieldSettings.autofill === 'empty' && fieldSettings.defaultSource === 'load') {
                 $vm.loadEntryForUpdate();
+              } else {
+                value = fieldSettings.value;
               }
             } else if (field._type === 'flDateRange') {
               if (['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
