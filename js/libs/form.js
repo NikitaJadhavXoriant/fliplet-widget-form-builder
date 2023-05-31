@@ -184,7 +184,7 @@ Fliplet().then(function() {
               fieldData = entry.data[field.name] || entry.data[field.defaultValueKey];
             }
 
-            if (!field._submit) {
+            if (_.has('_submit', field) && !field._submit) {
               return; // do not update the field value
             }
 
