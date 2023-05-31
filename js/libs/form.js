@@ -379,10 +379,22 @@ Fliplet().then(function() {
               if (!Array.isArray(value)) {
                 value = value.split(/\n/);
               }
-            } else if (field._type === 'flDate' && ['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
-              value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('YYYY-MM-DD') : $vm.today;
-            } else if (field._type === 'flTime' && ['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
-              value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('HH:mm') : $vm.now;
+            } else if (field._type === 'flDate') {
+              if (['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
+                value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('YYYY-MM-DD') : $vm.today;
+              } else if (fieldSettings.autofill === 'empty' && fieldSettings.defaultSource === 'load') {
+                $vm.loadEntryForUpdate();
+              } else {
+                value = fieldSettings.value;
+              }
+            } else if (field._type === 'flTime') {
+              if (['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
+                value = fieldSettings.defaultSource === 'submission' ? moment().locale('en').format('HH:mm') : $vm.now;
+              } else if (fieldSettings.autofill === 'empty' && fieldSettings.defaultSource === 'load') {
+                $vm.loadEntryForUpdate();
+              } else {
+                value = fieldSettings.value;
+              }
             } else if (field._type === 'flDateRange') {
               if (['default', 'always'].indexOf(fieldSettings.autofill) > -1) {
                 value = fieldSettings.defaultSource === 'submission'
@@ -720,7 +732,7 @@ Fliplet().then(function() {
                 }
 
                 if (type === 'flTime') {
-                  value = moment(value);
+                  value = moment(value, 'HH:mm a');
 
                   if (moment(value).isValid()) {
                     value = value.format('HH:mm');
