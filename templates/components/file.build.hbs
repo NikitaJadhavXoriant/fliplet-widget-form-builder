@@ -19,7 +19,12 @@
       </li>
     </ul>
   </div>
-  <label class="btn btn-primary focus-outline" tabindex="0" v-on:keydown.space.prevent="readonly ? false : openFileDialog()">
+  <label
+    class="btn btn-primary focus-outline"
+    tabindex="0"
+    v-on:keydown.space.prevent="readonly ? false : openFileDialog()"
+    v-on:click.prevent="readonly ? false : openFileDialog()"
+  >
     <i class="fa fa-plus" :class="{ 'hidden' : readonly }" aria-hidden="true"></i>
     <span>{{T "widgets.form.file.instruction"}}</span>
     <input type="file" ref="fileInput" :id="name" :name="name" :data-folder-id="mediaFolderId" class="input-file selectfile" :class="{ 'hidden' : readonly }" v-on:change="updateValue($event)" multiple tabindex="-1">

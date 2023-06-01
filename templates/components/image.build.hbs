@@ -13,6 +13,7 @@
     :class="{ 'hidden' : readonly }"
     tabindex="0"
     v-on:keydown.space.prevent="openFileDialog()"
+    v-on:click.prevent="readonly ? false : openFileDialog()"
   >
     <i class="fa fa-plus" aria-hidden="true"></i>
     <span>{{T "widgets.form.image.instruction"}}</span>
