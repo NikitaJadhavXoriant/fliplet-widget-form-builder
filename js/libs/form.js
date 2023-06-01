@@ -284,6 +284,10 @@ Fliplet().then(function() {
                 // There is no validation and value assignment for checkbox and radio options as there is no access to the options. This is implemented in the checkbox and radio components respectively.
 
               default:
+                if (!fieldData) {
+                  return;
+                }
+
                 field.value = fieldData;
                 break;
             }
