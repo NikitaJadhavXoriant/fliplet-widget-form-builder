@@ -207,6 +207,10 @@ Fliplet.FormBuilder = (function() {
       };
 
       component.computed._labelName = function() {
+        if (['flImage', 'flFile'].indexOf(component.props._componentName.default) > -1 && this.readonly) {
+          return '';
+        }
+
         return ['flRadio', 'flCheckbox'].indexOf(component.props._componentName.default) > -1 ? '' : this.name;
       };
 
