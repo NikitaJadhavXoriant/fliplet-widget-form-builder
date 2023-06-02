@@ -323,7 +323,7 @@ Fliplet().then(function() {
           isLoadingMessage: T('widgets.form.retrievingData'),
           isConfigured: !!data.templateId,
           isPlaceholder: data.isPlaceholder,
-          fields: getFields(true),
+          fields: getFields(),
           error: null,
           errors: {},
           isOffline: false,
