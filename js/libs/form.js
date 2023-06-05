@@ -1070,7 +1070,9 @@ Fliplet().then(function() {
           // This data is available through "Fliplet.FormBuilder.get()"
           formReady({
             name: data.name,
+            // Deprecated property but kept for legacy support
             instance: $form,
+            $instance: $form,
             data: function() {
               return data;
             },
@@ -1097,6 +1099,12 @@ Fliplet().then(function() {
               var field = $form.getField(key);
 
               if (!field) {
+                throw new Error('The field ' + key + ' has not been found.');
+              }
+
+              var $field = _.find($form.$children, { name: field.name });
+
+              if (!$field) {
                 throw new Error('The field ' + key + ' has not been found.');
               }
 
@@ -1276,7 +1284,45 @@ Fliplet().then(function() {
                   // Update live field
                   field.options = options;
                 },
-                instance: field
+                on: function(eventName, fn) {
+                  var eventListeners = data.fieldEventListeners;
+
+                  if (!eventListeners) {
+                    eventListeners = {};
+                  }
+
+                  eventListeners[field.name] = eventListeners[field.name] || {};
+                  eventListeners[field.name][eventName] = eventListeners[field.name][eventName] || [];
+                  eventListeners[field.name][eventName].push(fn);
+
+                  data.fieldEventListeners = eventListeners;
+                },
+                off: function(eventName, fn) {
+                  var eventListeners = _.get(data, ['fieldEventListeners', field.name, eventName]);
+
+                  if (!eventListeners) {
+                    return;
+                  }
+
+                  // No function provided. Clear all hook callbacks.
+                  if (typeof fn === 'undefined') {
+                    eventListeners = [];
+                    data.fieldEventListeners[field.name][eventName] = eventListeners;
+
+                    return;
+                  }
+
+                  // Remove matching handler
+                  eventListeners.forEach(function(handler, i) {
+                    if (handler === fn) {
+                      eventListeners.splice(i, 1);
+                    }
+                  });
+
+                  data.fieldEventListeners[field.name][eventName] = eventListeners;
+                },
+                instance: field,
+                $instance: $field
               };
             }
           });
