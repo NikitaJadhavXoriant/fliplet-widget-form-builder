@@ -582,7 +582,6 @@ Fliplet.FormBuilder = (function() {
         this.value = '';
       };
 
-
       if (!component.methods.disableAutomatch) {
         component.methods.disableAutomatch = component.methods._disableAutomatch;
       }
