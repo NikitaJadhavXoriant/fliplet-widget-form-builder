@@ -207,6 +207,10 @@ Fliplet.FormBuilder = (function() {
       };
 
       component.computed._labelName = function() {
+        if (['flImage', 'flFile'].indexOf(component.props._componentName.default) > -1 && this.readonly) {
+          return '';
+        }
+
         return ['flRadio', 'flCheckbox'].indexOf(component.props._componentName.default) > -1 ? '' : this.name;
       };
 
@@ -366,6 +370,18 @@ Fliplet.FormBuilder = (function() {
           }
         }
 
+        if (this._componentName === 'flTimer') {
+          if (data.type === 'timer') {
+            data.initialTimerValue = (data.hours * 60 * 60) + (data.minutes * 60) + data.seconds;
+          } else {
+            data.initialTimerValue = 0;
+          }
+
+          delete data.hours;
+          delete data.minutes;
+          delete data.seconds;
+        }
+
         if (this._componentName === 'flSlider') {
           data.max = !data.max ? 100 : Number(data.max);
           data.min = !data.min ? 0 : Number(data.min);
@@ -399,12 +415,12 @@ Fliplet.FormBuilder = (function() {
 
       component.props._componentsWithDescription = {
         type: Array,
-        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flDateRange', 'flTimeRange', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider', 'flMatrix']
+        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flDateRange', 'flTimeRange', 'flTimer', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider', 'flMatrix']
       };
 
       component.props._readOnlyComponents = {
         type: Array,
-        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flDateRange', 'flTimeRange', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider', 'flMatrix']
+        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flDateRange', 'flTimeRange', 'flTimer', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider', 'flMatrix']
       };
 
       component.props._idx = {
@@ -481,12 +497,19 @@ Fliplet.FormBuilder = (function() {
           case 'flTime':
             if (this.autofill === 'custom' && !this.value) {
               _.assignIn(this.errors, {
-                requiredField: 'This field is required*'
+                requiredField: 'This field is required'
               });
             }
 
             break;
+          case 'flTimer':
+            if (this.type === 'timer' && this.hours === 0 && this.minutes === 0 && this.seconds === 0) {
+              _.assignIn(this.errors, {
+                requiredField: 'This field is required'
+              });
+            }
 
+            break;
           case 'flSlider':
             var max = !this.max ? 100 : Number(this.max);
             var min = !this.min ? 0 : Number(this.min);
@@ -704,6 +727,7 @@ Fliplet.FormBuilder = (function() {
       var hasSelectAll = component.props.addSelectAll && typeof component.props.addSelectAll.default === 'boolean';
       var isSlider = component.props._componentName.default === 'flSlider';
       var isMatrix = component.props._componentName.default === 'flMatrix';
+      var isTimer = component.props._componentName.default === 'flTimer';
 
       /**
       * Generate text configurations for radio/checkbox options, separated by new lines
@@ -778,7 +802,8 @@ Fliplet.FormBuilder = (function() {
         template: template && template() || '',
         hasOptions: hasOptions,
         hasSelectAll: hasSelectAll,
-        isSlider: isSlider
+        isSlider: isSlider,
+        isTimer: isTimer
       });
 
       Vue.component(componentName + 'Config', component);
