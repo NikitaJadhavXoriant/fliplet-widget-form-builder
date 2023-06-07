@@ -153,8 +153,24 @@ Fliplet().then(function() {
       });
     }
 
+    function saveProgress() {
+      var progress = {};
+
+      data.fields.forEach(function(field) {
+        if (field.saveProgress !== false && field.enabled) {
+          progress[field.name] = field.value;
+        }
+      });
+
+      localStorage.setItem(progressKey, JSON.stringify(progress));
+    }
+
     function getFields(isEditMode) {
       var fields = _.compact(JSON.parse(JSON.stringify(data.fields || [])));
+
+      // Make sure all updated values are stored in localstorage before get them
+      saveProgress();
+
       var progress = getProgress();
 
       fields.forEach(function(field) {
@@ -327,7 +343,7 @@ Fliplet().then(function() {
           isLoadingMessage: T('widgets.form.retrievingData'),
           isConfigured: !!data.templateId,
           isPlaceholder: data.isPlaceholder,
-          fields: getFields(true),
+          fields: getFields(),
           error: null,
           errors: {},
           isOffline: false,
