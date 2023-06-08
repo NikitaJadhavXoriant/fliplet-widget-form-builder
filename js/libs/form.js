@@ -1032,17 +1032,7 @@ Fliplet().then(function() {
       mounted: function() {
         var $vm = this;
 
-        this.saveProgress = debounce(function() {
-          var progress = {};
-
-          $vm.fields.forEach(function(field) {
-            if (field.saveProgress !== false && field.enabled) {
-              progress[field.name] = field.value;
-            }
-          });
-
-          localStorage.setItem(progressKey, JSON.stringify(progress));
-        }, saveDelay);
+        this.saveProgressed = debounce(saveProgress(), saveDelay);
 
         $(selector).removeClass('hidden');
 
@@ -1067,7 +1057,7 @@ Fliplet().then(function() {
         this.loadEntryForUpdate().then(function() {
           var debouncedUpdate = _.debounce(function() {
             $form.$forceUpdate();
-            $vm.saveProgress();
+            $vm.saveProgressed();
           }, 10);
 
           function validateCheckboxValue(value, options) {
