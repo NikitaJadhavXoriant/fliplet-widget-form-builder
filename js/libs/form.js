@@ -1032,7 +1032,7 @@ Fliplet().then(function() {
       mounted: function() {
         var $vm = this;
 
-        this.saveProgressed = debounce(saveProgress(), saveDelay);
+        this.saveProgressed = debounce(saveProgress, saveDelay);
 
         $(selector).removeClass('hidden');
 
