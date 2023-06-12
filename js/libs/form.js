@@ -467,6 +467,7 @@ Fliplet().then(function() {
 
           localStorage.removeItem(progressKey);
 
+          $vm.$forceUpdate();
           Fliplet.FormBuilder.emit('reset', { id: data.id });
           this.$emit('reset');
         },

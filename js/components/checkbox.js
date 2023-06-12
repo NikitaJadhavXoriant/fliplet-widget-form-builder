@@ -125,6 +125,16 @@ Fliplet.FormBuilder.field('checkbox', {
     },
     selectAllClickHandler: function() {
       this.selectedAll = !this.selectedAll;
+    },
+    onReset: function(data) {
+      if (!data || data.id !== this.$parent.id) {
+        return;
+      }
+
+      if (this.defaultValueSource === 'default' && this.defaultValue === '') {
+        this.value = [];
+        this.updateValue(this.name, this.value);
+      }
     }
   },
   created: function() {
@@ -153,5 +163,10 @@ Fliplet.FormBuilder.field('checkbox', {
       this.value = [];
       this.updateValue(this.name, this.value);
     }
+
+    Fliplet.FormBuilder.on('reset', this.onReset);
+  },
+  destroyed: function() {
+    Fliplet.FormBuilder.off('reset', this.onReset);
   }
 });
