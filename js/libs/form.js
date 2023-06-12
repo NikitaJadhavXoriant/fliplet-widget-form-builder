@@ -252,7 +252,7 @@ Fliplet().then(function() {
 
                 if ((regexDateFormat.exec(fieldData) || regexISOFormat.exec(fieldData)) && !showCurrentDateTime) {
                   field.value = moment(fieldData).format('YYYY-MM-DD');
-                } else {
+                } else if (field.autofill !== 'empty')  {
                   field.value = moment().get().format('YYYY-MM-DD');
                 }
 
@@ -279,7 +279,7 @@ Fliplet().then(function() {
 
                 if (regexp.exec(fieldData) && !showCurrentDateTime) {
                   field.value = fieldData;
-                } else {
+                } else if (field.autofill !== 'empty') {
                   field.value = moment().get().format('HH:mm');
                 }
 
