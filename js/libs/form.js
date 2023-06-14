@@ -153,8 +153,24 @@ Fliplet().then(function() {
       });
     }
 
+    function saveProgress() {
+      var progress = {};
+
+      data.fields.forEach(function(field) {
+        if (field.saveProgress !== false && field.enabled) {
+          progress[field.name] = field.value;
+        }
+      });
+
+      localStorage.setItem(progressKey, JSON.stringify(progress));
+    }
+
     function getFields(isEditMode) {
       var fields = _.compact(JSON.parse(JSON.stringify(data.fields || [])));
+
+      // Make sure all updated values are stored in localstorage before get them
+      saveProgress();
+
       var progress = getProgress();
 
       fields.forEach(function(field) {
@@ -335,6 +351,10 @@ Fliplet().then(function() {
                 // There is no validation and value assignment for checkbox and radio options as there is no access to the options. This is implemented in the checkbox and radio components respectively.
 
               default:
+                if (!fieldData) {
+                  return;
+                }
+
                 field.value = fieldData;
                 break;
             }
@@ -1071,17 +1091,7 @@ Fliplet().then(function() {
       mounted: function() {
         var $vm = this;
 
-        this.saveProgress = debounce(function() {
-          var progress = {};
-
-          $vm.fields.forEach(function(field) {
-            if (field.saveProgress !== false && field.enabled) {
-              progress[field.name] = field.value;
-            }
-          });
-
-          localStorage.setItem(progressKey, JSON.stringify(progress));
-        }, saveDelay);
+        this.saveProgressed = debounce(saveProgress, saveDelay);
 
         $(selector).removeClass('hidden');
 
@@ -1106,7 +1116,7 @@ Fliplet().then(function() {
         this.loadEntryForUpdate().then(function() {
           var debouncedUpdate = _.debounce(function() {
             $form.$forceUpdate();
-            $vm.saveProgress();
+            $vm.saveProgressed();
           }, 10);
 
           function validateCheckboxValue(value, options) {
