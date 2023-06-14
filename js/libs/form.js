@@ -178,10 +178,39 @@ Fliplet().then(function() {
               ? field.defaultValueKey || field.name
               : field.name || field.defaultValueKey;
 
-            var fieldData = entry.data[fieldKey];
+            var fieldData;
 
-            if (typeof fieldData === 'undefined') {
-              fieldData = entry.data[field.name] || entry.data[field.defaultValueKey];
+            switch (field._type) {
+              case 'flDateRange':
+                fieldData = {
+                  start: entry.data[`${fieldKey} [Start]`],
+                  end: entry.data[`${fieldKey} [End]`]
+                };
+
+                if (!Fliplet.UI.DateRange.validateDateRange(fieldData)) {
+                  fieldData = null;
+                }
+
+                break;
+              case 'flTimeRange':
+                fieldData = {
+                  start: entry.data[`${fieldKey} [Start]`],
+                  end: entry.data[`${fieldKey} [End]`]
+                };
+
+                if (!Fliplet.UI.TimeRange.validateTimeRange(fieldData)) {
+                  fieldData = null;
+                }
+
+                break;
+              default:
+                fieldData = entry.data[fieldKey];
+
+                if (typeof fieldData === 'undefined') {
+                  fieldData = entry.data[field.name] || entry.data[field.defaultValueKey];
+                }
+
+                break;
             }
 
             if (_.has('_submit', field) && !field._submit) {
@@ -276,6 +305,28 @@ Fliplet().then(function() {
                 });
 
                 if (!isResetAction) {
+                  field.value = fieldData;
+                }
+
+                break;
+              case 'flDateRange':
+                if (!fieldData && showCurrentDateTime) {
+                  field.value = {
+                    start: moment().get().format('YYYY-MM-DD'),
+                    end: moment().get().format('YYYY-MM-DD')
+                  };
+                } else {
+                  field.value = fieldData;
+                }
+
+                break;
+              case 'flTimeRange':
+                if (!fieldData && showCurrentDateTime) {
+                  field.value = {
+                    start: moment().get().format('HH:mm'),
+                    end: moment().get().format('HH:mm')
+                  };
+                } else {
                   field.value = fieldData;
                 }
 
@@ -401,11 +452,11 @@ Fliplet().then(function() {
                   ? { start: moment().locale('en').format('YYYY-MM-DD'), end: moment().locale('en').format('YYYY-MM-DD') }
                   : { start: $vm.today, end: $vm.today };
               } else if (fieldSettings.autofill === 'empty' && fieldSettings.defaultSource === 'load') {
-                $vm.loadEntryForUpdate();
+                value = null;
               } else {
                 value = {
-                  start: field.startValue,
-                  end: field.endValue
+                  start: fieldSettings.startValue,
+                  end: fieldSettings.endValue
                 };
               }
             } else if (field._type === 'flTimeRange') {
@@ -414,11 +465,11 @@ Fliplet().then(function() {
                   ? { start: moment().locale('en').format('HH:mm'), end: moment().locale('en').format('HH:mm') }
                   : { start: $vm.now, end: $vm.now };
               } else if (fieldSettings.autofill === 'empty' && fieldSettings.defaultSource === 'load') {
-                $vm.loadEntryForUpdate();
+                value = null;
               } else {
                 value = {
-                  start: field.startValue,
-                  end: field.endValue
+                  start: fieldSettings.startValue,
+                  end: fieldSettings.endValue
                 };
               }
             } else {
@@ -808,8 +859,15 @@ Fliplet().then(function() {
                   value = result;
                 }
 
-                // Other inputs
-                appendField(field.name, value);
+                if (type === 'flDateRange' || type === 'flTimeRange') {
+                  if (value) {
+                    appendField(`${field.name} [Start]`, value.start);
+                    appendField(`${field.name} [End]`, value.end);
+                  }
+                } else {
+                  // Other inputs
+                  appendField(field.name, value);
+                }
               }
             });
 
