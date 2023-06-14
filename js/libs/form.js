@@ -447,7 +447,7 @@ Fliplet().then(function() {
             if (field._type === 'flCheckbox') {
               value = fieldSettings.defaultValue || fieldSettings.value;
 
-              if (!Array.isArray(value)) {
+              if (typeof value !== 'undefined' && !Array.isArray(value)) {
                 value = value.split(/\n/);
               }
             } else if (field._type === 'flDate') {
@@ -538,6 +538,7 @@ Fliplet().then(function() {
 
           localStorage.removeItem(progressKey);
 
+          $vm.$forceUpdate();
           Fliplet.FormBuilder.emit('reset', { id: data.id });
           this.$emit('reset');
         },
