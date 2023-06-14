@@ -427,7 +427,7 @@ Fliplet().then(function() {
             if (field._type === 'flCheckbox') {
               value = fieldSettings.defaultValue || fieldSettings.value;
 
-              if (!Array.isArray(value)) {
+              if (typeof value !== 'undefined' && !Array.isArray(value)) {
                 value = value.split(/\n/);
               }
             } else if (field._type === 'flDate') {
