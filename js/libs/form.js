@@ -146,9 +146,23 @@ Fliplet().then(function() {
           if (!Array.isArray(val)) {
             val = _.compact([val]);
           }
+        } else if (field._type === 'flMatrix') {
+          var option = {};
+
+          _.some(field.rowOptions, function(row) {
+            _.each(val, function(c, r) {
+              if (row.label ===  r) {
+                option[r] = c;
+
+                return true;
+              }
+            });
+          });
+          field.value = option;
+        } else {
+          field.value = val;
         }
 
-        field.value = val;
         debounce();
       });
     }
@@ -218,6 +232,19 @@ Fliplet().then(function() {
                   fieldData = null;
                 }
 
+                break;
+              case 'flMatrix':
+                var option = {};
+
+                _.forEach(field.rowOptions, function(row) {
+                  var val = row.id ? row.id : row.label;
+
+                  if (_.has(entry.data, `${fieldKey} [${val}]`)) {
+                    option[val] = entry.data[`${fieldKey} [${val}]`];
+                  }
+                });
+
+                fieldData = option;
                 break;
               default:
                 fieldData = entry.data[fieldKey];
@@ -362,7 +389,32 @@ Fliplet().then(function() {
             return field.value;
           }
 
-          if (progress && !isEditMode) {
+          if (field.defaultValueSource === 'default' && field._type === 'flMatrix') {
+            var matrixOption = {};
+
+            _.forEach(field.value.split(/\r?\n/), function(rawOption) {
+              if (rawOption) {
+                rawOption = rawOption.trim();
+
+                var regex = /\[(.*)\]/g;
+                var match = rawOption.split(regex).filter(r => r !== '');
+
+                if (match.length > 1) {
+                  matrixOption[match[0].trim()] =  match[1].trim();
+                } else {
+                  _.forEach(field.rowOptions, function(row) {
+                    if (!_.has(matrixOption, row.label)) {
+                      matrixOption[row.label] = match[0].trim();
+                    }
+                  });
+                }
+
+                return matrixOption;
+              }
+            });
+
+            field.value = matrixOption;
+          } else if (progress && !isEditMode) {
             var savedValue = progress[field.name];
 
             if (typeof savedValue !== 'undefined') {
@@ -884,6 +936,14 @@ Fliplet().then(function() {
                     appendField(`${field.name} [Start]`, value.start);
                     appendField(`${field.name} [End]`, value.end);
                   }
+                } else if (type === 'flMatrix') {
+                  _.forEach(value, function(col, row) {
+                    if (!row || !col) {
+                      return '';
+                    }
+
+                    appendField(`${field.name} [${row}]`, col);
+                  });
                 } else {
                   // Other inputs
                   appendField(field.name, value);
@@ -1273,7 +1333,21 @@ Fliplet().then(function() {
 
                     var hasChanged = field.value !== value;
 
-                    field.value = value;
+                    if (field._type === 'flMatrix') {
+                      var option = {};
+
+                      _.some(field.rowOptions, function(row) {
+                        _.each(value, function(c, r) {
+                          if (row.label ===  r)    {
+                            option[r] = c;
+                          }
+                        });
+                      });
+                      field.value = option;
+                    } else {
+                      field.value = value;
+                    }
+
                     debouncedUpdate();
 
                     if (hasChanged) {
