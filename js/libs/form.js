@@ -114,6 +114,41 @@ Fliplet().then(function() {
       };
     }
 
+    function getMatrixValue(value, field) {
+      var matrixOption = {};
+
+      if (!value) {
+        return;
+      }
+
+      if (value.indexOf('[') > -1 || value.indexOf(']') > -1) {
+        _.forEach(value.split(/\r?\n/), function(rawOption) {
+          if (rawOption) {
+            rawOption = rawOption.trim();
+
+            var regex = /\[(.*)\]/g;
+            var match = rawOption.split(regex).filter(r => r !== '');
+
+            if (match.length > 1) {
+              matrixOption[match[0].trim()] =  match[1].trim();
+            } else {
+              _.forEach(field.rowOptions, function(row) {
+                if (!_.has(matrixOption, row.label)) {
+                  matrixOption[row.label] = match[0].trim();
+                }
+              });
+            }
+          }
+        });
+      } else {
+        _.forEach(field.rowOptions, function(row) {
+          matrixOption[row.label] = value;
+        });
+      }
+
+      return matrixOption;
+    }
+
     function loadFieldValueFromSource(field) {
       var result;
 
@@ -147,18 +182,7 @@ Fliplet().then(function() {
             val = _.compact([val]);
           }
         } else if (field._type === 'flMatrix') {
-          var option = {};
-
-          _.some(field.rowOptions, function(row) {
-            _.each(val, function(c, r) {
-              if (row.label ===  r) {
-                option[r] = c;
-
-                return true;
-              }
-            });
-          });
-          field.value = option;
+          field.value = getMatrixValue(val, field);
         } else {
           field.value = val;
         }
@@ -389,31 +413,19 @@ Fliplet().then(function() {
             return field.value;
           }
 
-          if (field.defaultValueSource === 'default' && field._type === 'flMatrix') {
-            var matrixOption = {};
+          if (field._type === 'flMatrix') {
+            switch (field.defaultValueSource) {
+              case 'default' :
+                field.value = getMatrixValue(field.value, field);
+                break;
 
-            _.forEach(field.value.split(/\r?\n/), function(rawOption) {
-              if (rawOption) {
-                rawOption = rawOption.trim();
+              case 'query':
+                loadFieldValueFromSource(field);
+                break;
 
-                var regex = /\[(.*)\]/g;
-                var match = rawOption.split(regex).filter(r => r !== '');
-
-                if (match.length > 1) {
-                  matrixOption[match[0].trim()] =  match[1].trim();
-                } else {
-                  _.forEach(field.rowOptions, function(row) {
-                    if (!_.has(matrixOption, row.label)) {
-                      matrixOption[row.label] = match[0].trim();
-                    }
-                  });
-                }
-
-                return matrixOption;
-              }
-            });
-
-            field.value = matrixOption;
+              default:
+                break;
+            }
           } else if (progress && !isEditMode) {
             var savedValue = progress[field.name];
 
@@ -584,34 +596,7 @@ Fliplet().then(function() {
             }
 
             if (field.defaultValueSource === 'default' && field._type === 'flMatrix') {
-              var matrixOption = {};
-
-              if (!value) {
-                return;
-              }
-
-              _.forEach(value.split(/\r?\n/), function(rawOption) {
-                if (rawOption) {
-                  rawOption = rawOption.trim();
-
-                  var regex = /\[(.*)\]/g;
-                  var match = rawOption.split(regex).filter(r => r !== '');
-
-                  if (match.length > 1) {
-                    matrixOption[match[0].trim()] =  match[1].trim();
-                  } else {
-                    _.forEach(field.rowOptions, function(row) {
-                      if (!_.has(matrixOption, row.label)) {
-                        matrixOption[row.label] = match[0].trim();
-                      }
-                    });
-                  }
-
-                  return matrixOption;
-                }
-              });
-
-              field.value = matrixOption;
+              field.value = getMatrixValue(value, field);
             } else {
               field.value = value;
             }
