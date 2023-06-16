@@ -583,7 +583,38 @@ Fliplet().then(function() {
               }
             }
 
-            field.value = value;
+            if (field.defaultValueSource === 'default' && field._type === 'flMatrix') {
+              var matrixOption = {};
+
+              if (!value) {
+                return;
+              }
+
+              _.forEach(value.split(/\r?\n/), function(rawOption) {
+                if (rawOption) {
+                  rawOption = rawOption.trim();
+
+                  var regex = /\[(.*)\]/g;
+                  var match = rawOption.split(regex).filter(r => r !== '');
+
+                  if (match.length > 1) {
+                    matrixOption[match[0].trim()] =  match[1].trim();
+                  } else {
+                    _.forEach(field.rowOptions, function(row) {
+                      if (!_.has(matrixOption, row.label)) {
+                        matrixOption[row.label] = match[0].trim();
+                      }
+                    });
+                  }
+
+                  return matrixOption;
+                }
+              });
+
+              field.value = matrixOption;
+            } else {
+              field.value = value;
+            }
 
             $vm.triggerChange(field.name, field.value);
           });
