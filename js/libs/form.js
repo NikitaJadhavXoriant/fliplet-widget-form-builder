@@ -262,9 +262,10 @@ Fliplet().then(function() {
 
                 _.forEach(field.rowOptions, function(row) {
                   var val = row.id ? row.id : row.label;
+                  var matrixKey = entry.data[`${fieldKey} [${val}]`] ? entry.data[`${fieldKey} [${val}]`] : entry.data[`${fieldKey}`];
 
-                  if (_.has(entry.data, `${fieldKey} [${val}]`)) {
-                    option[val] = entry.data[`${fieldKey} [${val}]`];
+                  if (matrixKey) {
+                    option[val] = matrixKey;
                   }
                 });
 
