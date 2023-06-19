@@ -264,7 +264,7 @@ Fliplet().then(function() {
                   var val = row.id ? row.id : row.label;
                   var matrixKey = entry.data[`${fieldKey} [${val}]`] ? entry.data[`${fieldKey} [${val}]`] : entry.data[`${fieldKey}`];
 
-                  if (matrixKey) {
+                  if (field.defaultValueKey.indexOf(val) !== -1 && matrixKey) {
                     option[val] = matrixKey;
                   }
                 });
