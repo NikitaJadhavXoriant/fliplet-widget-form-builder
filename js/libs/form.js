@@ -117,8 +117,8 @@ Fliplet().then(function() {
     function getMatrixValue(value, field) {
       var matrixOption = {};
 
-      if (!value) {
-        return;
+      if (!value || typeof value === 'object') {
+        return value;
       }
 
       if (value.indexOf('[') > -1 || value.indexOf(']') > -1) {
