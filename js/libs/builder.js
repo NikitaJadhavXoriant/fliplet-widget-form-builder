@@ -916,11 +916,24 @@ Fliplet().then(function() {
           .value();
 
         fields.forEach(function(field) {
-          if (field._type === 'flDateRange' || field._type === 'flTimeRange') {
-            fieldNames.push(`${field.name} [Start]`);
-            fieldNames.push(`${field.name} [End]`);
-          } else {
-            fieldNames.push(field.name);
+          switch (field._type) {
+            case 'flDateRange':
+            case 'flTimeRange':
+              fieldNames.push(`${field.name} [Start]`);
+              fieldNames.push(`${field.name} [End]`);
+
+              break;
+
+            case 'flMatrix':
+              _.forEach(field.rowOptions, function(row) {
+                var val = row.id ? row.id : row.label;
+
+                fieldNames.push(`${field.name} [${val}]`);
+              });
+              break;
+
+            default:
+              fieldNames.push(field.name);
           }
         });
 
