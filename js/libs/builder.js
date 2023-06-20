@@ -230,14 +230,19 @@ Fliplet().then(function() {
 
           var index = fieldsWithSameName.length;
           var defaultName = component.name + (index ? '-' + index : '');
-
-          return this.fields.splice(event.newIndex, 0, {
+          var data = {
             _type: componentName,
             _submit: typeof component.submit !== 'undefined' ? component.submit : true,
             name: defaultName,
             label: defaultName,
             value: value.default || value.type()
-          });
+          };
+
+          if (componentName === 'flMatrix') {
+            _.assign(data, { 'rowOptions': component.props.rowOptions.default() });
+          }
+
+          return this.fields.splice(event.newIndex, 0, data);
         }
       },
       updateAccessTypes: function() {

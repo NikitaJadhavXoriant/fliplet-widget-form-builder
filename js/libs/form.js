@@ -954,13 +954,21 @@ Fliplet().then(function() {
                     appendField(`${field.name} [End]`, value.end);
                   }
                 } else if (type === 'flMatrix') {
-                  _.forEach(value, function(col, row) {
-                    if (!row || !col) {
-                      return '';
-                    }
+                  if (!_.isEmpty(value)) {
+                    _.forEach(value, function(col, row) {
+                      if (!row || !col) {
+                        return '';
+                      }
 
-                    appendField(`${field.name} [${row}]`, col);
-                  });
+                      appendField(`${field.name} [${row}]`, col);
+                    });
+                  } else {
+                    _.forEach(field.rowOptions, function(row) {
+                      var val = row.id ? row.id : row.label;
+
+                      appendField(`${field.name} [${val}]`, '');
+                    });
+                  }
                 } else {
                   // Other inputs
                   appendField(field.name, value);
