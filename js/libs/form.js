@@ -844,7 +844,7 @@ Fliplet().then(function() {
             }
 
             $vm.fields.forEach(function(field) {
-              var value = field.value ? field.value;
+              var value = field.value;
               var type = field._type;
 
               if (field._submit === false || !field.enabled) {
