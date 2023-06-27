@@ -489,10 +489,64 @@ Fliplet.FormBuilder = (function() {
         return !_.isEmpty(this.errors);
       };
 
+      component.methods._checkDuplicateOptions = function(options) {
+        var duplicates = _.filter(
+          _.uniq(
+            _.map(options, function(item) {
+              if (_.filter(options, { label: item.label }).length > 1) {
+                return item.label;
+              }
+
+              return false;
+            })),
+          function(value) { return value; });
+
+        return duplicates;
+      };
+
       component.methods._getErrors = function() {
         this.errors = {};
 
         switch (this._componentName) {
+          case 'flCheckbox':
+            if (this.options.length === 0) {
+              _.assignIn(this.errors, {
+                checkboxOptions: 'Please enter options for the checkbox field'
+              });
+            } else if (this._checkDuplicateOptions(this.options).length > 0) {
+              _.assignIn(this.errors, {
+                checkboxDuplicateOptions: 'Please enter unique options for the checkbox field'
+              });
+            }
+
+            break;
+
+          case 'flRadio':
+            if (this.options.length === 0) {
+              _.assignIn(this.errors, {
+                radioOptions: 'Please enter options for the radio field'
+              });
+            } else if (this._checkDuplicateOptions(this.options).length > 0) {
+              _.assignIn(this.errors, {
+                radioDuplicateOptions: 'Please enter unique options for the radio field'
+              });
+            }
+
+            break;
+
+          case 'flSelect':
+            if (this.options.length === 0) {
+              _.assignIn(this.errors, {
+                selectOptions: 'Please enter options for the dropdown field'
+              });
+            } else if (this._checkDuplicateOptions(this.options).length > 0) {
+              _.assignIn(this.errors, {
+                selectDuplicateOptions: 'Please enter unique options for the dropdown field'
+              });
+            }
+
+            break;
+
           case 'flDate':
           case 'flTime':
             if (this.autofill === 'custom' && !this.value) {
@@ -502,6 +556,7 @@ Fliplet.FormBuilder = (function() {
             }
 
             break;
+
           case 'flTimer':
             if (this.type === 'timer' && this.hours === 0 && this.minutes === 0 && this.seconds === 0) {
               _.assignIn(this.errors, {
@@ -510,6 +565,7 @@ Fliplet.FormBuilder = (function() {
             }
 
             break;
+
           case 'flSlider':
             var max = !this.max ? 100 : Number(this.max);
             var min = !this.min ? 0 : Number(this.min);
@@ -534,11 +590,19 @@ Fliplet.FormBuilder = (function() {
               _.assignIn(this.errors, {
                 matrixColumnOptions: 'Please enter column options for the matrix field'
               });
+            } else if (this._checkDuplicateOptions(this.columnOptions).length > 0) {
+              _.assignIn(this.errors, {
+                matrixDuplicateColumnOptions: 'Please enter unique column options for the matrix field'
+              });
             }
 
             if (this.rowOptions.length === 0) {
               _.assignIn(this.errors, {
                 matrixRowOptions: 'Please enter row options for the matrix field'
+              });
+            } else if (this._checkDuplicateOptions(this.rowOptions).length > 0) {
+              _.assignIn(this.errors, {
+                matrixDuplicateRowOptions: 'Please enter unique row options for the matrix field'
               });
             }
 
