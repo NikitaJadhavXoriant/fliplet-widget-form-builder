@@ -9,6 +9,13 @@ Fliplet.FormBuilder.field('url', {
       type: String
     }
   },
+  watch: {
+    value: {
+      handler: function(val) {
+        this.value = val.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      }
+    }
+  },
   validations: function() {
     var rules = {
       value: {
