@@ -493,8 +493,10 @@ Fliplet.FormBuilder = (function() {
         var duplicates = _.filter(
           _.uniq(
             _.map(options, function(item) {
-              if (_.filter(options, { label: item.label }).length > 1) {
-                return item.label;
+              var val = item.id ? item.id : item.label;
+
+              if (_.filter(options, { label: item.label, id: item.id }).length > 1) {
+                return val;
               }
 
               return false;
