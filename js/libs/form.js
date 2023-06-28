@@ -1056,11 +1056,7 @@ Fliplet().then(function() {
             });
           }
 
-          if (formMode === 'add') {
-            return Promise.resolve();
-          }
-
-          if (data.autobindProfileEditing) {
+          if (data.autobindProfileEditing || !entryId) {
             $vm.isLoading = true;
 
             return Fliplet.Session.get().then(function(session) {
@@ -1083,6 +1079,10 @@ Fliplet().then(function() {
                 }, 50);
               });
             });
+          }
+
+          if (formMode === 'add') {
+            return Promise.resolve();
           }
 
           return Promise.resolve();
