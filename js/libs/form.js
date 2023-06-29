@@ -115,38 +115,44 @@ Fliplet().then(function() {
     }
 
     function getMatrixValue(value, field) {
-      var matrixOption = {};
+      var matrixValue = {};
 
       if (!value || typeof value === 'object') {
         return value;
       }
 
       if (value.indexOf('[') > -1 || value.indexOf(']') > -1) {
-        _.forEach(value.split(/\r?\n/), function(rawOption) {
-          if (rawOption) {
-            rawOption = rawOption.trim();
-
-            var regex = /\[(.*)\]/g;
-            var match = rawOption.split(regex).filter(r => r !== '');
-
-            if (match.length > 1) {
-              matrixOption[match[0].trim()] =  match[1].trim();
-            } else {
-              _.forEach(field.rowOptions, function(row) {
-                if (!_.has(matrixOption, row.label)) {
-                  matrixOption[row.label] = match[0].trim();
-                }
-              });
-            }
+        _.forEach(value.split(/\r?\n/), function(rowOption) {
+          if (!rowOption) {
+            return;
           }
+
+          rowOption = rowOption.trim();
+
+          var regex = /\[(.*)\]/g;
+          var match = rowOption.split(regex).filter(r => r !== '');
+
+          if (match.length > 1) {
+            matrixValue[match[0].trim()] =  match[1].trim();
+
+            return;
+          }
+
+          _.forEach(field.rowOptions, function(row) {
+            if (_.has(matrixValue, row.label)) {
+              return;
+            }
+
+            matrixValue[row.label] = match[0].trim();
+          });
         });
       } else {
         _.forEach(field.rowOptions, function(row) {
-          matrixOption[row.label] = value;
+          matrixValue[row.label] = value;
         });
       }
 
-      return matrixOption;
+      return matrixValue;
     }
 
     function loadFieldValueFromSource(field) {
@@ -1365,6 +1371,8 @@ Fliplet().then(function() {
                         _.each(value, function(c, r) {
                           if (row.label ===  r)    {
                             option[r] = c;
+
+                            return true;
                           }
                         });
                       });
