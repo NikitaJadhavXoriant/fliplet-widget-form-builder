@@ -489,7 +489,7 @@ Fliplet.FormBuilder = (function() {
         return !_.isEmpty(this.errors);
       };
 
-      component.methods._checkDuplicateOptions = function(options) {
+      component.methods._hasDuplicateOptions  = function(options) {
         var duplicates = _.filter(
           _.uniq(
             _.map(options, function(item) {
@@ -504,7 +504,7 @@ Fliplet.FormBuilder = (function() {
             })),
           function(value) { return value; });
 
-        return duplicates;
+        return !!duplicates.length;
       };
 
       component.methods._getErrors = function() {
@@ -516,7 +516,7 @@ Fliplet.FormBuilder = (function() {
               _.assignIn(this.errors, {
                 checkboxOptions: 'Please enter options for the checkbox field'
               });
-            } else if (this._checkDuplicateOptions(this.options).length > 0) {
+            } else if (this._hasDuplicateOptions(this.options)) {
               _.assignIn(this.errors, {
                 checkboxDuplicateOptions: 'Please enter unique options for the checkbox field'
               });
@@ -529,7 +529,7 @@ Fliplet.FormBuilder = (function() {
               _.assignIn(this.errors, {
                 radioOptions: 'Please enter options for the radio field'
               });
-            } else if (this._checkDuplicateOptions(this.options).length > 0) {
+            } else if (this._hasDuplicateOptions(this.options)) {
               _.assignIn(this.errors, {
                 radioDuplicateOptions: 'Please enter unique options for the radio field'
               });
@@ -542,7 +542,7 @@ Fliplet.FormBuilder = (function() {
               _.assignIn(this.errors, {
                 selectOptions: 'Please enter options for the dropdown field'
               });
-            } else if (this._checkDuplicateOptions(this.options).length > 0) {
+            } else if (this._hasDuplicateOptions(this.options)) {
               _.assignIn(this.errors, {
                 selectDuplicateOptions: 'Please enter unique options for the dropdown field'
               });
@@ -593,7 +593,7 @@ Fliplet.FormBuilder = (function() {
               _.assignIn(this.errors, {
                 matrixColumnOptions: 'Please enter column options for the matrix field'
               });
-            } else if (this._checkDuplicateOptions(this.columnOptions).length > 0) {
+            } else if (this._hasDuplicateOptions(this.columnOptions)) {
               _.assignIn(this.errors, {
                 matrixDuplicateColumnOptions: 'Please enter unique column options for the matrix field'
               });
@@ -603,7 +603,7 @@ Fliplet.FormBuilder = (function() {
               _.assignIn(this.errors, {
                 matrixRowOptions: 'Please enter row options for the matrix field'
               });
-            } else if (this._checkDuplicateOptions(this.rowOptions).length > 0) {
+            } else if (this._hasDuplicateOptions(this.rowOptions)) {
               _.assignIn(this.errors, {
                 matrixDuplicateRowOptions: 'Please enter unique row options for the matrix field'
               });
