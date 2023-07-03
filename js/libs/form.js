@@ -1061,20 +1061,25 @@ Fliplet().then(function() {
             });
           }
 
-          if (data.autobindProfileEditing || !entryId) {
+          if (data.autobindProfileEditing || (isResetAction && !entryId )) {
             $vm.isLoading = true;
 
             return Fliplet.Session.get().then(function(session) {
               var isEditMode = false;
 
               if (session.entries && session.entries.dataSource) {
-                entryId = 'session'; // this works because you can use it as an ID on the backend
+                if (!isResetAction) {
+                  entryId = 'session'; // this works because you can use it as an ID on the backend
+                }
+
                 entry = session.entries.dataSource;
                 isEditMode = true;
               }
 
               // Re-render fields
               $vm.fields = [];
+
+              isResetAction = false;
 
               return new Promise(function(resolve) {
                 setTimeout(function() {

@@ -251,11 +251,7 @@ Fliplet.FormBuilder = (function() {
       if (!component.mounted) {
         component.mounted = function() {
           if (this.defaultValueSource !== 'default') {
-            var $vm = this;
-
-            setTimeout(function() {
-              $vm.setValueFromDefaultSettings({ source: this.defaultValueSource, key: this.defaultValueKey });
-            }, 0);
+            this.setValueFromDefaultSettings({ source: this.defaultValueSource, key: this.defaultValueKey });
           }
         };
       }
