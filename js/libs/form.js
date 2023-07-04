@@ -282,7 +282,7 @@ Fliplet().then(function() {
                     if ((!field.defaultValueKey && matrixKey) || (field.defaultValueKey.indexOf(val) !== -1 && matrixKey)) {
                       option[val] = matrixKey;
                     }
-                  } else if (field.defaultValueKey && matrixKey) {
+                  } else if (matrixKey) {
                     option[val] = matrixKey;
                   }
                 });
