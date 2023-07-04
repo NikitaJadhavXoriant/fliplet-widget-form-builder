@@ -270,11 +270,19 @@ Fliplet().then(function() {
               case 'flMatrix':
                 var option = {};
 
+                if (_.isEmpty(entry.data)) {
+                  return;
+                }
+
                 _.forEach(field.rowOptions, function(row) {
                   var val = row.id ? row.id : row.label;
                   var matrixKey = entry.data[`${fieldKey} [${val}]`] ? entry.data[`${fieldKey} [${val}]`] : entry.data[`${fieldKey}`];
 
-                  if ((!field.defaultValueKey && matrixKey) || (field.defaultValueKey.indexOf(val) !== -1 && matrixKey)) {
+                  if (isResetAction) {
+                    if ((!field.defaultValueKey && matrixKey) || (field.defaultValueKey.indexOf(val) !== -1 && matrixKey)) {
+                      option[val] = matrixKey;
+                    }
+                  } else if (field.defaultValueKey && matrixKey) {
                     option[val] = matrixKey;
                   }
                 });
