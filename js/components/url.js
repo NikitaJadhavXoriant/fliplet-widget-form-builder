@@ -9,18 +9,22 @@ Fliplet.FormBuilder.field('url', {
       type: String
     }
   },
-  watch: {
-    value: {
-      handler: function(val) {
-        this.value = val.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  data: function() {
+    return {
+      rules: {
+        urlCase: new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@%!\$&'\*\+,;=.]+$/i)
       }
-    }
+    };
   },
   validations: function() {
     var rules = {
       value: {
         // URL regex taken form https://www.regextester.com/94502 and added % sign
-        url: window.validators.helpers.regex('', /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@%!\$&'\*\+,;=.]+$/i)
+        url: function(value) {
+          value = value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+          return value ? this.rules.urlCase.test(value) : false;
+        }
       }
     };
 
