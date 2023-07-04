@@ -490,13 +490,22 @@ Fliplet.FormBuilder = (function() {
       };
 
       component.methods._hasDuplicateOptions  = function(options) {
+        var finalOptions = _.cloneDeep(options);
+
+        _.forEach(finalOptions, function(i) {
+          i.id = i.id ? i.id.toLowerCase() : i.label.toLowerCase();
+          i.label = i.label ? i.label.toLowerCase() : i.id.toLowerCase();
+
+          return i;
+        });
+
         var duplicates = _.filter(
           _.uniq(
-            _.map(options, function(item) {
-              var val = item.id ? item.id : item.label;
+            _.map(finalOptions, function(item) {
+              var val = (item.id ? item.id : item.label).toLowerCase();
               var key = item.id ? 'id' : 'label';
 
-              if (_.filter(options, [key, val]).length > 1) {
+              if (_.filter(finalOptions, [key, val]).length > 1) {
                 return val;
               }
 
