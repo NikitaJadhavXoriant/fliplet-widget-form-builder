@@ -254,7 +254,7 @@ Fliplet.FormBuilder = (function() {
             var $vm = this;
 
             setTimeout(function() {
-              $vm.setValueFromDefaultSettings({ source: this.defaultValueSource, key: this.defaultValueKey });
+              $vm.setValueFromDefaultSettings({ source: $vm.defaultValueSource, key: $vm.defaultValueKey });
             }, 0);
           }
         };
