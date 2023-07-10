@@ -12,6 +12,7 @@ Fliplet.FormBuilder.field('url', {
   data: function() {
     return {
       rules: {
+        // URL regex taken form https://www.regextester.com/94502 and added % sign
         urlCase: new RegExp(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@%!\$&'\*\+,;=.]+$/i)
       }
     };
@@ -19,7 +20,6 @@ Fliplet.FormBuilder.field('url', {
   validations: function() {
     var rules = {
       value: {
-        // URL regex taken form https://www.regextester.com/94502 and added % sign
         url: function(value) {
           value = value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
