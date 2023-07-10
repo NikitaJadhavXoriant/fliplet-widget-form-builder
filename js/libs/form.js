@@ -1379,15 +1379,21 @@ Fliplet().then(function() {
 
                     if (field._type === 'flMatrix') {
                       var option = {};
+                      var flag = false;
 
                       _.some(field.rowOptions, function(row) {
                         _.each(value, function(c, r) {
                           if (row.label ===  r)    {
                             option[r] = c;
+                            flag = true;
 
                             return true;
                           }
                         });
+
+                        if (flag) {
+                          return true;
+                        }
                       });
                       field.value = option;
                     } else {
