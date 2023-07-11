@@ -492,17 +492,17 @@ Fliplet.FormBuilder = (function() {
       component.methods._hasDuplicateOptions  = function(options) {
         var finalOptions = _.cloneDeep(options);
 
-        _.forEach(finalOptions, function(i) {
-          i.id = i.id ? i.id.toLowerCase() : i.label.toLowerCase();
-          i.label = i.label ? i.label.toLowerCase() : i.id.toLowerCase();
+        _.forEach(finalOptions, function(option) {
+          option.id = option.id ? option.id.toLowerCase() : option.label.toLowerCase();
+          option.label = option.label ? option.label.toLowerCase() : option.id.toLowerCase();
 
-          return i;
+          return option;
         });
 
         var duplicates = _.filter(
           _.uniq(
             _.map(finalOptions, function(item) {
-              var val = (item.id ? item.id : item.label).toLowerCase();
+              var val = item.id.toLowerCase();
               var key = item.id ? 'id' : 'label';
 
               if (_.filter(finalOptions, [key, val]).length > 1) {
