@@ -1385,7 +1385,7 @@ Fliplet().then(function() {
                           if (row.label === key) {
                             options[key] = value[key];
 
-                            return;
+                            return true;
                           }
                         });
                       });
