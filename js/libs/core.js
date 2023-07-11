@@ -250,7 +250,7 @@ Fliplet.FormBuilder = (function() {
 
       if (!component.mounted) {
         component.mounted = function() {
-          if (this.defaultValueSource !== 'default') {
+          if (this.defaultValueSource !== 'default' || this.defaultValueSource !== 'profile') {
             var $vm = this;
 
             setTimeout(function() {
