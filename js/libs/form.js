@@ -1160,18 +1160,17 @@ Fliplet().then(function() {
             });
           }
 
-          if (formMode === 'add') {
-            return Promise.resolve();
-          }
-
-          if (data.autobindProfileEditing) {
+          if (data.autobindProfileEditing || !entryId) {
             $vm.isLoading = true;
 
             return Fliplet.Session.get().then(function(session) {
               var isEditMode = false;
 
               if (session.entries && session.entries.dataSource) {
-                entryId = 'session'; // this works because you can use it as an ID on the backend
+                if (!isResetAction || formMode !== 'add') {
+                  entryId = 'session'; // this works because you can use it as an ID on the backend
+                }
+
                 entry = session.entries.dataSource;
                 isEditMode = true;
               }
@@ -1187,6 +1186,10 @@ Fliplet().then(function() {
                 }, 50);
               });
             });
+          }
+
+          if (formMode === 'add') {
+            return Promise.resolve();
           }
 
           return Promise.resolve();
