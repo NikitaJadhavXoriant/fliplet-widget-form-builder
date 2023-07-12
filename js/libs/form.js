@@ -169,14 +169,30 @@ Fliplet().then(function() {
           break;
 
         case 'query':
-          result = Fliplet.Navigate.query[field.defaultValueKey];
+          if (field._type === 'flMatrix') {
+            var matrixValue = {};
+
+            _.mapKeys(Fliplet.Navigate.query, function(value, key) {
+              if (key === field.defaultValueKey || _.includes(key, field.defaultValueKey)) {
+                var regex = /\[(.*)\]/g;
+                var match = key.split(regex).filter(r => r !== '');
+
+                if (match.length > 0) {
+                  matrixValue[match[1]] = value;
+                }
+              }
+            });
+
+            result = matrixValue;
+          } else {
+            result = Fliplet.Navigate.query[field.defaultValueKey];
+          }
 
           break;
 
         default:
           break;
       }
-
 
       if (!(result instanceof Promise)) {
         result = Promise.resolve(result);
@@ -188,7 +204,11 @@ Fliplet().then(function() {
             val = _.compact([val]);
           }
         } else if (field._type === 'flMatrix') {
-          field.value = getMatrixValue(val, field);
+          if (field.defaultValueSource === 'query') {
+            field.value = val;
+          } else {
+            field.value = getMatrixValue(val, field);
+          }
         } else {
           field.value = val;
         }
