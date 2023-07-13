@@ -127,8 +127,10 @@ Fliplet.FormBuilder = (function() {
                   var regex = /\[(.*)\]/g;
                   var match = key.split(regex).filter(r => r !== '');
 
-                  if (match.length > 0) {
+                  if (match.length > 1) {
                     matrixValue[match[1]] = value;
+                  } else {
+                    matrixValue = value;
                   }
                 }
               });
