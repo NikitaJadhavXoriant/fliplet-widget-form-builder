@@ -177,7 +177,6 @@ Fliplet().then(function() {
           break;
       }
 
-
       if (!(result instanceof Promise)) {
         result = Promise.resolve(result);
       }
@@ -1167,12 +1166,12 @@ Fliplet().then(function() {
               var isEditMode = false;
 
               if (session.entries && session.entries.dataSource) {
-                if (!isResetAction || formMode !== 'add') {
+                if (formMode !== 'add') {
                   entryId = 'session'; // this works because you can use it as an ID on the backend
+                  isEditMode = true;
                 }
 
                 entry = session.entries.dataSource;
-                isEditMode = true;
               }
 
               // Re-render fields
