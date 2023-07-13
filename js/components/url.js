@@ -24,7 +24,11 @@ Fliplet.FormBuilder.field('url', {
           // Normalize()ing to NFD Unicode normal form decomposes combined graphemes into the combination of simple ones using a regex character class to match the U+0300 → U+036F range
           value = value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-          return value ? this.rules.urlCase.test(value) : false;
+          if (value) {
+            return value ? this.rules.urlCase.test(value) : false;
+          }
+
+          return true;
         }
       }
     };
