@@ -177,8 +177,10 @@ Fliplet().then(function() {
                 var regex = /\[(.*)\]/g;
                 var match = key.split(regex).filter(r => r !== '');
 
-                if (match.length > 0) {
+                if (match.length > 1) {
                   matrixValue[match[1]] = value;
+                } else {
+                  matrixValue = value;
                 }
               }
             });
@@ -204,7 +206,7 @@ Fliplet().then(function() {
             val = _.compact([val]);
           }
         } else if (field._type === 'flMatrix') {
-          if (field.defaultValueSource === 'query') {
+          if (field.defaultValueSource === 'query' && typeof val !== 'string') {
             field.value = val;
           } else {
             field.value = getMatrixValue(val, field);
