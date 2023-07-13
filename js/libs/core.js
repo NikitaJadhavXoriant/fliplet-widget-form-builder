@@ -501,9 +501,8 @@ Fliplet.FormBuilder = (function() {
           _.uniq(
             _.map(finalOptions, function(item) {
               var val = item.id.toLowerCase();
-              var key = item.id ? 'id' : 'label';
 
-              if (_.filter(finalOptions, [key, val]).length > 1) {
+              if (_.filter(finalOptions, ['id', val]).length > 1) {
                 return val;
               }
 
