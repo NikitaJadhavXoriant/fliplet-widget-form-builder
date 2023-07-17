@@ -972,12 +972,26 @@ Fliplet().then(function() {
                   }
                 } else if (type === 'flMatrix') {
                   if (!_.isEmpty(value)) {
-                    _.forEach(value, function(col, row) {
-                      if (!row || !col) {
-                        return '';
-                      }
+                    _.forEach(field.rowOptions, function(rowOpt) {
+                      var rowFlag = false;
+                      var val = rowOpt.id ? rowOpt.id : rowOpt.label;
 
-                      appendField(`${field.name} [${row}]`, col);
+                      _.some(value, function(col, row) {
+                        if (!row || !col) {
+                          return '';
+                        }
+
+                        if (val === row) {
+                          appendField(`${field.name} [${val}]`, col);
+                          rowFlag = true;
+
+                          return true;
+                        }
+                      });
+
+                      if (!rowFlag) {
+                        appendField(`${field.name} [${val}]`, '');
+                      }
                     });
                   } else {
                     _.forEach(field.rowOptions, function(row) {
