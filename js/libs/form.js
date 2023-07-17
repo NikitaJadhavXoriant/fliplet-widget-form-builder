@@ -173,7 +173,15 @@ Fliplet().then(function() {
             var matrixValue = {};
 
             _.mapKeys(Fliplet.Navigate.query, function(value, key) {
-              if (key === field.defaultValueKey || _.includes(key, field.defaultValueKey)) {
+              if (key === field.defaultValueKey) {
+                _.forEach(field.rowOptions, function(row) {
+                  var val = row.id ? row.id : row.label;
+
+                  if (!_.has(matrixValue, val)) {
+                    matrixValue[val] = value;
+                  }
+                });
+              } else if (_.includes(key, field.defaultValueKey)) {
                 var regex = /\[(.*)\]/g;
                 var match = key.split(regex).filter(r => r !== '');
 

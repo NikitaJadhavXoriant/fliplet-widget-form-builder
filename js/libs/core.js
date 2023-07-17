@@ -123,7 +123,15 @@ Fliplet.FormBuilder = (function() {
               var matrixValue = {};
 
               _.mapKeys(Fliplet.Navigate.query, function(value, key) {
-                if (key === data.key || _.includes(key, data.key)) {
+                if (key === data.key) {
+                  _.forEach(this.rowOptions, function(row) {
+                    var val = row.id ? row.id : row.label;
+
+                    if (!_.has(matrixValue, val)) {
+                      matrixValue[val] = value;
+                    }
+                  });
+                } else if ( _.includes(key, data.key)) {
                   var regex = /\[(.*)\]/g;
                   var match = key.split(regex).filter(r => r !== '');
 
