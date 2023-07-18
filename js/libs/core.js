@@ -131,7 +131,7 @@ Fliplet.FormBuilder = (function() {
                       matrixValue[val] = value;
                     }
                   });
-                } else if ( _.includes(key, data.key)) {
+                } else if (_.includes(key, data.key)) {
                   var regex = /\[(.*)\]/g;
                   var match = key.split(regex).filter(r => r !== '');
 
