@@ -230,7 +230,7 @@ Fliplet().then(function() {
     function saveProgress() {
       var progress = {};
 
-      data.fields.forEach(function(field) {
+      (data.fields || []).forEach(function(field) {
         if (field.saveProgress !== false && field.enabled) {
           progress[field.name] = field.value;
         }
@@ -1313,10 +1313,6 @@ Fliplet().then(function() {
               }
 
               var $field = _.find($form.$children, { name: field.name });
-
-              if (!$field) {
-                throw new Error('The field ' + key + ' has not been found.');
-              }
 
               return {
                 val: function(value) {
