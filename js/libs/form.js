@@ -309,7 +309,8 @@ Fliplet().then(function() {
                   var matrixKey = entry.data[`${fieldKey} [${val}]`] ? entry.data[`${fieldKey} [${val}]`] : entry.data[`${fieldKey}`];
 
                   if (isResetAction) {
-                    if ((!field.defaultValueKey && matrixKey) || (field.defaultValueKey.indexOf(val) !== -1 && matrixKey)) {
+                    if ((!field.defaultValueKey && matrixKey) || (field.defaultValueKey.indexOf(val) !== -1 && matrixKey)
+                      || (field.defaultValueKey.indexOf(fieldKey) !== -1 && matrixKey)) {
                       option[val] = matrixKey;
                     }
                   } else if (matrixKey) {
@@ -1204,7 +1205,7 @@ Fliplet().then(function() {
             });
           }
 
-          if (data.autobindProfileEditing || !entryId) {
+          if (data.autobindProfileEditing || formMode === 'add') {
             $vm.isLoading = true;
 
             return Fliplet.Session.get().then(function(session) {
@@ -1230,10 +1231,6 @@ Fliplet().then(function() {
                 }, 50);
               });
             });
-          }
-
-          if (formMode === 'add') {
-            return Promise.resolve();
           }
 
           return Promise.resolve();
