@@ -315,6 +315,9 @@ Fliplet().then(function() {
                     }
                   } else if (matrixKey) {
                     option[val] = matrixKey;
+                  } else if (formMode === 'add' && !matrixKey) {
+                    matrixKey = entry.data[`${field.defaultValueKey} [${val}]`] ? entry.data[`${field.defaultValueKey} [${val}]`] : entry.data[`${field.defaultValueKey}`];
+                    option[val] = matrixKey;
                   }
                 });
 
@@ -323,7 +326,7 @@ Fliplet().then(function() {
               default:
                 fieldData = entry.data[fieldKey];
 
-                if (typeof fieldData === 'undefined' && isResetAction) {
+                if (typeof fieldData === 'undefined' && (isResetAction || formMode === 'add')) {
                   fieldData = entry.data[field.name] || entry.data[field.defaultValueKey];
                 }
 
