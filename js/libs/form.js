@@ -1040,6 +1040,16 @@ Fliplet().then(function() {
                     append: false
                   };
                 }
+
+                if (field._type === 'flMatrix') {
+                  formData._flSchema.excludedFields = [];
+
+                  _.forEach(field.rowOptions, function(row) {
+                    var val = row.id ? row.id : row.label;
+
+                    formData._flSchema.excludedFields.push(`${field.name} [${val}]`);
+                  });
+                }
               });
 
               if (entryId && entry && data.dataSourceId) {
