@@ -174,8 +174,7 @@ Fliplet.FormBuilder.field('file', {
           }, {
             canvas: true,
             maxWidth: $vm.customWidth,
-            maxHeight: $vm.customHeight,
-            orientation: true
+            maxHeight: $vm.customHeight
           });
       });
     },

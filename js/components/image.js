@@ -217,8 +217,7 @@ Fliplet.FormBuilder.field('image', {
         var options = {
           canvas: true,
           maxWidth: $vm.customWidth,
-          maxHeight: $vm.customHeight,
-          orientation: true
+          maxHeight: $vm.customHeight
         };
 
         loadImage(file, function(img) {
