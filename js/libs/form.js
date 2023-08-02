@@ -175,7 +175,7 @@ Fliplet().then(function() {
             _.mapKeys(Fliplet.Navigate.query, function(value, key) {
               if (key === field.defaultValueKey) {
                 _.forEach(field.rowOptions, function(row) {
-                  var val = row.id ? row.id : row.label;
+                  var val = row.id || row.label;
 
                   if (!_.has(matrixValue, val)) {
                     matrixValue[val] = value;
@@ -305,7 +305,7 @@ Fliplet().then(function() {
                 }
 
                 _.forEach(field.rowOptions, function(row) {
-                  var val = row.id ? row.id : row.label;
+                  var val = row.id || row.label;
                   var matrixKey = entry.data[`${fieldKey} [${val}]`] ? entry.data[`${fieldKey} [${val}]`] : entry.data[`${fieldKey}`];
 
                   if (isResetAction) {
@@ -1012,7 +1012,7 @@ Fliplet().then(function() {
                     });
                   } else {
                     _.forEach(field.rowOptions, function(row) {
-                      var val = row.id ? row.id : row.label;
+                      var val = row.id || row.label;
 
                       appendField(`${field.name} [${val}]`, '');
                     });
@@ -1045,7 +1045,7 @@ Fliplet().then(function() {
                   formData._flSchema.excludedFields = [];
 
                   _.forEach(field.rowOptions, function(row) {
-                    var val = row.id ? row.id : row.label;
+                    var val = row.id || row.label;
 
                     formData._flSchema.excludedFields.push(`${field.name} [${val}]`);
                   });
