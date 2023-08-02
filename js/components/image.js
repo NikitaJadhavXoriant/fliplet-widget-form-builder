@@ -213,12 +213,12 @@ Fliplet.FormBuilder.field('image', {
 
       this.validateValue();
 
-      loadImage.parseMetaData(file, function(data) {
+      loadImage.parseMetaData(file, function() {
         var options = {
           canvas: true,
           maxWidth: $vm.customWidth,
           maxHeight: $vm.customHeight,
-          orientation: data.exif ? data.exif.get('Orientation') : true
+          orientation: true
         };
 
         loadImage(file, function(img) {
