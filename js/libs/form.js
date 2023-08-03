@@ -520,7 +520,8 @@ Fliplet().then(function() {
           blockScreen: false,
           today: moment().locale('en').format('YYYY-MM-DD'),
           now: moment().locale('en').format('HH:mm'),
-          id: data.id
+          id: data.id,
+          entryId: entryId
         };
       },
       computed: {
