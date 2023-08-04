@@ -213,12 +213,12 @@ Fliplet.FormBuilder.field('image', {
 
       this.validateValue();
 
-      loadImage.parseMetaData(file, function(data) {
+      loadImage.parseMetaData(file, function() {
         var options = {
           canvas: true,
           maxWidth: $vm.customWidth,
           maxHeight: $vm.customHeight,
-          orientation: data.exif ? data.exif.get('Orientation') : true
+          orientation: 0
         };
 
         loadImage(file, function(img) {
@@ -276,9 +276,9 @@ Fliplet.FormBuilder.field('image', {
       this.validateValue();
 
       getPicture.then(function onSelectedPicture(imgBase64Url) {
-        imgBase64Url = (imgBase64Url.indexOf('base64') > -1) ?
-          imgBase64Url :
-          'data:image/jpeg;base64,' + imgBase64Url;
+        imgBase64Url = (imgBase64Url.indexOf('base64') > -1)
+          ? imgBase64Url
+          : 'data:image/jpeg;base64,' + imgBase64Url;
         $vm.value.push(imgBase64Url);
         addThumbnailToCanvas(imgBase64Url, $vm.value.length - 1, $vm);
         $vm.$emit('_input', $vm.name, $vm.value);

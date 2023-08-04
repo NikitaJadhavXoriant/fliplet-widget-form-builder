@@ -209,7 +209,7 @@ Fliplet().then(function() {
       }
 
       result.then(function(val) {
-        if (field._type === 'flCheckbox') {
+        if (field._type === 'flCheckbox' || field._type === 'flTypeahead') {
           if (!Array.isArray(val)) {
             val = _.compact([val]);
           }
@@ -227,23 +227,8 @@ Fliplet().then(function() {
       });
     }
 
-    function saveProgress() {
-      var progress = {};
-
-      (data.fields || []).forEach(function(field) {
-        if (field.saveProgress !== false && field.enabled) {
-          progress[field.name] = field.value;
-        }
-      });
-
-      localStorage.setItem(progressKey, JSON.stringify(progress));
-    }
-
     function getFields(isEditMode) {
       var fields = _.compact(JSON.parse(JSON.stringify(data.fields || [])));
-
-      // Make sure all updated values are stored in localstorage before get them
-      saveProgress();
 
       var progress = getProgress();
 
@@ -342,12 +327,12 @@ Fliplet().then(function() {
             // Typecast field data to ensure data type is suitable for each field
             switch (field._type) {
               case 'flCheckbox':
+              case 'flTypeahead':
                 if (!Array.isArray(fieldData)) {
                   fieldData = _.compact([fieldData]);
                 }
 
                 break;
-
               case 'flImage':
               case 'flFile':
                 // Don't change the data types for Image and File fields
@@ -452,6 +437,16 @@ Fliplet().then(function() {
 
                 break;
 
+              case 'flGeolocation':
+                var regex = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/;
+
+                if (regex.exec(fieldData)) {
+                  field.value = fieldData;
+                } else {
+                  field.value = null;
+                }
+
+                break;
                 // There is no validation and value assignment for checkbox and radio options as there is no access to the options. This is implemented in the checkbox and radio components respectively.
 
               default:
@@ -479,13 +474,17 @@ Fliplet().then(function() {
               default:
                 break;
             }
-          } else if (progress && !isEditMode) {
+          }
+
+          if (progress && !isEditMode) {
             var savedValue = progress[field.name];
 
             if (typeof savedValue !== 'undefined') {
               field.value = savedValue;
             }
           }
+
+          return field;
         });
       }
 
@@ -532,6 +531,17 @@ Fliplet().then(function() {
         }
       },
       methods: {
+        saveProgress: function() {
+          var progress = {};
+
+          this.fields.forEach(function(field) {
+            if (field.saveProgress !== false && field.enabled) {
+              progress[field.name] = field.value;
+            }
+          });
+
+          localStorage.setItem(progressKey, JSON.stringify(progress));
+        },
         start: function(event) {
           if (event) {
             event.preventDefault();
@@ -562,7 +572,7 @@ Fliplet().then(function() {
               return;
             }
 
-            if (field._type === 'flCheckbox') {
+            if (field._type === 'flCheckbox' || field._type === 'flTypeahead') {
               value = fieldSettings.defaultValue || fieldSettings.value;
 
               if (typeof value !== 'undefined' && !Array.isArray(value)) {
@@ -701,8 +711,8 @@ Fliplet().then(function() {
             }
           });
 
-          if (data.saveProgress && typeof this.saveProgress === 'function') {
-            this.saveProgress();
+          if (data.saveProgress && typeof this.saveProgressed === 'function') {
+            this.saveProgressed();
           }
         },
         onChange: function(fieldName, fn, runOnBind) {
@@ -917,6 +927,10 @@ Fliplet().then(function() {
                 // Remove spaces and dashes from value (when it's a string)
                 if (typeof value === 'string' && ['flNumber', 'flTelephone'].indexOf(type) !== -1) {
                   value = value.replace(/-|\s/g, '');
+                }
+
+                if (type === 'flGeolocation' && !value && !field.required) {
+                  value = null;
                 }
 
                 if (type === 'flDate') {
@@ -1244,7 +1258,7 @@ Fliplet().then(function() {
       mounted: function() {
         var $vm = this;
 
-        this.saveProgressed = debounce(saveProgress, saveDelay);
+        this.saveProgressed = debounce(this.saveProgress, saveDelay);
 
         $(selector).removeClass('hidden');
 
@@ -1256,9 +1270,9 @@ Fliplet().then(function() {
 
           Fliplet.Navigator.onOffline(function() {
             $vm.isOffline = true;
-            $vm.isOfflineMessage = data.dataStore && data.dataStore.indexOf('editDataSource') > -1 ?
-              T('widgets.form.errors.offlineDataError') :
-              T('widgets.form.errors.offlineFormError');
+            $vm.isOfflineMessage = data.dataStore && data.dataStore.indexOf('editDataSource') > -1
+              ? T('widgets.form.errors.offlineDataError')
+              : T('widgets.form.errors.offlineFormError');
 
             if ($vm.isEditMode && $vm.isLoading && $vm.isOffline) {
               $vm.blockScreen = true;
@@ -1473,58 +1487,72 @@ Fliplet().then(function() {
                   }
                 },
                 options: function(values) {
-                  if (typeof values === 'undefined') {
+                  var result = typeof values === 'function' ? values() : values;
+
+                  if (typeof result === 'undefined') {
                     return field.options;
                   }
 
-                  if (!Array.isArray(values)) {
-                    throw new Error('Options must be an array');
-                  }
+                  return Promise.resolve(result).then(function(newOptions) {
+                    if (!Array.isArray(newOptions)) {
+                      throw new Error('Options must be an array');
+                    }
 
-                  if (field._type === 'flSelect') {
-                    // remove all invalid options
-                    _.remove(values, function(val) {
-                      return !(_.isObject(val) || _.isNumber(val) || (_.isString(val) && val.trim()));
-                    });
-                  }
+                    values = newOptions || [];
 
-                  var options = values.map(function(option) {
-                    if (typeof option === 'object') {
-                      if (typeof option.value !== 'undefined') {
-                        option.id = option.value;
+                    if (field._type === 'flSelect') {
+                      // remove all invalid options
+                      _.remove(values, function(val) {
+                        return !(_.isObject(val) || _.isNumber(val) || (_.isString(val) && val.trim()));
+                      });
+                    }
+
+                    var options = values.map(function(option) {
+                      if (typeof option === 'object') {
+                        if (typeof option.value !== 'undefined') {
+                          option.id = option.value;
+                        }
+
+                        if (field._type === 'flTypeahead' && typeof option.id === 'undefined') {
+                          option.id = option.label;
+                        }
+
+                        return option;
                       }
 
-                      return option;
+                      if (field._type === 'flTypeahead') {
+                        return { id: option, label: option };
+                      }
+
+                      return { id: option };
+                    });
+
+                    if (!_.isEmpty(field.value)) {
+                      switch (field._type) {
+                        case 'flCheckbox':
+                          var selectedValues = _.difference(field.value, values);
+
+                          field.value = selectedValues.length ? [] : field.value;
+                          break;
+                        case 'flRadio':
+                        case 'flSelect':
+                          var selectedValueInOptions = _.some(values, function(option) {
+                            return option === field.value;
+                          });
+
+                          field.value = selectedValueInOptions ? field.value : '';
+                          break;
+                        default:
+                          break;
+                      }
                     }
 
-                    return { id: option };
+                    // Update options in field definition so they are kept between renderings
+                    _.find(data.fields, { name: field.name }).options = options;
+
+                    // Update live field
+                    field.options = options;
                   });
-
-                  if (!_.isEmpty(field.value)) {
-                    switch (field._type) {
-                      case 'flCheckbox':
-                        var selectedValues = _.difference(field.value, values);
-
-                        field.value = selectedValues.length ? [] : field.value;
-                        break;
-                      case 'flRadio':
-                      case 'flSelect':
-                        var selectedValueInOptions = _.some(values, function(option) {
-                          return option === field.value;
-                        });
-
-                        field.value = selectedValueInOptions ? field.value : '';
-                        break;
-                      default:
-                        break;
-                    }
-                  }
-
-                  // Update options in field definition so they are kept between renderings
-                  _.find(data.fields, { name: field.name }).options = options;
-
-                  // Update live field
-                  field.options = options;
                 },
                 on: function(eventName, fn) {
                   var eventListeners = data.fieldEventListeners;

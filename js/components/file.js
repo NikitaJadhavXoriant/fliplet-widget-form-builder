@@ -139,7 +139,7 @@ Fliplet.FormBuilder.field('file', {
       do {
         bytes /= unitCapacity;
         ++unitIndex;
-      } while (Math.round(Math.abs(bytes) * round ) / round  >= unitCapacity && unitIndex < units.length - 1);
+      } while (Math.round(Math.abs(bytes) * round) / round >= unitCapacity && unitIndex < units.length - 1);
 
       return TN(bytes.toFixed(decimals)) + ' ' + units[unitIndex];
     },
@@ -163,7 +163,7 @@ Fliplet.FormBuilder.field('file', {
     processImage: function(file, isAddElem) {
       var $vm = this;
 
-      loadImage.parseMetaData(file, function(data) {
+      loadImage.parseMetaData(file, function() {
         loadImage(
           file,
           function() {
@@ -175,8 +175,7 @@ Fliplet.FormBuilder.field('file', {
             canvas: true,
             maxWidth: $vm.customWidth,
             maxHeight: $vm.customHeight,
-            orientation: data.exif ?
-              data.exif.get('Orientation') : true
+            orientation: 0
           });
       });
     },
