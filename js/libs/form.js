@@ -326,7 +326,7 @@ Fliplet().then(function() {
               default:
                 fieldData = entry.data[fieldKey];
 
-                if (typeof fieldData === 'undefined' && (isResetAction || formMode === 'add')) {
+                if (typeof fieldData === 'undefined' && formMode === 'add') {
                   fieldData = entry.data[field.name] || entry.data[field.defaultValueKey];
                 }
 
