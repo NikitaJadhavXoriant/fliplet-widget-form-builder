@@ -167,7 +167,7 @@ Fliplet.FormBuilder = (function() {
             value = '';
           }
 
-          if (componentName === 'flCheckbox') {
+          if (componentName === 'flCheckbox' || componentName === 'flTypeahead') {
             value = Array.isArray(value) ? value : [value];
           }
 
@@ -377,6 +377,8 @@ Fliplet.FormBuilder = (function() {
 
       var template = templates['templates.configurations.' + componentName];
 
+      Handlebars.registerPartial('defaultValue', Fliplet.Widget.Templates['templates.configurations.defaultValue']());
+
       componentName = name(componentName);
 
       // Extend from base component
@@ -455,17 +457,17 @@ Fliplet.FormBuilder = (function() {
 
       component.props._componentsWithPersonalization = {
         type: Array,
-        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flSlider', 'flMatrix']
+        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flSlider', 'flMatrix', 'flTypeahead']
       };
 
       component.props._componentsWithDescription = {
         type: Array,
-        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flDateRange', 'flTimeRange', 'flTimer', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider', 'flMatrix', 'flGeolocation']
+        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flDateRange', 'flTimeRange', 'flTimer', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider', 'flMatrix', 'flTypeahead', 'flGeolocation']
       };
 
       component.props._readOnlyComponents = {
         type: Array,
-        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flDateRange', 'flTimeRange', 'flTimer', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider', 'flMatrix']
+        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flDateRange', 'flTimeRange', 'flTimer', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider', 'flMatrix', 'flTypeahead']
       };
 
       component.props._flexibleWidthComponents = {
@@ -690,6 +692,10 @@ Fliplet.FormBuilder = (function() {
         component.mounted = function() {
           this._showNameField = this.name !== this.label;
           this.initTooltip();
+
+          if (componentName === 'flTypeahead') {
+            this.initDataProvider();
+          }
         };
       }
 
@@ -709,6 +715,42 @@ Fliplet.FormBuilder = (function() {
       component.methods._onDefaultValueSourceChanged = function() {
         this.defaultValueKey = '';
         this.value = '';
+      };
+
+      component.methods._getDataSourceColumnValues = function() {
+        var $vm = this;
+        var id = this.dataSourceId;
+        var column = this.column;
+
+        Fliplet.Cache.get({
+          key: id + '-' + column,
+          expire: 60
+        }, function getColumnValues() {
+          // If there's no cache, return new values, i.e.
+          Fliplet.DataSources.connect(id).then(function(connection) {
+            connection.getIndex(column).then(function onSuccess(values) {
+              $vm.options = _.compact(_.map(values, function(option) {
+                if (!option) {
+                  return;
+                }
+
+                if (typeof option === 'object' || Array.isArray(option)) {
+                  option = JSON.stringify(option);
+                }
+
+                return {
+                  id: (typeof option === 'string' ? option : option.toString()).trim(),
+                  label: (typeof option === 'string' ? option : option.toString()).trim()
+                };
+              }));
+
+              return $vm.options;
+            });
+          });
+        })
+          .then(function(result) {
+            $vm.options = result;
+          });
       };
 
       if (!component.methods.disableAutomatch) {
@@ -793,6 +835,57 @@ Fliplet.FormBuilder = (function() {
         component.methods.openFilePicker = component.methods._openFilePicker;
       }
 
+      component.methods._initDataProvider = function() {
+        var $vm = this;
+
+        var dataSourceData = {
+          dataSourceTitle: 'Your list data',
+          dataSourceId: $vm.dataSourceId,
+          appId: Fliplet.Env.get('appId'),
+          default: {
+            name: 'Form data for ' + $vm.name,
+            entries: [],
+            columns: []
+          },
+          accessRules: [
+            { allow: 'all', type: ['select'] }
+          ]
+        };
+
+
+        window.dataProvider = Fliplet.Widget.open('com.fliplet.data-source-provider', {
+          selector: '#data-provider',
+          data: dataSourceData,
+          onEvent: function(event, dataSource) {
+            if (event === 'dataSourceSelect') {
+              $vm.dataSourceId = dataSource.id;
+              $vm.columnOptions = dataSource.columns;
+            }
+          }
+        });
+
+        window.dataProvider.then(function(dataSource) {
+          $vm.dataSourceId = dataSource.data.id;
+          window.dataProvider = null;
+          $vm.triggerSave();
+        });
+      };
+
+      if (!component.methods.initDataProvider) {
+        component.methods.initDataProvider = component.methods._initDataProvider;
+      }
+
+      component.methods._removeDataProvider = function() {
+        this.dataSourceId = null;
+        this.column = '';
+        window.dataProvider.close();
+        window.dataProvider = null;
+      };
+
+      if (!component.methods.removeDataProvider) {
+        component.methods.removeDataProvider = component.methods._removeDataProvider;
+      }
+
       component.methods._openFileManager = function() {
         var $vm = this;
 
@@ -822,6 +915,7 @@ Fliplet.FormBuilder = (function() {
       var isSlider = component.props._componentName.default === 'flSlider';
       var isMatrix = component.props._componentName.default === 'flMatrix';
       var isTimer = component.props._componentName.default === 'flTimer';
+      var isTypeahead = component.props._componentName.default === 'flTypeahead';
 
       /**
       * Generate text configurations for radio/checkbox options, separated by new lines
@@ -897,7 +991,8 @@ Fliplet.FormBuilder = (function() {
         hasOptions: hasOptions,
         hasSelectAll: hasSelectAll,
         isSlider: isSlider,
-        isTimer: isTimer
+        isTimer: isTimer,
+        isTypeahead: isTypeahead
       });
 
       Vue.component(componentName + 'Config', component);
