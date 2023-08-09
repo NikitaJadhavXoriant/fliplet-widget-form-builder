@@ -179,13 +179,19 @@ Fliplet.FormBuilder.field('geolocation', {
         return Promise.reject('');
       }
     },
-    onReset: function() {
-      this.firstTimeSaved = false;
-      this.showFeedback = false;
+    onReset: function(data) {
+      if (data.id === this.$parent.id) {
+        this.firstTimeSaved = false;
+        this.showFeedback = false;
+      }
     }
   },
   watch: {
     value: function(val) {
+      if (this.value) {
+        this.firstTimeSaved = true;
+      }
+
       this.$emit('_input', this.name, val, false, true);
     }
   }
