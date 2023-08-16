@@ -41,6 +41,10 @@ Fliplet.FormBuilder.field('geolocation', {
     if (this.autofill) {
       this.getLocation();
     }
+
+    if (this.value) {
+      this.firstTimeSaved = true;
+    }
   },
   created: function() {
     Fliplet.FormBuilder.on('reset', this.onReset);
@@ -169,7 +173,7 @@ Fliplet.FormBuilder.field('geolocation', {
         });
 
         return Promise.reject('');
-      } else if (this.preciseLocationRequired && this.accuracy > 100) {
+      } else if (this.preciseLocationRequired && this.value && this.accuracy > 100) {
         var error = {
           code: 'inaccurateCoords'
         };
@@ -188,9 +192,7 @@ Fliplet.FormBuilder.field('geolocation', {
   },
   watch: {
     value: function(val) {
-      if (this.value) {
-        this.firstTimeSaved = true;
-      }
+      this.firstTimeSaved = !!this.value;
 
       this.$emit('_input', this.name, val, false, true);
     }
