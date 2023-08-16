@@ -291,7 +291,7 @@ Fliplet().then(function() {
 
                 _.forEach(field.rowOptions, function(row) {
                   var val = row.id ? row.id : row.label;
-                  var matrixKey = entry.data[`${fieldKey} [${val}]`] ? entry.data[`${fieldKey} [${val}]`] : entry.data[`${fieldKey}`];
+                  var matrixKey = entry.data[`${fieldKey} [${val}]`] || entry.data[`${fieldKey}`];
 
                   if (isResetAction) {
                     if ((!field.defaultValueKey && matrixKey) || (field.defaultValueKey.indexOf(val) !== -1 && matrixKey)
@@ -301,7 +301,7 @@ Fliplet().then(function() {
                   } else if (matrixKey) {
                     option[val] = matrixKey;
                   } else if (formMode === 'add' && !matrixKey) {
-                    matrixKey = entry.data[`${field.defaultValueKey} [${val}]`] ? entry.data[`${field.defaultValueKey} [${val}]`] : entry.data[`${field.defaultValueKey}`];
+                    matrixKey = entry.data[`${field.defaultValueKey} [${val}]`] || entry.data[`${field.defaultValueKey}`];
                     option[val] = matrixKey;
                   }
                 });
@@ -1023,23 +1023,23 @@ Fliplet().then(function() {
                 } else if (type === 'flMatrix') {
                   if (!_.isEmpty(value)) {
                     _.forEach(field.rowOptions, function(rowOpt) {
-                      var rowFlag = false;
-                      var val = rowOpt.id ? rowOpt.id : rowOpt.label;
+                      var rowFound = false;
+                      var val = rowOpt.id || rowOpt.label;
 
                       _.some(value, function(col, row) {
                         if (!row || !col) {
-                          return '';
+                          return;
                         }
 
                         if (val === row) {
                           appendField(`${field.name} [${val}]`, col);
-                          rowFlag = true;
+                          rowFound = true;
 
                           return true;
                         }
                       });
 
-                      if (!rowFlag) {
+                      if (!rowFound) {
                         appendField(`${field.name} [${val}]`, '');
                       }
                     });
