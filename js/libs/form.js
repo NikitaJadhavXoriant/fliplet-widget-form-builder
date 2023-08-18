@@ -254,7 +254,7 @@ Fliplet().then(function() {
         fields.forEach(function(field) {
           if (entry && entry.data && field.populateOnUpdate !== false) {
             var fieldKey = isResetAction
-              ? field.defaultValueKey || field.name
+              ? field.defaultValueKey
               : field.name || field.defaultValueKey;
 
             var fieldData;
