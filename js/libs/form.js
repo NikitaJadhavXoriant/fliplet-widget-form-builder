@@ -355,6 +355,10 @@ Fliplet().then(function() {
                   fieldData = _.join(_.compact(fieldData), '\n');
                 }
 
+                if (field.defaultValueKey !== field.name && entry.data[field.defaultValueKey]) {
+                  fieldData = entry.data[field.defaultValueKey];
+                }
+
                 break;
 
               default:
