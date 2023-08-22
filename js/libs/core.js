@@ -472,7 +472,7 @@ Fliplet.FormBuilder = (function() {
 
       component.props._flexibleWidthComponents = {
         type: Array,
-        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flDateRange', 'flTimeRange', 'flTimer', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider', 'flMatrix']
+        default: ['flInput', 'flCheckbox', 'flRadio', 'flEmail', 'flNumber', 'flTelephone', 'flUrl', 'flTextarea', 'flWysiwyg', 'flSelect', 'flDate', 'flTime', 'flDateRange', 'flTimeRange', 'flTimer', 'flStarRating', 'flSignature', 'flImage', 'flFile', 'flSlider', 'flMatrix', 'flTypeahead', 'flGeolocation']
       };
 
       component.props._idx = {
@@ -879,6 +879,14 @@ Fliplet.FormBuilder = (function() {
         this.dataSourceId = null;
         this.column = '';
         this.columnOptions = null;
+        this.options = [
+          {
+            label: 'Option 1'
+          },
+          {
+            label: 'Option 2'
+          }
+        ];
         window.dataProvider.close();
         window.dataProvider = null;
       };
