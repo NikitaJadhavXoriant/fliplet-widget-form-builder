@@ -294,7 +294,8 @@ Fliplet().then(function() {
                   var matrixKey = entry.data[`${fieldKey} [${val}]`] || entry.data[`${fieldKey}`];
 
                   if (isResetAction) {
-                    if ((!field.defaultValueKey && matrixKey) || (field.defaultValueKey.indexOf(val) !== -1 && matrixKey)
+                    if ((!field.defaultValueKey && matrixKey)
+                      || (field.defaultValueKey.indexOf(val) !== -1 && matrixKey)
                       || (field.defaultValueKey.indexOf(fieldKey) !== -1 && matrixKey)) {
                       option[val] = matrixKey;
                     }
