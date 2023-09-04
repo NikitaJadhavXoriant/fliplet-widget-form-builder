@@ -1024,17 +1024,14 @@ Fliplet().then(function() {
                 } else if (type === 'flMatrix') {
                   if (!_.isEmpty(value)) {
                     _.forEach(field.rowOptions, function(rowOpt) {
-                      var rowFound = false;
                       var val = rowOpt.id || rowOpt.label;
-
-                      _.some(value, function(col, row) {
+                      var rowFound = _.some(value, function(col, row) {
                         if (!row || !col) {
                           return;
                         }
 
                         if (val === row) {
                           appendField(`${field.name} [${val}]`, col);
-                          rowFound = true;
 
                           return true;
                         }
